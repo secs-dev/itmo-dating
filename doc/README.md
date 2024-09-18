@@ -85,7 +85,6 @@ GET /suggestions/{person-id}
 
 POST /attitudes
 {
-    "source_id": <person-id>,
     "target_id": <person-id>,
     "score": <like|skip>
 }
@@ -103,7 +102,7 @@ GET /statistics/count-liked
 }
 
 # лайкнуть или дизлайкнуть человека
-POST /person/{person-id}/partner/{person-id}/attitude/{like|skip}
+POST /partner/{person-id}/attitude/{like|skip}
 {}
 ```
 
