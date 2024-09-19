@@ -34,6 +34,17 @@
             </dependency>
 
             <dependency>
+                <groupId>ru.ifmo.se.dating</groupId>
+                <artifactId>people-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.ifmo.se.dating</groupId>
+                <artifactId>people-server</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>3.3.3</version>

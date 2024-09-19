@@ -16,7 +16,7 @@
 
     <modules>
         <module>api</module>
-        <module>server</module>
         <module>app</module>
+        <module>server</module>
     </modules>
 </project>
