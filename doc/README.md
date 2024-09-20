@@ -39,7 +39,7 @@ class Topic {
 
 class Interest {
     Topic topic;
-    int degree; // от 0 до 5
+    int level; // от 1 до 5
 }
 
 class Location {
