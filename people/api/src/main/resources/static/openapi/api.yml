@@ -47,26 +47,26 @@ paths:
           description: Pattern for a first name
           required: false
           schema:
-            $ref: '#/components/schemas/RegexPattern'
+            $ref: "#/components/schemas/RegexPattern"
         - name: last_name
           in: query
           description: Pattern for a last name
           required: false
           schema:
-            $ref: '#/components/schemas/RegexPattern'
+            $ref: "#/components/schemas/RegexPattern"
         - name: pictures_count_min
           in: query
           description: Minimum count of pictures in profile
           required: false
           schema:
-            $ref: '#/components/schemas/PicturesCount'
+            $ref: "#/components/schemas/PicturesCount"
           example: 2
         - name: pictures_count_max
           in: query
           description: Maximum count of pictures in profile
           required: false
           schema:
-            $ref: '#/components/schemas/PicturesCount'
+            $ref: "#/components/schemas/PicturesCount"
           example: 4
         - name: topic_id
           in: query
@@ -77,20 +77,20 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/TopicId'
+              $ref: "#/components/schemas/TopicId"
         - name: height_min
           in: query
           description: Minimum height of a person
           required: false
           schema:
-            $ref: '#/components/schemas/PersonHeight'
+            $ref: "#/components/schemas/PersonHeight"
             example: 160
         - name: height_max
           in: query
           description: Maximum height of a person
           required: false
           schema:
-            $ref: '#/components/schemas/PersonHeight'
+            $ref: "#/components/schemas/PersonHeight"
             example: 180
         - name: birthday_min
           in: query
@@ -117,7 +117,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/ZodiacSign'
+              $ref: "#/components/schemas/ZodiacSign"
         - name: faculty
           in: query
           description: Faculties to search. Logical or.
@@ -127,17 +127,17 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/Faculty'
+              $ref: "#/components/schemas/Faculty"
         - name: latitude
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/Latitude'
+            $ref: "#/components/schemas/Latitude"
         - name: longitude
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/Longitude'
+            $ref: "#/components/schemas/Longitude"
         - name: radius_meters
           in: query
           required: false
@@ -151,13 +151,13 @@ paths:
           description: Minimum birthday of a person
           required: false
           schema:
-            $ref: '#/components/schemas/UpdateMoment'
+            $ref: "#/components/schemas/UpdateMoment"
         - name: updated_max
           in: query
           description: Maximum birthday of a person
           required: false
           schema:
-            $ref: '#/components/schemas/UpdateMoment'
+            $ref: "#/components/schemas/UpdateMoment"
       responses:
         200:
           description: OK
@@ -278,13 +278,13 @@ components:
           maxItems: 8
           uniqueItems: true
         height:
-          $ref: '#/components/schemas/PersonHeight'
+          $ref: "#/components/schemas/PersonHeight"
         birthday:
           type: string
           description: A date when person was born
           format: date
         faculty:
-          $ref: '#/components/schemas/Faculty'
+          $ref: "#/components/schemas/Faculty"
         location:
           type: object
           properties:
@@ -297,9 +297,9 @@ components:
               type: object
               properties:
                 latitude:
-                  $ref: '#/components/schemas/Latitude'
+                  $ref: "#/components/schemas/Latitude"
                 longitude:
-                  $ref: '#/components/schemas/Longitude'
+                  $ref: "#/components/schemas/Longitude"
               required:
                 - latitude
                 - longitude
@@ -319,7 +319,7 @@ components:
             id:
               $ref: "#/components/schemas/PersonId"
             zodiac:
-              $ref: '#/components/schemas/ZodiacSign'
+              $ref: "#/components/schemas/ZodiacSign"
             update_moment:
               $ref: "#/components/schemas/UpdateMoment"
           required:
@@ -346,11 +346,11 @@ components:
       type: string
       description: Where does a person study
       enum:
-        - csr     # Control Systems and Robotics
-        - secs    # Software Engineering and Computer Systems
-        - itp     # Information Technologies and Programming
-        - it      # Infocommunication Technologies
-        - phys    # Physics
+        - csr # Control Systems and Robotics
+        - secs # Software Engineering and Computer Systems
+        - itp # Information Technologies and Programming
+        - it # Infocommunication Technologies
+        - phys # Physics
         - infchem # Infochemistry
         - biotech # Biotechnologies
     Latitude:
@@ -417,7 +417,7 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/TopicId'
+          $ref: "#/components/schemas/TopicId"
         name:
           type: string
           description: A unique name of a topic
@@ -450,3 +450,23 @@ components:
       minimum: 1
       maximum: 16
       example: 4
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: HTTP Status Code
+          example: 400
+        status:
+          type: string
+          description: HTTP Status Description
+          example: Bad Request
+        message:
+          type: string
+          description: Detailed Message
+          example: Username must contain only latin letter
+      required:
+        - code
+        - status
+        - message
