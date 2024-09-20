@@ -21,8 +21,143 @@ paths:
   /people:
     get:
       tags: [People]
-      summary: Get all people list
-      description: Returns list of all people
+      summary: Get filtered people list
+      description: Returns list of people, filtered by given conditions
+      parameters:
+        - name: offset
+          in: query
+          description: Count of skipped elements from the head of a result list
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            example: 32
+        - name: limit
+          in: query
+          description: Maximum count of elements to return
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            example: 8
+        - name: first_name
+          in: query
+          description: Pattern for a first name
+          required: false
+          schema:
+            $ref: '#/components/schemas/RegexPattern'
+        - name: last_name
+          in: query
+          description: Pattern for a last name
+          required: false
+          schema:
+            $ref: '#/components/schemas/RegexPattern'
+        - name: pictures_count_min
+          in: query
+          description: Minimum count of pictures in profile
+          required: false
+          schema:
+            $ref: '#/components/schemas/PicturesCount'
+          example: 2
+        - name: pictures_count_max
+          in: query
+          description: Maximum count of pictures in profile
+          required: false
+          schema:
+            $ref: '#/components/schemas/PicturesCount'
+          example: 4
+        - name: topic_id
+          in: query
+          description: IDs of topics interested for person. Logical or.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TopicId'
+        - name: height_min
+          in: query
+          description: Minimum height of a person
+          required: false
+          schema:
+            $ref: '#/components/schemas/PersonHeight'
+            example: 160
+        - name: height_max
+          in: query
+          description: Maximum height of a person
+          required: false
+          schema:
+            $ref: '#/components/schemas/PersonHeight'
+            example: 180
+        - name: birthday_min
+          in: query
+          description: Minimum birthday of a person
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 1990-01-01
+        - name: birthday_max
+          in: query
+          description: Maximum birthday of a person
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 2000-12-31
+        - name: zodiac
+          in: query
+          description: Zodiac signs to search. Logical or.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ZodiacSign'
+        - name: faculty
+          in: query
+          description: Faculties to search. Logical or.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Faculty'
+        - name: latitude
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Latitude'
+        - name: longitude
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Longitude'
+        - name: radius_meters
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Radius of circle with center at (latitude, longitude)
+            format: int32
+            example: 1500
+        - name: updated_min
+          in: query
+          description: Minimum birthday of a person
+          required: false
+          schema:
+            $ref: '#/components/schemas/UpdateMoment'
+        - name: updated_max
+          in: query
+          description: Maximum birthday of a person
+          required: false
+          schema:
+            $ref: '#/components/schemas/UpdateMoment'
       responses:
         200:
           description: OK
@@ -111,8 +246,15 @@ components:
     PersonName:
       type: string
       description: Either first or last person name
-      pattern: ^[a-z ,.'-]{2, 32}$
+      pattern: ^[a-z,.'-]{2, 32}$
       example: Ivan
+    PersonHeight:
+      type: integer
+      description: A height of the person in centimeters
+      format: int32
+      minimum: 50
+      maximum: 280
+      example: 172
     PersonDraft:
       type: object
       description: A draft of a person
@@ -136,27 +278,13 @@ components:
           maxItems: 8
           uniqueItems: true
         height:
-          type: integer
-          description: A height of the person in centimeters
-          format: int32
-          minimum: 50
-          maximum: 280
-          example: 172
+          $ref: '#/components/schemas/PersonHeight'
         birthday:
           type: string
           description: A date when person was born
           format: date
         faculty:
-          type: string
-          description: Where does a person study
-          enum:
-            - Control Systems and Robotics
-            - Software Engineering and Computer Systems
-            - Information Technologies and Programming
-            - Infocommunication Technologies
-            - Physics
-            - Infochemistry
-            - Biotechnologies
+          $ref: '#/components/schemas/Faculty'
         location:
           type: object
           properties:
@@ -169,19 +297,9 @@ components:
               type: object
               properties:
                 latitude:
-                  type: number
-                  description: The north-south position on the Earth surface
-                  format: double
-                  minimum: -90
-                  maximum: 90
-                  example: 59.957478
+                  $ref: '#/components/schemas/Latitude'
                 longitude:
-                  type: number
-                  description: The east-west position on the Earth surface
-                  format: double
-                  minimum: 0
-                  maximum: 180
-                  example: 30.308014
+                  $ref: '#/components/schemas/Longitude'
               required:
                 - latitude
                 - longitude
@@ -200,28 +318,55 @@ components:
           properties:
             id:
               $ref: "#/components/schemas/PersonId"
-            zodiac_sign:
-              type: string
-              description: Astrological sign, caclulated based on a birthday
-              enum:
-                - aries
-                - taurus
-                - gemini
-                - cancer
-                - leo
-                - virgo
-                - libra
-                - scorpio
-                - sagittarius
-                - capricorn
-                - aquarius
-                - pisces
-            creation_moment:
+            zodiac:
+              $ref: '#/components/schemas/ZodiacSign'
+            update_moment:
               $ref: "#/components/schemas/UpdateMoment"
           required:
             - id
-            - creation_moment
+            - update_moment
         - $ref: "#/components/schemas/PersonDraft"
+    ZodiacSign:
+      type: string
+      description: Astrological sign, caclulated based on a birthday
+      enum:
+        - aries
+        - taurus
+        - gemini
+        - cancer
+        - leo
+        - virgo
+        - libra
+        - scorpio
+        - sagittarius
+        - capricorn
+        - aquarius
+        - pisces
+    Faculty:
+      type: string
+      description: Where does a person study
+      enum:
+        - csr     # Control Systems and Robotics
+        - secs    # Software Engineering and Computer Systems
+        - itp     # Information Technologies and Programming
+        - it      # Infocommunication Technologies
+        - phys    # Physics
+        - infchem # Infochemistry
+        - biotech # Biotechnologies
+    Latitude:
+      type: number
+      description: The north-south position on the Earth surface
+      format: double
+      minimum: -90
+      maximum: 90
+      example: 59.957478
+    Longitude:
+      type: number
+      description: The east-west position on the Earth surface
+      format: double
+      minimum: 0
+      maximum: 180
+      example: 30.308014
     PictureUrl:
       type: string
       description: An URL of picture for downloading
@@ -262,15 +407,17 @@ components:
       required:
         - topic
         - level
+    TopicId:
+      type: integer
+      description: A unique key of a topic
+      format: int64
+      minimum: 1
+      example: 12345678
     Topic:
       type: object
       properties:
         id:
-          type: integer
-          description: A unique key of a topic
-          format: int64
-          minimum: 1
-          example: 12345678
+          $ref: '#/components/schemas/TopicId'
         name:
           type: string
           description: A unique name of a topic
@@ -293,3 +440,13 @@ components:
       format: date-time
       description: A moment when this object was updated, autogenerated
       example: 2024-04-14T13:32:42Z
+    RegexPattern:
+      type: string
+      example: Va.ya
+      pattern: ^[A-Za-z.?*+]{1, 64}$
+    PicturesCount:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 16
+      example: 4
