@@ -5,7 +5,7 @@ info:
 servers:
   - url: /api/v1
 security:
-  - bearerAuth: []
+  - bearerAuth: [USER, ADMIN]
 paths:
   /monitoring/healthcheck:
     get:
@@ -172,7 +172,18 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/components/schemas/PersonSortingKey"
+              type: string
+              enum:
+                - first_name
+                - last_name
+                - height
+                - birthday
+                - updated
+                - -first_name
+                - -last_name
+                - -height
+                - -birthday
+                - -updated
             uniqueItems: true
       responses:
         200:
@@ -285,6 +296,8 @@ paths:
       tags: [People]
       summary: Delete person by id
       description: Deletes a person with a given id forever?
+      security:
+        - bearerAuth: [ADMIN]
       parameters:
         - name: person_id
           in: path
@@ -445,19 +458,6 @@ components:
             - id
             - update_moment
         - $ref: "#/components/schemas/PersonDraft"
-    PersonSortingKey:
-      type: string
-      enum:
-        - first_name
-        - last_name
-        - height
-        - birthday
-        - updated
-        - -first_name
-        - -last_name
-        - -height
-        - -birthday
-        - -updated
     ZodiacSign:
       type: string
       description: Astrological sign, caclulated based on a birthday
