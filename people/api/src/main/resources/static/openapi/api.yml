@@ -21,6 +21,18 @@ paths:
               schema:
                 type: string
                 example: ok
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /people:
     get:
       tags: [People]
@@ -213,6 +225,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
     post:
       tags: [People]
       summary: Create a person
@@ -246,6 +270,18 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         401:
           description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
@@ -292,6 +328,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
     delete:
       tags: [People]
       summary: Delete person by id
@@ -315,6 +363,18 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         403:
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
@@ -362,6 +422,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
 components:
   securitySchemes:
     bearerAuth:
@@ -391,9 +463,9 @@ components:
       type: object
       description: A draft of a person
       properties:
-        first_name:
+        firstName:
           $ref: "#/components/schemas/PersonName"
-        last_name:
+        lastName:
           $ref: "#/components/schemas/PersonName"
         pictures:
           type: array
@@ -439,8 +511,8 @@ components:
             - name
             - coordinates
       required:
-        - first_name
-        - last_name
+        - firstName
+        - lastName
         - pictures
         - interests
     Person:
@@ -452,11 +524,11 @@ components:
               $ref: "#/components/schemas/PersonId"
             zodiac:
               $ref: "#/components/schemas/ZodiacSign"
-            update_moment:
+            updateMoment:
               $ref: "#/components/schemas/UpdateMoment"
           required:
             - id
-            - update_moment
+            - updateMoment
         - $ref: "#/components/schemas/PersonDraft"
     ZodiacSign:
       type: string
