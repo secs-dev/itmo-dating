@@ -21,6 +21,18 @@ paths:
               schema:
                 type: string
                 example: ok
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /suggestions:
     get:
       tags: [Suggestions]
@@ -52,6 +64,18 @@ paths:
           description: No authentication
           content:
             application/josn:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
   /people/{target_id}/attitudes:
@@ -98,6 +122,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /people/{target_id}/attitudes/{attitude_kind}:
     post:
       tags: [SOA]
@@ -137,6 +173,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /attitudes:
     delete:
       tags: [SOA]
@@ -161,6 +209,18 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         404:
           description: Person is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
@@ -204,6 +264,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /statistics/attitudes:
     get:
       tags: [SOA]
@@ -221,7 +293,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    person_id:
+                    personId:
                       $ref: "#/components/schemas/PersonId"
                     likes:
                       type: integer
@@ -234,7 +306,7 @@ paths:
                       format: int32
                       minimum: 0
                   required:
-                    - person_id
+                    - personId
                     - likes
                     - skips
                 uniqueItems: true
@@ -246,6 +318,18 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         403:
           description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
