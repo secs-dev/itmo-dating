@@ -92,6 +92,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+  /people/{target_id}/attitudes/{attitude_kind}:
+    post:
+      tags: [SOA]
+      summary: Like or skip a suggestion
+      description: |
+        Does the same as /people/{target_id}/attitudes.
+        Exists just to defend SOA labs.
+      parameters:
+        - name: target_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+        - name: attitude_kind
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/AttitudeKind"
+      responses:
+        204:
+          description: Attitude was taken into account
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Person is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /people/{person_id}/matches:
     get:
       tags: [Suggestions]
@@ -131,6 +164,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+  /statistics/attitudes:
+    get:
+      tags: [SOA]
+      summary: Get attitudes statistics
+      description: Returns like/skip counters for each person
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    person_id:
+                      $ref: "#/components/schemas/PersonId"
+                    likes:
+                      type: integer
+                      description: Count of people liked by the person
+                      format: int32
+                      minimum: 0
+                    skips:
+                      type: integer
+                      description: Count of people skipped by the person
+                      format: int32
+                      minimum: 0
+                  required:
+                    - person_id
+                    - likes
+                    - skips
+                uniqueItems: true
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
 components:
   securitySchemes:
     bearerAuth:
@@ -144,14 +221,16 @@ components:
       format: int64
       minimum: 1
       example: 12345678
+    AttitudeKind:
+      type: string
+      enum:
+        - like
+        - skip
     Attitude:
       type: object
       properties:
-        verdict:
-          type: string
-          enum:
-            - like
-            - skip
+        kind:
+          $ref: "#/components/schemas/AttitudeKind"
       required:
         - verdict
     GeneralError:
