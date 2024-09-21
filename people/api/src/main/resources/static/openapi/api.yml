@@ -90,14 +90,14 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/PersonHeight"
-            example: 160
+          example: 160
         - name: height_max
           in: query
           description: Maximum height of a person
           required: false
           schema:
             $ref: "#/components/schemas/PersonHeight"
-            example: 180
+          example: 180
         - name: birthday_min
           in: query
           description: Minimum birthday of a person
