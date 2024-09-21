@@ -27,6 +27,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
         default:
           description: Unexpected error
           content:
@@ -68,6 +74,12 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         500:
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
           content:
             application/json:
               schema:
@@ -128,6 +140,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
         default:
           description: Unexpected error
           content:
@@ -179,6 +197,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
         default:
           description: Unexpected error
           content:
@@ -215,6 +239,12 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         500:
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
           content:
             application/json:
               schema:
@@ -266,6 +296,12 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         500:
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
           content:
             application/json:
               schema:
@@ -324,6 +360,12 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         500:
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        503:
+          description: Service unavailable
           content:
             application/json:
               schema:
