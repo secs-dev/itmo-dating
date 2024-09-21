@@ -92,6 +92,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+        409:
+          description: Attitude was already taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /people/{target_id}/attitudes/{attitude_kind}:
     post:
       tags: [SOA]
@@ -121,6 +127,12 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         404:
           description: Person is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        409:
+          description: Attitude was already taken
           content:
             application/json:
               schema:

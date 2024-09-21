@@ -196,6 +196,14 @@ paths:
       tags: [People]
       summary: Create a person
       description: Creates a person with given parameters
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000
       requestBody:
         required: true
         content:
@@ -217,6 +225,12 @@ paths:
                 $ref: "#/components/schemas/GeneralError"
         401:
           description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        409:
+          description: If person was already created (Idempotency-Key duplicated)
           content:
             application/json:
               schema:
