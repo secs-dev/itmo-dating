@@ -125,6 +125,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+  /attitudes:
+    delete:
+      tags: [SOA]
+      summary: Reset attitudes
+      description: Removes attitudes from the given person
+      parameters:
+        - name: source_id
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+      responses:
+        204:
+          description: Attitudes was reset
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Person is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /people/{person_id}/matches:
     get:
       tags: [Suggestions]
