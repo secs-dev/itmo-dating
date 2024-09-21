@@ -4,12 +4,15 @@ info:
   version: 0.0.1
 servers:
   - url: /api/v1
+security:
+  - bearerAuth: []
 paths:
-  /monitoring/status:
+  /monitoring/healthcheck:
     get:
       tags: [Monitoring]
       summary: Checks if service is alive
       description: Returns 'ok', if service is alive, else we will cry
+      security: []
       responses:
         200:
           description: OK
@@ -31,6 +34,7 @@ paths:
           schema:
             type: integer
             format: int64
+            default: 0
             minimum: 0
             example: 32
         - name: limit
@@ -40,7 +44,9 @@ paths:
           schema:
             type: integer
             format: int64
+            default: 20
             minimum: 1
+            maximum: 1000
             example: 8
         - name: first_name
           in: query
@@ -138,23 +144,23 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/Longitude"
-        - name: radius_meters
+        - name: radius
           in: query
           required: false
           schema:
             type: integer
-            description: Radius of circle with center at (latitude, longitude)
+            description: Radius of circle in meters with center at (latitude, longitude)
             format: int32
             example: 1500
         - name: updated_min
           in: query
-          description: Minimum birthday of a person
+          description: Minimal updated moment
           required: false
           schema:
             $ref: "#/components/schemas/UpdateMoment"
         - name: updated_max
           in: query
-          description: Maximum birthday of a person
+          description: Maximal updated moment
           required: false
           schema:
             $ref: "#/components/schemas/UpdateMoment"
@@ -168,6 +174,24 @@ paths:
                 items:
                   $ref: "#/components/schemas/Person"
                 uniqueItems: true
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
     post:
       tags: [People]
       summary: Create a person
@@ -185,6 +209,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Person"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
   /people/{person_id}:
     get:
       tags: [People]
@@ -203,6 +239,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Person"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
     delete:
       tags: [People]
       summary: Delete person by id
@@ -216,6 +270,18 @@ paths:
       responses:
         204:
           description: Person was deleted
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
     patch:
       tags: [People]
       summary: Update a person
@@ -235,7 +301,36 @@ paths:
       responses:
         204:
           description: Person was updated
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     PersonId:
       type: integer
@@ -246,7 +341,7 @@ components:
     PersonName:
       type: string
       description: Either first or last person name
-      pattern: ^[a-z,.'-]{2, 32}$
+      pattern: ^[A-Za-z,.'-]{2, 32}$
       example: Ivan
     PersonHeight:
       type: integer
@@ -291,7 +386,7 @@ components:
             name:
               type: string
               description: User readable location name
-              pattern: ^[A-Za-z ,.-]{3, 128}$
+              pattern: ^[A-Za-z ,.-]{3,128}$
               example: ITMO University, Kronverkskiy Avenue
             coordinates:
               type: object
@@ -421,7 +516,7 @@ components:
         name:
           type: string
           description: A unique name of a topic
-          pattern: ^[a-z]{3, 32}$
+          pattern: ^[a-z]{3,32}$
           example: Programming
         icon:
           $ref: "#/components/schemas/Picture"
@@ -443,7 +538,7 @@ components:
     RegexPattern:
       type: string
       example: Va.ya
-      pattern: ^[A-Za-z.?*+]{1, 64}$
+      pattern: ^[A-Za-z.?*+]{1,64}$
     PicturesCount:
       type: integer
       format: int32
