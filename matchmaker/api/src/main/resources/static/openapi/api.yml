@@ -1,46 +1,176 @@
----
-  swagger: "2.0"
-  info: 
-    version: "1.0.0"
-    title: "Swagger Petstore: Matchmaker"
-    description: "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification"
-    termsOfService: "http://swagger.io/terms/"
-    contact: 
-      name: "Swagger API Team"
-    license: 
-      name: "MIT"
-  host: "petstore.swagger.io"
-  basePath: "/api"
-  schemes: 
-    - "http"
-  consumes: 
-    - "application/json"
-  produces: 
-    - "application/json"
-  paths: 
-    /pets: 
-      get: 
-        description: "Returns all pets from the system that the user has access to"
-        produces: 
-          - "application/json"
-        responses: 
-          "200":
-            description: "A list of pets."
-            schema: 
-              type: "array"
-              items: 
-                $ref: "#/definitions/Pet"
-  definitions: 
-    Pet: 
-      type: "object"
-      required: 
-        - "id"
-        - "name"
-      properties: 
-        id: 
-          type: "integer"
-          format: "int64"
-        name: 
-          type: "string"
-        tag: 
-          type: "string"
+openapi: 3.0.3
+info:
+  title: ITMO Dating Matchmaker
+  version: 0.0.1
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: [USER, ADMIN]
+paths:
+  /monitoring/healthcheck:
+    get:
+      tags: [Monitoring]
+      summary: Checks if service is alive
+      description: Returns 'ok', if service is alive, else we will cry
+      security: []
+      responses:
+        200:
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                example: ok
+  /suggestions:
+    get:
+      tags: [Suggestions]
+      summary: Get suggestions
+      description: Returns people suggested for a given person
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum count of elements to return
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 20
+            minimum: 1
+            maximum: 50
+            example: 8
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonId"
+                uniqueItems: true
+        401:
+          description: No authentication
+          content:
+            application/josn:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+  /people/{target_id}/attitudes:
+    post:
+      tags: [Suggestions]
+      summary: Like or skip a suggestion
+      description: Source id is taken from an auth token
+      parameters:
+        - name: target_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attitude"
+      responses:
+        204:
+          description: Attitude was taken into account
+        400:
+          description: Source already posted an attitude to target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Person is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+  /people/{person_id}/matches:
+    get:
+      tags: [Suggestions]
+      summary: Get person matches
+      description: Returns people who mutually liked given person
+      parameters:
+        - name: person_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonId"
+                uniqueItems: true
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Person is not found. Error is available only with admin rights
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PersonId:
+      type: integer
+      description: A unique key of a person, autogenerated
+      format: int64
+      minimum: 1
+      example: 12345678
+    Attitude:
+      type: object
+      properties:
+        verdict:
+          type: string
+          enum:
+            - like
+            - skip
+      required:
+        - verdict
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: HTTP Status Code
+          example: 400
+        status:
+          type: string
+          description: HTTP Status Description
+          example: Bad Request
+        message:
+          type: string
+          description: Detailed Message
+          example: Username must contain only latin letter
+      required:
+        - code
+        - status
+        - message

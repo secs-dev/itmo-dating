@@ -1,46 +1,567 @@
----
-  swagger: "2.0"
-  info: 
-    version: "1.0.0"
-    title: "Swagger Petstore: People"
-    description: "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification"
-    termsOfService: "http://swagger.io/terms/"
-    contact: 
-      name: "Swagger API Team"
-    license: 
-      name: "MIT"
-  host: "petstore.swagger.io"
-  basePath: "/api"
-  schemes: 
-    - "http"
-  consumes: 
-    - "application/json"
-  produces: 
-    - "application/json"
-  paths: 
-    /pets: 
-      get: 
-        description: "Returns all pets from the system that the user has access to"
-        produces: 
-          - "application/json"
-        responses: 
-          "200":
-            description: "A list of pets."
-            schema: 
-              type: "array"
-              items: 
-                $ref: "#/definitions/Pet"
-  definitions: 
-    Pet: 
-      type: "object"
-      required: 
-        - "id"
-        - "name"
-      properties: 
-        id: 
-          type: "integer"
-          format: "int64"
-        name: 
-          type: "string"
-        tag: 
-          type: "string"
+openapi: 3.0.3
+info:
+  title: ITMO Dating People
+  version: 0.0.1
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /monitoring/healthcheck:
+    get:
+      tags: [Monitoring]
+      summary: Checks if service is alive
+      description: Returns 'ok', if service is alive, else we will cry
+      security: []
+      responses:
+        200:
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                example: ok
+  /people:
+    get:
+      tags: [People]
+      summary: Get filtered people list
+      description: Returns list of people, filtered by given conditions
+      parameters:
+        - name: offset
+          in: query
+          description: Count of skipped elements from the head of a result list
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
+            minimum: 0
+            example: 32
+        - name: limit
+          in: query
+          description: Maximum count of elements to return
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 20
+            minimum: 1
+            maximum: 1000
+            example: 8
+        - name: first_name
+          in: query
+          description: Pattern for a first name
+          required: false
+          schema:
+            $ref: "#/components/schemas/RegexPattern"
+        - name: last_name
+          in: query
+          description: Pattern for a last name
+          required: false
+          schema:
+            $ref: "#/components/schemas/RegexPattern"
+        - name: pictures_count_min
+          in: query
+          description: Minimum count of pictures in profile
+          required: false
+          schema:
+            $ref: "#/components/schemas/PicturesCount"
+          example: 2
+        - name: pictures_count_max
+          in: query
+          description: Maximum count of pictures in profile
+          required: false
+          schema:
+            $ref: "#/components/schemas/PicturesCount"
+          example: 4
+        - name: topic_id
+          in: query
+          description: IDs of topics interested for person. Logical or.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/TopicId"
+        - name: height_min
+          in: query
+          description: Minimum height of a person
+          required: false
+          schema:
+            $ref: "#/components/schemas/PersonHeight"
+            example: 160
+        - name: height_max
+          in: query
+          description: Maximum height of a person
+          required: false
+          schema:
+            $ref: "#/components/schemas/PersonHeight"
+            example: 180
+        - name: birthday_min
+          in: query
+          description: Minimum birthday of a person
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 1990-01-01
+        - name: birthday_max
+          in: query
+          description: Maximum birthday of a person
+          required: false
+          schema:
+            type: string
+            format: date
+            example: 2000-12-31
+        - name: zodiac
+          in: query
+          description: Zodiac signs to search. Logical or.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ZodiacSign"
+        - name: faculty
+          in: query
+          description: Faculties to search. Logical or.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Faculty"
+        - name: latitude
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/Latitude"
+        - name: longitude
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/Longitude"
+        - name: radius
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Radius of circle in meters with center at (latitude, longitude)
+            format: int32
+            example: 1500
+        - name: updated_min
+          in: query
+          description: Minimal updated moment
+          required: false
+          schema:
+            $ref: "#/components/schemas/UpdateMoment"
+        - name: updated_max
+          in: query
+          description: Maximal updated moment
+          required: false
+          schema:
+            $ref: "#/components/schemas/UpdateMoment"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+                uniqueItems: true
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+    post:
+      tags: [People]
+      summary: Create a person
+      description: Creates a person with given parameters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonDraft"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+  /people/{person_id}:
+    get:
+      tags: [People]
+      summary: Get person by id
+      description: Returns a person with a given id
+      parameters:
+        - name: person_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Person"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+    delete:
+      tags: [People]
+      summary: Delete person by id
+      description: Deletes a person with a given id forever?
+      parameters:
+        - name: person_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+      responses:
+        204:
+          description: Person was deleted
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+    patch:
+      tags: [People]
+      summary: Update a person
+      description: Updates a person with a given id
+      parameters:
+        - name: person_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PersonId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PersonDraft"
+      responses:
+        204:
+          description: Person was updated
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        401:
+          description: No authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PersonId:
+      type: integer
+      description: A unique key of a person, autogenerated
+      format: int64
+      minimum: 1
+      example: 12345678
+    PersonName:
+      type: string
+      description: Either first or last person name
+      pattern: ^[A-Za-z,.'-]{2, 32}$
+      example: Ivan
+    PersonHeight:
+      type: integer
+      description: A height of the person in centimeters
+      format: int32
+      minimum: 50
+      maximum: 280
+      example: 172
+    PersonDraft:
+      type: object
+      description: A draft of a person
+      properties:
+        first_name:
+          $ref: "#/components/schemas/PersonName"
+        last_name:
+          $ref: "#/components/schemas/PersonName"
+        pictures:
+          type: array
+          items:
+            $ref: "#/components/schemas/Picture"
+          minItems: 1
+          maxItems: 8
+          uniqueItems: true
+        interests:
+          type: array
+          items:
+            $ref: "#/components/schemas/Interest"
+          minItems: 0
+          maxItems: 8
+          uniqueItems: true
+        height:
+          $ref: "#/components/schemas/PersonHeight"
+        birthday:
+          type: string
+          description: A date when person was born
+          format: date
+        faculty:
+          $ref: "#/components/schemas/Faculty"
+        location:
+          type: object
+          properties:
+            name:
+              type: string
+              description: User readable location name
+              pattern: ^[A-Za-z ,.-]{3,128}$
+              example: ITMO University, Kronverkskiy Avenue
+            coordinates:
+              type: object
+              properties:
+                latitude:
+                  $ref: "#/components/schemas/Latitude"
+                longitude:
+                  $ref: "#/components/schemas/Longitude"
+              required:
+                - latitude
+                - longitude
+          required:
+            - name
+            - coordinates
+      required:
+        - first_name
+        - last_name
+        - pictures
+        - interests
+    Person:
+      description: A person, registered in a system
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/PersonId"
+            zodiac:
+              $ref: "#/components/schemas/ZodiacSign"
+            update_moment:
+              $ref: "#/components/schemas/UpdateMoment"
+          required:
+            - id
+            - update_moment
+        - $ref: "#/components/schemas/PersonDraft"
+    ZodiacSign:
+      type: string
+      description: Astrological sign, caclulated based on a birthday
+      enum:
+        - aries
+        - taurus
+        - gemini
+        - cancer
+        - leo
+        - virgo
+        - libra
+        - scorpio
+        - sagittarius
+        - capricorn
+        - aquarius
+        - pisces
+    Faculty:
+      type: string
+      description: Where does a person study
+      enum:
+        - csr # Control Systems and Robotics
+        - secs # Software Engineering and Computer Systems
+        - itp # Information Technologies and Programming
+        - it # Infocommunication Technologies
+        - phys # Physics
+        - infchem # Infochemistry
+        - biotech # Biotechnologies
+    Latitude:
+      type: number
+      description: The north-south position on the Earth surface
+      format: double
+      minimum: -90
+      maximum: 90
+      example: 59.957478
+    Longitude:
+      type: number
+      description: The east-west position on the Earth surface
+      format: double
+      minimum: 0
+      maximum: 180
+      example: 30.308014
+    PictureUrl:
+      type: string
+      description: An URL of picture for downloading
+      format: uri
+      example: https://avatars.githubusercontent.com/u/53015676
+    Picture:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: A unique key of a picture
+          format: int64
+          minimum: 1
+          example: 12345678
+        small:
+          $ref: "#/components/schemas/PictureUrl"
+        medium:
+          $ref: "#/components/schemas/PictureUrl"
+        large:
+          $ref: "#/components/schemas/PictureUrl"
+      required:
+        - id
+      anyOf:
+        - required: [small]
+        - required: [medium]
+        - required: [large]
+    Interest:
+      type: object
+      properties:
+        topic:
+          $ref: "#/components/schemas/Topic"
+        level:
+          type: integer
+          description: A level of interest
+          format: int32
+          minimum: 1
+          maximum: 5
+      required:
+        - topic
+        - level
+    TopicId:
+      type: integer
+      description: A unique key of a topic
+      format: int64
+      minimum: 1
+      example: 12345678
+    Topic:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TopicId"
+        name:
+          type: string
+          description: A unique name of a topic
+          pattern: ^[a-z]{3,32}$
+          example: Programming
+        icon:
+          $ref: "#/components/schemas/Picture"
+        color:
+          type: string
+          description: An RGB color in the hex format
+          pattern: ^#([A-F0-9]{6}$
+          example: "#6495ED"
+      required:
+        - id
+        - name
+        - icon
+        - color
+    UpdateMoment:
+      type: string
+      format: date-time
+      description: A moment when this object was updated, autogenerated
+      example: 2024-04-14T13:32:42Z
+    RegexPattern:
+      type: string
+      example: Va.ya
+      pattern: ^[A-Za-z.?*+]{1,64}$
+    PicturesCount:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 16
+      example: 4
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: HTTP Status Code
+          example: 400
+        status:
+          type: string
+          description: HTTP Status Description
+          example: Bad Request
+        message:
+          type: string
+          description: Detailed Message
+          example: Username must contain only latin letter
+      required:
+        - code
+        - status
+        - message
