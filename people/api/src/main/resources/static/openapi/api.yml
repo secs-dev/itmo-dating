@@ -5,7 +5,7 @@ info:
 servers:
   - url: /api/v1
 security:
-  - bearerAuth: []
+  - bearerAuth: [USER, ADMIN]
 paths:
   /monitoring/healthcheck:
     get:
@@ -285,6 +285,8 @@ paths:
       tags: [People]
       summary: Delete person by id
       description: Deletes a person with a given id forever?
+      security:
+        - bearerAuth: [ADMIN]
       parameters:
         - name: person_id
           in: path

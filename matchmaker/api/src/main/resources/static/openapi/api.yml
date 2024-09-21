@@ -142,6 +142,8 @@ paths:
       tags: [SOA]
       summary: Reset attitudes
       description: Removes attitudes from the given person
+      security:
+        - bearerAuth: [ADMIN]
       parameters:
         - name: source_id
           in: query
@@ -207,6 +209,8 @@ paths:
       tags: [SOA]
       summary: Get attitudes statistics
       description: Returns like/skip counters for each person
+      security:
+        - bearerAuth: [ADMIN]
       responses:
         200:
           description: OK
