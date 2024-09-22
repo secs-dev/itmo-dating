@@ -22,23 +22,11 @@ paths:
                 type: string
                 example: ok
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /suggestions:
     get:
       tags: [Suggestions]
@@ -67,29 +55,13 @@ paths:
                   $ref: "#/components/schemas/PersonId"
                 uniqueItems: true
         401:
-          description: No authentication
-          content:
-            application/josn:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /people/{target_id}/attitudes:
     post:
       tags: [Suggestions]
@@ -117,11 +89,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         404:
           description: Person is not found
           content:
@@ -135,23 +103,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /people/{target_id}/attitudes/{attitude_kind}:
     post:
       tags: [SOA]
@@ -174,11 +130,7 @@ paths:
         204:
           description: Attitude was taken into account
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         404:
           description: Person is not found
           content:
@@ -192,23 +144,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /attitudes:
     delete:
       tags: [SOA]
@@ -226,11 +166,7 @@ paths:
         204:
           description: Attitudes was reset
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         404:
           description: Person is not found
           content:
@@ -238,23 +174,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /people/{person_id}/matches:
     get:
       tags: [Suggestions]
@@ -277,17 +201,9 @@ paths:
                   $ref: "#/components/schemas/PersonId"
                 uniqueItems: true
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         404:
           description: Person is not found. Error is available only with admin rights
           content:
@@ -295,23 +211,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /statistics/attitudes:
     get:
       tags: [SOA]
@@ -347,35 +251,15 @@ paths:
                     - skips
                 uniqueItems: true
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
 components:
   securitySchemes:
     bearerAuth:
@@ -421,3 +305,56 @@ components:
         - code
         - status
         - message
+  responses:
+    "200":
+      description: OK
+    "204":
+      description: No Content
+    "400":
+      description: Invalid arguments
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "401":
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "403":
+      description: Access forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "409":
+      description: Duplicate request causing a conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "503":
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    Unexpected:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
