@@ -62,7 +62,7 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
-  /people/{target_id}/attitudes/incoming/{attitude_kind}:
+  /people/{person_id}/attitudes/incoming/{attitude_kind}:
     post:
       tags: [Suggestions]
       summary: Like or skip a suggestion
@@ -70,11 +70,7 @@ paths:
         Does the same as /people/{target_id}/attitudes.
         Exists just to defend SOA labs.
       parameters:
-        - name: target_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
         - name: attitude_kind
           in: path
           required: true
@@ -139,11 +135,7 @@ paths:
       summary: Get person matches
       description: Returns people who mutually liked given person
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       responses:
         200:
           description: OK
@@ -220,6 +212,13 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    PersonIdPath:
+      name: person_id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/PersonId"
   schemas:
     PersonId:
       type: integer
