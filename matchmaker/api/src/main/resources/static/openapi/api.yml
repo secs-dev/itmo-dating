@@ -62,46 +62,6 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
-  /people/{target_id}/attitudes/incoming:
-    post:
-      tags: [Suggestions]
-      summary: Like or skip a suggestion
-      description: Source id is taken from an auth token
-      parameters:
-        - name: target_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Attitude"
-      responses:
-        204:
-          description: Attitude was taken into account
-        401:
-          $ref: "#/components/responses/401"
-        404:
-          description: Person is not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        409:
-          description: Attitude was already taken
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        500:
-          $ref: "#/components/responses/500"
-        503:
-          $ref: "#/components/responses/503"
-        default:
-          $ref: "#/components/responses/Unexpected"
   /people/{target_id}/attitudes/incoming/{attitude_kind}:
     post:
       tags: [Suggestions]
