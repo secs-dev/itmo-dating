@@ -44,6 +44,8 @@ paths:
       tags: [People]
       summary: Get filtered people list
       description: Returns list of people, filtered by given conditions
+      security:
+        - bearerAuth: [ADMIN]
       parameters:
         - name: offset
           in: query
@@ -214,13 +216,13 @@ paths:
                   $ref: "#/components/schemas/Person"
                 uniqueItems: true
         400:
-          description: Bad request
+          description: Bad request. Some filter name or value is incorrect.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         401:
-          description: No authentication
+          description: No authentication. User was not recognized.
           content:
             application/json:
               schema:
