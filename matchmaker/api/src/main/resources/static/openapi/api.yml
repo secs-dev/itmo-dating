@@ -104,7 +104,7 @@ paths:
           $ref: "#/components/responses/Unexpected"
   /people/{target_id}/attitudes/incoming/{attitude_kind}:
     post:
-      tags: [SOA]
+      tags: [Suggestions]
       summary: Like or skip a suggestion
       description: |
         Does the same as /people/{target_id}/attitudes.
@@ -145,7 +145,7 @@ paths:
           $ref: "#/components/responses/Unexpected"
   /attitudes:
     delete:
-      tags: [SOA]
+      tags: [Suggestions]
       summary: Reset attitudes
       description: Removes attitudes from the given person
       security:
@@ -212,7 +212,7 @@ paths:
           $ref: "#/components/responses/Unexpected"
   /statistics/attitudes:
     get:
-      tags: [SOA]
+      tags: [Statistics]
       summary: Get attitudes statistics
       description: Returns like/skip counters for each person
       security:
