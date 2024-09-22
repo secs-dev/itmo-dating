@@ -62,7 +62,7 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
-  /people/{target_id}/attitudes:
+  /people/{target_id}/attitudes/incoming:
     post:
       tags: [Suggestions]
       summary: Like or skip a suggestion
@@ -102,7 +102,7 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
-  /people/{target_id}/attitudes/{attitude_kind}:
+  /people/{target_id}/attitudes/incoming/{attitude_kind}:
     post:
       tags: [SOA]
       summary: Like or skip a suggestion
