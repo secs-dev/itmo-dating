@@ -133,6 +133,10 @@
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -204,6 +208,7 @@
                         <effort>Max</effort>
                         <threshold>Low</threshold>
                         <excludeFilterFile>config/spotbugs-suppressions.xml</excludeFilterFile>
+                        <failOnError>true</failOnError>
                         <plugins>
                             <plugin>
                                 <groupId>com.h3xstream.findsecbugs</groupId>
@@ -216,6 +221,26 @@
                                 <version>7.4.3</version>
                             </plugin>
                         </plugins>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <?m2e execute onConfiguration,onIncremental?>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.25.0</version>
+                    <configuration>
+                        <failOnViolation>true</failOnViolation>
+                        <maxAllowedViolations>0</maxAllowedViolations>
                     </configuration>
                     <executions>
                         <execution>
