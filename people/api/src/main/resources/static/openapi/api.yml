@@ -220,13 +220,7 @@ paths:
       summary: Create a person
       description: Creates a person with given parameters
       parameters:
-        - name: Idempotency-Key
-          in: header
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 550e8400-e29b-41d4-a716-446655440000
+        - $ref: "#/components/parameters/IdempotencyKeyHeader"
       requestBody:
         required: true
         content:
@@ -258,11 +252,7 @@ paths:
       summary: Get person by id
       description: Returns a person with a given id
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       responses:
         200:
           description: OK
@@ -289,18 +279,14 @@ paths:
       security:
         - bearerAuth: [ADMIN]
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       responses:
         204:
           description: Person was deleted
         401:
           $ref: "#/components/responses/401"
         403:
-          $ref: '#/components/responses/403'
+          $ref: "#/components/responses/403"
         500:
           $ref: "#/components/responses/500"
         503:
@@ -312,11 +298,7 @@ paths:
       summary: Update a person
       description: Updates a person with a given id
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       requestBody:
         required: true
         content:
@@ -346,6 +328,21 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    PersonIdPath:
+      name: person_id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/PersonId"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
   schemas:
     PersonId:
       type: integer
