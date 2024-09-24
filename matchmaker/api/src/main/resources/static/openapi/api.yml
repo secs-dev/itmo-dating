@@ -22,23 +22,11 @@ paths:
                 type: string
                 example: ok
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /suggestions:
     get:
       tags: [Suggestions]
@@ -67,104 +55,22 @@ paths:
                   $ref: "#/components/schemas/PersonId"
                 uniqueItems: true
         401:
-          description: No authentication
-          content:
-            application/josn:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-  /people/{target_id}/attitudes:
+          $ref: "#/components/responses/Unexpected"
+  /people/{person_id}/attitudes/incoming/{attitude_kind}:
     post:
       tags: [Suggestions]
-      summary: Like or skip a suggestion
-      description: Source id is taken from an auth token
-      parameters:
-        - name: target_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Attitude"
-      responses:
-        204:
-          description: Attitude was taken into account
-        400:
-          description: Source already posted an attitude to target
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        404:
-          description: Person is not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        409:
-          description: Attitude was already taken
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
-  /people/{target_id}/attitudes/{attitude_kind}:
-    post:
-      tags: [SOA]
       summary: Like or skip a suggestion
       description: |
         Does the same as /people/{target_id}/attitudes.
         Exists just to defend SOA labs.
       parameters:
-        - name: target_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
         - name: attitude_kind
           in: path
           required: true
@@ -174,11 +80,7 @@ paths:
         204:
           description: Attitude was taken into account
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         404:
           description: Person is not found
           content:
@@ -192,26 +94,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /attitudes:
     delete:
-      tags: [SOA]
+      tags: [Suggestions]
       summary: Reset attitudes
       description: Removes attitudes from the given person
       security:
@@ -226,11 +116,7 @@ paths:
         204:
           description: Attitudes was reset
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         404:
           description: Person is not found
           content:
@@ -238,34 +124,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /people/{person_id}/matches:
     get:
       tags: [Suggestions]
       summary: Get person matches
       description: Returns people who mutually liked given person
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       responses:
         200:
           description: OK
@@ -277,17 +147,9 @@ paths:
                   $ref: "#/components/schemas/PersonId"
                 uniqueItems: true
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         404:
           description: Person is not found. Error is available only with admin rights
           content:
@@ -295,26 +157,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/GeneralError"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /statistics/attitudes:
     get:
-      tags: [SOA]
+      tags: [Statistics]
       summary: Get attitudes statistics
       description: Returns like/skip counters for each person
       security:
@@ -347,41 +197,28 @@ paths:
                     - skips
                 uniqueItems: true
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         500:
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    PersonIdPath:
+      name: person_id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/PersonId"
   schemas:
     PersonId:
       type: integer
@@ -421,3 +258,56 @@ components:
         - code
         - status
         - message
+  responses:
+    "200":
+      description: OK
+    "204":
+      description: No Content
+    "400":
+      description: Invalid arguments
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "401":
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "403":
+      description: Access forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "409":
+      description: Duplicate request causing a conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "503":
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    Unexpected:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
