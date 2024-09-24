@@ -22,28 +22,18 @@ paths:
                 type: string
                 example: ok
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /people:
     get:
       tags: [People]
       summary: Get filtered people list
       description: Returns list of people, filtered by given conditions
+      security:
+        - bearerAuth: [ADMIN]
       parameters:
         - name: offset
           in: query
@@ -214,53 +204,23 @@ paths:
                   $ref: "#/components/schemas/Person"
                 uniqueItems: true
         400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/400"
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
     post:
       tags: [People]
       summary: Create a person
       description: Creates a person with given parameters
       parameters:
-        - name: Idempotency-Key
-          in: header
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 550e8400-e29b-41d4-a716-446655440000
+        - $ref: "#/components/parameters/IdempotencyKeyHeader"
       requestBody:
         required: true
         content:
@@ -275,52 +235,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/Person"
         400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/400"
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         409:
-          description: If person was already created (Idempotency-Key duplicated)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/409"
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
   /people/{person_id}:
     get:
       tags: [People]
       summary: Get person by id
       description: Returns a person with a given id
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       responses:
         200:
           description: OK
@@ -329,41 +261,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/Person"
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         404:
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/404"
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
     delete:
       tags: [People]
       summary: Delete person by id
@@ -371,54 +279,26 @@ paths:
       security:
         - bearerAuth: [ADMIN]
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       responses:
         204:
           description: Person was deleted
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
     patch:
       tags: [People]
       summary: Update a person
       description: Updates a person with a given id
       parameters:
-        - name: person_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/PersonId"
+        - $ref: "#/components/parameters/PersonIdPath"
       requestBody:
         required: true
         content:
@@ -429,53 +309,40 @@ paths:
         204:
           description: Person was updated
         400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/400"
         401:
-          description: No authentication
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/401"
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/403"
         404:
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/404"
         500:
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/500"
         503:
-          description: Service unavailable
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/503"
         default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GeneralError"
+          $ref: "#/components/responses/Unexpected"
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    PersonIdPath:
+      name: person_id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/PersonId"
+    IdempotencyKeyHeader:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: 550e8400-e29b-41d4-a716-446655440000
   schemas:
     PersonId:
       type: integer
@@ -710,3 +577,56 @@ components:
         - code
         - status
         - message
+  responses:
+    "200":
+      description: OK
+    "204":
+      description: No Content
+    "400":
+      description: Invalid arguments
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "401":
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "403":
+      description: Access forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "409":
+      description: Duplicate request causing a conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "503":
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    Unexpected:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
