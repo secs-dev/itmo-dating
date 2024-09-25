@@ -5,7 +5,8 @@ import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import ru.ifmo.se.dating.matchmaker.model.AttitudeKind;
+import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKind;
+import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate;
 
 @Service
 class HttpPeopleApi implements PeopleApiDelegate {

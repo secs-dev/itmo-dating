@@ -5,7 +5,8 @@ import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import ru.ifmo.se.dating.matchmaker.model.StatisticsAttitudesGet200ResponseInner;
+import ru.ifmo.se.dating.matchmaker.model.generated.StatisticsAttitudesGet200ResponseInner;
+import ru.ifmo.se.dating.matchmaker.api.generated.StatisticsApiDelegate;
 
 @Service
 class HttpStatisticsApi implements StatisticsApiDelegate {

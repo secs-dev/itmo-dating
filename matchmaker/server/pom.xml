@@ -83,8 +83,8 @@
                             <generatorName>spring</generatorName>
                             <configOptions>
                                 <basePackage>ru.ifmo.se.dating.matchmaker</basePackage>
-                                <apiPackage>ru.ifmo.se.dating.matchmaker.api</apiPackage>
-                                <modelPackage>ru.ifmo.se.dating.matchmaker.model</modelPackage>
+                                <apiPackage>ru.ifmo.se.dating.matchmaker.api.generated</apiPackage>
+                                <modelPackage>ru.ifmo.se.dating.matchmaker.model.generated</modelPackage>
                                 <delegatePattern>true</delegatePattern>
                             </configOptions>
                         </configuration>

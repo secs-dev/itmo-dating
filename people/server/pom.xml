@@ -83,8 +83,8 @@
                             <generatorName>spring</generatorName>
                             <configOptions>
                                 <basePackage>ru.ifmo.se.dating.people</basePackage>
-                                <apiPackage>ru.ifmo.se.dating.people.api</apiPackage>
-                                <modelPackage>ru.ifmo.se.dating.people.model</modelPackage>
+                                <apiPackage>ru.ifmo.se.dating.people.api.generated</apiPackage>
+                                <modelPackage>ru.ifmo.se.dating.people.model.generated</modelPackage>
                                 <delegatePattern>true</delegatePattern>
                             </configOptions>
                         </configuration>
