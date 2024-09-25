@@ -35,7 +35,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ru.ifmo.se.dating.people.Main</mainClass>
+                    <mainClass>ru.ifmo.se.dating.people.OpenApiGeneratorApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

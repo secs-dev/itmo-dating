@@ -30,13 +30,15 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
 
+    <module name="SuppressWarningsFilter" />
+
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter"/>
-
         <module name="SuppressionXpathFilter">
             <property name="file" value="config/checkstyle-suppressions.xml"/>
             <property name="optional" value="false"/>
         </module>
+        <module name="SuppressWarningsHolder" />
 
         <module name="InvalidJavadocPosition"/>
         <module name="JavadocStyle"/>
