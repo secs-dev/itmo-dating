@@ -81,6 +81,12 @@
                         <configuration>
                             <inputSpec>${project.basedir}/../api/src/main/resources/static/openapi/api.yml</inputSpec>
                             <generatorName>spring</generatorName>
+                            <configOptions>
+                                <basePackage>ru.ifmo.se.dating.matchmaker</basePackage>
+                                <apiPackage>ru.ifmo.se.dating.matchmaker.api</apiPackage>
+                                <modelPackage>ru.ifmo.se.dating.matchmaker.model</modelPackage>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
