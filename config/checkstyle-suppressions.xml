@@ -21,6 +21,13 @@
     <suppress-xpath checks="HideUtilityClassConstructor"
                     query="//*[MODIFIERS//*[@text = 'UtilityClass']]/descendant-or-self::node()"/>
 
+    <!-- Spring Annotations -->
+    <suppress-xpath checks="FinalClass"
+                    query="//*[MODIFIERS//*[@text = 'SpringBootApplication']]/descendant-or-self::node()"/>
+
+    <suppress-xpath checks="HideUtilityClassConstructor"
+                    query="//*[MODIFIERS//*[@text = 'SpringBootApplication']]/descendant-or-self::node()"/>
+
     <!-- Jakarta EE Annotations -->
     <suppress-xpath checks="DesignForExtension"
                     query="//*[MODIFIERS//*[@text = 'Path']]/descendant-or-self::node()"/>
