@@ -4,6 +4,10 @@ services:
     volumes:
       - ./matchmaker/app/target/matchmaker-app-1.0.0.jar:/matchmaker.jar
     command: java -jar /matchmaker.jar
+    environment:
+      POSTGRES_DB: ${ITMO_DATING_MATCHMAKER_POSTGRES_DB?:err}
+      POSTGRES_USER: ${ITMO_DATING_MATCHMAKER_POSTGRES_USER?:err}
+      POSTGRES_PASSWORD: ${ITMO_DATING_MATCHMAKER_POSTGRES_PASSWORD?:err}
     ports:
       - 8080:8080
     depends_on:
@@ -25,6 +29,10 @@ services:
     volumes:
       - ./people/app/target/people-app-1.0.0.jar:/people.jar
     command: java -jar /people.jar
+    environment:
+      POSTGRES_DB: ${ITMO_DATING_PEOPLE_POSTGRES_DB?:err}
+      POSTGRES_USER: ${ITMO_DATING_PEOPLE_POSTGRES_USER?:err}
+      POSTGRES_PASSWORD: ${ITMO_DATING_PEOPLE_POSTGRES_PASSWORD?:err}
     ports:
       - 8081:8080
     depends_on:
