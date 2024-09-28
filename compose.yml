@@ -21,9 +21,9 @@ services:
       POSTGRES_PASSWORD: ${ITMO_DATING_MATCHMAKER_POSTGRES_PASSWORD?:err}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 1s
+      timeout: 1s
+      retries: 16
   people:
     image: eclipse-temurin:21-jdk-alpine
     volumes:
@@ -46,6 +46,6 @@ services:
       POSTGRES_PASSWORD: ${ITMO_DATING_PEOPLE_POSTGRES_PASSWORD?:err}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 1s
+      timeout: 1s
+      retries: 16
