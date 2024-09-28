@@ -20,6 +20,10 @@
             <artifactId>people-server</artifactId>
         </dependency>
         <dependency>
+            <groupId>ru.ifmo.se.dating</groupId>
+            <artifactId>people-database</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

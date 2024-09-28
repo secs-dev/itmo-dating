@@ -45,6 +45,11 @@
             </dependency>
             <dependency>
                 <groupId>ru.ifmo.se.dating</groupId>
+                <artifactId>people-database</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.ifmo.se.dating</groupId>
                 <artifactId>people-server</artifactId>
                 <version>1.0.0</version>
             </dependency>
