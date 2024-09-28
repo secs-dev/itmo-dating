@@ -11,6 +11,7 @@
     <name>itmo-dating</name>
 
     <modules>
+        <module>common</module>
         <module>matchmaker</module>
         <module>people</module>
     </modules>
@@ -22,6 +23,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>ru.ifmo.se.dating</groupId>
+                <artifactId>common-testing</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
             <dependency>
                 <groupId>ru.ifmo.se.dating</groupId>
                 <artifactId>matchmaker-api</artifactId>
@@ -146,6 +153,12 @@
                 <version>4.13.2</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>1.20.1</version>
+            </dependency>
+
 
             <dependency>
 		        <groupId>org.projectlombok</groupId>
