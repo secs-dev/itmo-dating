@@ -1,13 +1,13 @@
 services:
   matchmaker:
-    image: eclipse-temurin:17-jdk-alpine
+    image: eclipse-temurin:21-jdk-alpine
     volumes:
       - ./matchmaker/app/target/matchmaker-app-1.0.0.jar:/matchmaker.jar
     command: java -jar /matchmaker.jar
     ports:
       - 8080:8080
   people:
-    image: eclipse-temurin:17-jdk-alpine
+    image: eclipse-temurin:21-jdk-alpine
     volumes:
       - ./people/app/target/people-app-1.0.0.jar:/people.jar
     command: java -jar /people.jar
