@@ -6,6 +6,20 @@ services:
     command: java -jar /matchmaker.jar
     ports:
       - 8080:8080
+    depends_on:
+      matchmaker-database:
+        condition: service_healthy
+  matchmaker-database:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${ITMO_DATING_MATCHMAKER_POSTGRES_DB?:err}
+      POSTGRES_USER: ${ITMO_DATING_MATCHMAKER_POSTGRES_USER?:err}
+      POSTGRES_PASSWORD: ${ITMO_DATING_MATCHMAKER_POSTGRES_PASSWORD?:err}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   people:
     image: eclipse-temurin:21-jdk-alpine
     volumes:
@@ -13,3 +27,17 @@ services:
     command: java -jar /people.jar
     ports:
       - 8081:8080
+    depends_on:
+      people-database:
+        condition: service_healthy
+  people-database:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${ITMO_DATING_PEOPLE_POSTGRES_DB?:err}
+      POSTGRES_USER: ${ITMO_DATING_PEOPLE_POSTGRES_USER?:err}
+      POSTGRES_PASSWORD: ${ITMO_DATING_PEOPLE_POSTGRES_PASSWORD?:err}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
