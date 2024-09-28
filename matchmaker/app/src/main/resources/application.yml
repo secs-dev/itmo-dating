@@ -1,9 +1,3 @@
 spring:
   config:
-    import: application-database.yml
-springdoc:
-  api-docs:
-    path: /openapi
-  swagger-ui:
-    url: /openapi/api.yml
-    path: /swagger-ui.html
+    import: application-database.yml, application-server.yml
