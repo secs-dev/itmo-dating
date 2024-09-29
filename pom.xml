@@ -203,13 +203,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>3.13.0</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.12.4</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <parallel>methods</parallel>
                         <threadCount>10</threadCount>
@@ -219,7 +219,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.22.1</version>
+                    <version>3.5.0</version>
                     <executions>
                         <execution>
                             <goals>
@@ -233,7 +233,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <configLocation>config/checkstyle.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
@@ -255,7 +255,7 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.8.6.0</version>
+                    <version>4.8.6.4</version>
                     <dependencies>
                         <dependency>
                             <groupId>com.github.spotbugs</groupId>
@@ -272,12 +272,12 @@
                             <plugin>
                                 <groupId>com.h3xstream.findsecbugs</groupId>
                                 <artifactId>findsecbugs-plugin</artifactId>
-                                <version>1.12.0</version>
+                                <version>1.13.0</version>
                             </plugin>
                             <plugin>
                                 <groupId>com.mebigfatguy.fb-contrib</groupId>
                                 <artifactId>fb-contrib</artifactId>
-                                <version>7.4.3</version>
+                                <version>7.6.4</version>
                             </plugin>
                         </plugins>
                     </configuration>
@@ -316,7 +316,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
