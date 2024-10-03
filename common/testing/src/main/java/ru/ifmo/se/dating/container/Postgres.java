@@ -15,8 +15,7 @@ public final class Postgres implements AutoCloseable {
     }
 
     public String jdbcUrl() {
-        return "jdbc:postgresql://%s:%s/%s"
-                .formatted(host(), port(), databaseName());
+        return container.getJdbcUrl();
     }
 
     public String username() {
@@ -31,18 +30,6 @@ public final class Postgres implements AutoCloseable {
     public void close() throws Exception {
         container.stop();
         container.close();
-    }
-
-    private String host() {
-        return container.getHost();
-    }
-
-    private Integer port() {
-        return container.getFirstMappedPort();
-    }
-
-    private String databaseName() {
-        return container.getDatabaseName();
     }
 
     public static Postgres start() {
