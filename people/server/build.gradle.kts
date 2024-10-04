@@ -1,5 +1,6 @@
 plugins {
     id("buildlogic.java-library-conventions")
+    id("org.openapi.generator") version "6.3.0"
 }
 
 dependencies {
@@ -16,4 +17,34 @@ dependencies {
     api(libs.com.fasterxml.jackson.core.jackson.databind)
     compileOnly(libs.javax.servlet.javax.servlet.api)
     compileOnly(libs.org.projectlombok.lombok)
+}
+
+
+val apiResourcesDir = project(":people-api").layout.projectDirectory.asFile
+    .let { "$it/src/main/resources" }
+
+val generatedDir = layout.buildDirectory.dir("generated").get().toString()
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$apiResourcesDir/static/openapi/api.yml"
+    outputDir = generatedDir
+    invokerPackage = "${group}.people"
+    apiPackage = "${group}.people.api.generated"
+    modelPackage = "${group}.people.model.generated"
+    configOptions = mapOf(
+        "delegatePattern" to "true",
+    )
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir("${generatedDir}/src/main/java")
+        }
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    dependsOn("openApiGenerate")
 }

@@ -27,7 +27,7 @@ services:
   people:
     image: eclipse-temurin:21-jdk-alpine
     volumes:
-      - ./people/app/target/people-app-1.0.0.jar:/people.jar
+      - ./people/app/build/libs/people-app-1.0.0.jar:/people.jar
     command: java -jar /people.jar
     environment:
       POSTGRES_DB: ${ITMO_DATING_PEOPLE_POSTGRES_DB?:err}
