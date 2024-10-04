@@ -1,4 +1,4 @@
-name: Maven
+name: Gradle
 
 on:
   push:
@@ -21,13 +21,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          cache: gradle
 
-      - name: Compile
-        run: mvn compile
-
-      - name: Unit Test
-        run: mvn test
-
-      - name: Package
-        run: mvn package
+      - name: Build
+        run: gradle build
