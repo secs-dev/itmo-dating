@@ -41,9 +41,6 @@ sourceSets {
         java {
             srcDir("${generatedDir}/src/main/java")
         }
-        resources {
-            srcDir(apiResourcesDir)
-        }
     }
 }
 
