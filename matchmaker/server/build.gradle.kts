@@ -1,5 +1,5 @@
 plugins {
-    id("buildlogic.java-library-conventions")
+    id("buildlogic.kotlin-library-conventions")
     id("org.openapi.generator") version "6.3.0"
 }
 
@@ -16,7 +16,6 @@ dependencies {
     api(libs.javax.annotation.javax.annotation.api)
     api(libs.com.fasterxml.jackson.core.jackson.databind)
     compileOnly(libs.javax.servlet.javax.servlet.api)
-    compileOnly(libs.org.projectlombok.lombok)
 }
 
 val apiResourcesDir = project(":matchmaker-api").layout.projectDirectory.asFile
@@ -44,7 +43,6 @@ sourceSets {
     }
 }
 
-
-tasks.withType<JavaCompile>().configureEach {
+tasks.compileKotlin.configure {
     dependsOn("openApiGenerate")
 }
