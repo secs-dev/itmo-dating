@@ -1,17 +1,19 @@
 rootProject.name = "itmo-dating"
 
-include(":common")
-include(":people")
-include(":matchmaker-api")
-include(":matchmaker-app")
-include(":people-database")
-include(":matchmaker-server")
-include(":common-testing")
-include(":people-app")
-include(":matchmaker-database")
-include(":matchmaker")
-include(":people-api")
-include(":people-server")
+include(
+    ":common",
+    ":common-testing",
+    ":matchmaker",
+    ":matchmaker-api",
+    ":matchmaker-app",
+    ":matchmaker-database",
+    ":matchmaker-server",
+    ":people",
+    ":people-api",
+    ":people-app",
+    ":people-database",
+    ":people-server",
+)
 
 project(":matchmaker-api").projectDir = file("matchmaker/api")
 project(":matchmaker-app").projectDir = file("matchmaker/app")
