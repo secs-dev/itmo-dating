@@ -17,7 +17,6 @@ class Postgres private constructor() : AutoCloseable {
         return container.password
     }
 
-    @Throws(Exception::class)
     override fun close() {
         container.stop()
         container.close()
