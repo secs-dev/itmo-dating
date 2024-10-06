@@ -1,7 +1,5 @@
 plugins {
-    id("buildlogic.kotlin-conventions")
-    id("org.springframework.boot") version "3.0.0"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("buildlogic.spring-conventions")
     application
 }
 
@@ -15,5 +13,5 @@ dependencies {
 }
 
 application {
-    mainClass = "${group}.matchmaker.OpenApiGeneratorApplication"
+    mainClass = "${group}.matchmaker.ApplicationKt"
 }

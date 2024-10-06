@@ -14,17 +14,17 @@ import java.util.*
 @Service
 internal class HttpPeopleApi : PeopleApiDelegate {
     override fun peopleGet(
-        offset: Long, limit: Long, firstName: String, lastName: String,
-        picturesCountMin: Int, picturesCountMax: Int,
-        topicId: List<Long>, heightMin: Int,
-        heightMax: Int, birthdayMin: LocalDate, birthdayMax: LocalDate,
-        zodiac: List<ZodiacSign>, faculty: List<Faculty>, latitude: Double,
-        longitude: Double, radius: Int, updatedMin: OffsetDateTime,
-        updatedMax: OffsetDateTime, sortBy: Set<String>
-    ): ResponseEntity<Set<Person>> =
+        offset: Long, limit: Long, firstName: String?, lastName: String?,
+        picturesCountMin: Int?, picturesCountMax: Int?,
+        topicId: List<Long>?, heightMin: Int?,
+        heightMax: Int?, birthdayMin: LocalDate?, birthdayMax: LocalDate?,
+        zodiac: List<ZodiacSign>?, faculty: List<Faculty>?, latitude: Double?,
+        longitude: Double?, radius: Int?, updatedMin: OffsetDateTime?,
+        updatedMax: OffsetDateTime?, sortBy: List<String>?,
+    ): ResponseEntity<List<Person>> =
         ResponseEntityStub.create()
 
-    override fun peoplePersonIdDelete(personId: Long): ResponseEntity<Void> =
+    override fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
     override fun peoplePersonIdGet(personId: Long): ResponseEntity<Person> =
@@ -32,7 +32,7 @@ internal class HttpPeopleApi : PeopleApiDelegate {
 
     override fun peoplePersonIdPatch(
         personId: Long, personDraft: PersonDraft,
-    ): ResponseEntity<Void> =
+    ): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
     override fun peoplePost(

@@ -6,6 +6,6 @@ import ru.ifmo.se.dating.matchmaker.api.generated.AttitudesApiDelegate
 
 @Service
 internal class HttpAttitudesApi : AttitudesApiDelegate {
-    override fun attitudesDelete(sourceId: Long): ResponseEntity<Void> =
+    override fun attitudesDelete(sourceId: Long): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 }

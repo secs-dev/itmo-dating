@@ -8,6 +8,6 @@ import ru.ifmo.se.dating.matchmaker.model.generated.StatisticsAttitudesGet200Res
 @Service
 internal class HttpStatisticsApi : StatisticsApiDelegate {
     override fun statisticsAttitudesGet(
-    ): ResponseEntity<Set<StatisticsAttitudesGet200ResponseInner>> =
+    ): ResponseEntity<List<StatisticsAttitudesGet200ResponseInner>> =
         ResponseEntityStub.create()
 }

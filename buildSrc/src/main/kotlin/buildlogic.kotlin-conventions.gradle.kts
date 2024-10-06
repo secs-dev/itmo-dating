@@ -12,9 +12,3 @@ repositories {
 kotlin {
     jvmToolchain(20)
 }
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(20)
-    }
-}

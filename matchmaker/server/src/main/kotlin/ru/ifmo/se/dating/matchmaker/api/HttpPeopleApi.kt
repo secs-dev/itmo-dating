@@ -9,9 +9,9 @@ import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKind
 internal class HttpPeopleApi : PeopleApiDelegate {
     override fun peoplePersonIdAttitudesIncomingAttitudeKindPost(
         personId: Long, attitudeKind: AttitudeKind
-    ): ResponseEntity<Void> =
+    ): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
-    override fun peoplePersonIdMatchesGet(personId: Long): ResponseEntity<Set<Long>> =
+    override fun peoplePersonIdMatchesGet(personId: Long): ResponseEntity<List<Long>> =
         ResponseEntityStub.create()
 }

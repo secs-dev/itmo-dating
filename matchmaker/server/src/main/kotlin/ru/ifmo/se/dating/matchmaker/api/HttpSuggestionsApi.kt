@@ -6,6 +6,6 @@ import ru.ifmo.se.dating.matchmaker.api.generated.SuggestionsApiDelegate
 
 @Service
 internal class HttpSuggestionsApi : SuggestionsApiDelegate {
-    override fun suggestionsGet(limit: Long): ResponseEntity<Set<Long>> =
+    override fun suggestionsGet(limit: Long): ResponseEntity<List<Long>> =
         ResponseEntityStub.create()
 }
