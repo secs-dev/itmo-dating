@@ -192,7 +192,6 @@ paths:
                 - -height
                 - -birthday
                 - -updated
-            uniqueItems: true
       responses:
         200:
           description: OK
@@ -202,7 +201,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Person"
-                uniqueItems: true
         400:
           $ref: "#/components/responses/400"
         401:
