@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Lint OpenAPI Specifications
+        uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: '*/api/src/main/resources/static/openapi/api.yml'
+          spectral_ruleset: config/.spectral.yaml
+
       - name: Setup up JDK 20
         uses: actions/setup-java@v3
         with:
