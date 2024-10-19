@@ -2,10 +2,17 @@ openapi: 3.0.3
 info:
   title: ITMO Dating People
   version: 0.0.1
+  description: Service is responsible for storage of user profiles.
+  contact:
+    name: ITMO Dating Team
+    url: https://github.com/secs-dev/itmo-dating/issues
 servers:
   - url: /api/v1
 security:
   - bearerAuth: [USER, ADMIN]
+tags:
+  - name: Monitoring
+  - name: People
 paths:
   /monitoring/healthcheck:
     get:
@@ -201,7 +208,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Person"
-        400:
+        "400":
           $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
@@ -226,13 +233,13 @@ paths:
             schema:
               $ref: "#/components/schemas/PersonDraft"
       responses:
-        201:
+        "201":
           description: Created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Person"
-        400:
+        "400":
           $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
@@ -304,7 +311,7 @@ paths:
       responses:
         "204":
           description: Person was updated
-        400:
+        "400":
           $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
@@ -349,7 +356,7 @@ components:
     PersonName:
       type: string
       description: Either first or last person name
-      pattern: ^[A-Za-z,.'-]{2, 32}$
+      pattern: ^[A-Za-z,.'-]{2,32}$
       example: Ivan
     PersonHeight:
       type: integer
@@ -524,14 +531,14 @@ components:
         name:
           type: string
           description: A unique name of a topic
-          pattern: ^[a-z]{3,32}$
+          pattern: ^[A-Z][a-z]{3,32}$
           example: Programming
         icon:
           $ref: "#/components/schemas/Picture"
         color:
           type: string
           description: An RGB color in the hex format
-          pattern: ^#([A-F0-9]{6}$
+          pattern: ^#[A-F0-9]{6}$
           example: "#6495ED"
       required:
         - id
@@ -574,10 +581,6 @@ components:
         - status
         - message
   responses:
-    "200":
-      description: OK
-    "204":
-      description: No Content
     "400":
       description: Invalid arguments
       content:
@@ -598,12 +601,6 @@ components:
             $ref: "#/components/schemas/GeneralError"
     "404":
       description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralError"
-    "409":
-      description: Duplicate request causing a conflict
       content:
         application/json:
           schema:
