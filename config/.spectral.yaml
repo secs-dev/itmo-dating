@@ -1,4 +1,22 @@
-extends: ["spectral:oas"]
+extends:
+  - spectral:oas
+  - https://unpkg.com/@apisyouwonthate/style-guide@1.5.0/dist/ruleset.js
 rules:
-  operation-operationId: off
+  # Don't know how to fix this when JWT is used
   oas3-operation-security-defined: off
+
+  # TODO: https://github.com/secs-dev/itmo-dating/issues/41
+  operation-operationId: off
+
+  # TODO: https://github.com/secs-dev/itmo-dating/issues/16
+  hosts-https-only-oas3: off
+
+  # TODO: https://github.com/secs-dev/itmo-dating/issues/42
+  no-numeric-ids: off
+
+  # TODO: https://github.com/secs-dev/itmo-dating/issues/43
+  no-unknown-error-format: off
+
+  # Don't want to follow
+  api-home: off
+  api-health: off
