@@ -2,10 +2,18 @@ openapi: 3.0.3
 info:
   title: ITMO Dating People
   version: 0.0.1
+  description: Service is responsible for storage of user profiles.
+  contact:
+    name: ITMO Dating Team
+    url: https://github.com/secs-dev/itmo-dating/issues
 servers:
-  - url: /api/v1
+  - url: /api
+    x-internal: true
 security:
   - bearerAuth: [USER, ADMIN]
+tags:
+  - name: Monitoring
+  - name: People
 paths:
   /monitoring/healthcheck:
     get:
@@ -14,16 +22,18 @@ paths:
       description: Returns 'ok', if service is alive, else we will cry
       security: []
       responses:
-        200:
+        "200":
           description: OK
           content:
             text/html:
               schema:
                 type: string
+                pattern: ^[a-z]+$
+                maxLength: 32
                 example: ok
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -44,6 +54,7 @@ paths:
             format: int64
             default: 0
             minimum: 0
+            maximum: 10000000
             example: 32
         - name: limit
           in: query
@@ -92,6 +103,7 @@ paths:
             type: array
             items:
               $ref: "#/components/schemas/TopicId"
+            maxItems: 32
         - name: height_min
           in: query
           description: Minimum height of a person
@@ -113,6 +125,7 @@ paths:
           schema:
             type: string
             format: date
+            maxLength: 32
             example: 1990-01-01
         - name: birthday_max
           in: query
@@ -121,6 +134,7 @@ paths:
           schema:
             type: string
             format: date
+            maxLength: 32
             example: 2000-12-31
         - name: zodiac
           in: query
@@ -132,6 +146,7 @@ paths:
             type: array
             items:
               $ref: "#/components/schemas/ZodiacSign"
+            maxItems: 12
         - name: faculty
           in: query
           description: Faculties to search. Logical or.
@@ -142,6 +157,7 @@ paths:
             type: array
             items:
               $ref: "#/components/schemas/Faculty"
+            maxItems: 128
         - name: latitude
           in: query
           required: false
@@ -159,6 +175,8 @@ paths:
             type: integer
             description: Radius of circle in meters with center at (latitude, longitude)
             format: int32
+            minimum: 1
+            maximum: 100000
             example: 1500
         - name: updated_min
           in: query
@@ -192,9 +210,9 @@ paths:
                 - -height
                 - -birthday
                 - -updated
-            uniqueItems: true
+            maxItems: 10
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -202,23 +220,23 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Person"
-                uniqueItems: true
-        400:
+                maxItems: 10000
+        "400":
           $ref: "#/components/responses/400"
-        401:
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
     post:
       tags: [People]
       summary: Create a person
-      description: Creates a person with given parameters
+      description: Creates a person with given parameters, idempotent
       parameters:
         - $ref: "#/components/parameters/IdempotencyKeyHeader"
       requestBody:
@@ -228,21 +246,19 @@ paths:
             schema:
               $ref: "#/components/schemas/PersonDraft"
       responses:
-        201:
+        "201":
           description: Created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Person"
-        400:
+        "400":
           $ref: "#/components/responses/400"
-        401:
+        "401":
           $ref: "#/components/responses/401"
-        409:
-          $ref: "#/components/responses/409"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -254,21 +270,21 @@ paths:
       parameters:
         - $ref: "#/components/parameters/PersonIdPath"
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Person"
-        401:
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        404:
+        "404":
           $ref: "#/components/responses/404"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -281,15 +297,15 @@ paths:
       parameters:
         - $ref: "#/components/parameters/PersonIdPath"
       responses:
-        204:
+        "204":
           description: Person was deleted
-        401:
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -306,19 +322,19 @@ paths:
             schema:
               $ref: "#/components/schemas/PersonDraft"
       responses:
-        204:
+        "204":
           description: Person was updated
-        400:
+        "400":
           $ref: "#/components/responses/400"
-        401:
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        404:
+        "404":
           $ref: "#/components/responses/404"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -328,6 +344,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: Supports RFC8725
   parameters:
     PersonIdPath:
       name: person_id
@@ -342,6 +359,7 @@ components:
       schema:
         type: string
         format: uuid
+        maxLength: 48
         example: 550e8400-e29b-41d4-a716-446655440000
   schemas:
     PersonId:
@@ -349,11 +367,13 @@ components:
       description: A unique key of a person, autogenerated
       format: int64
       minimum: 1
-      example: 12345678
+      maximum: 10000000
+      example: 1234567
     PersonName:
       type: string
       description: Either first or last person name
-      pattern: ^[A-Za-z,.'-]{2, 32}$
+      pattern: ^[A-Za-z,.'-]{2,32}$
+      maxLength: 32
       example: Ivan
     PersonHeight:
       type: integer
@@ -390,6 +410,7 @@ components:
           type: string
           description: A date when person was born
           format: date
+          maxLength: 32
         faculty:
           $ref: "#/components/schemas/Faculty"
         location:
@@ -399,6 +420,7 @@ components:
               type: string
               description: User readable location name
               pattern: ^[A-Za-z ,.-]{3,128}$
+              maxLength: 128
               example: ITMO University, Kronverkskiy Avenue
             coordinates:
               type: object
@@ -478,6 +500,7 @@ components:
       type: string
       description: An URL of picture for downloading
       format: uri
+      maxLength: 256
       example: https://avatars.githubusercontent.com/u/53015676
     Picture:
       type: object
@@ -487,7 +510,8 @@ components:
           description: A unique key of a picture
           format: int64
           minimum: 1
-          example: 12345678
+          maximum: 10000000
+          example: 1234567
         small:
           $ref: "#/components/schemas/PictureUrl"
         medium:
@@ -519,7 +543,8 @@ components:
       description: A unique key of a topic
       format: int64
       minimum: 1
-      example: 12345678
+      maximum: 1024
+      example: 234
     Topic:
       type: object
       properties:
@@ -528,14 +553,16 @@ components:
         name:
           type: string
           description: A unique name of a topic
-          pattern: ^[a-z]{3,32}$
+          pattern: ^[A-Z][a-z]{3,32}$
+          maxLength: 32
           example: Programming
         icon:
           $ref: "#/components/schemas/Picture"
         color:
           type: string
           description: An RGB color in the hex format
-          pattern: ^#([A-F0-9]{6}$
+          pattern: ^#[A-F0-9]{6}$
+          maxLength: 7
           example: "#6495ED"
       required:
         - id
@@ -546,11 +573,13 @@ components:
       type: string
       format: date-time
       description: A moment when this object was updated, autogenerated
+      maxLength: 32
       example: 2024-04-14T13:32:42Z
     RegexPattern:
       type: string
       example: Va.ya
       pattern: ^[A-Za-z.?*+]{1,64}$
+      maxLength: 64
     PicturesCount:
       type: integer
       format: int32
@@ -564,24 +593,26 @@ components:
           type: integer
           format: int32
           description: HTTP Status Code
+          minimum: 100
+          maximum: 600
           example: 400
         status:
           type: string
           description: HTTP Status Description
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 64
           example: Bad Request
         message:
           type: string
           description: Detailed Message
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 128
           example: Username must contain only latin letter
       required:
         - code
         - status
         - message
   responses:
-    "200":
-      description: OK
-    "204":
-      description: No Content
     "400":
       description: Invalid arguments
       content:
@@ -602,12 +633,6 @@ components:
             $ref: "#/components/schemas/GeneralError"
     "404":
       description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralError"
-    "409":
-      description: Duplicate request causing a conflict
       content:
         application/json:
           schema:

@@ -1,0 +1,35 @@
+name: Gradle
+
+on:
+  push:
+    branches: 
+      - main
+      - lab-[1234]
+  pull_request:
+    branches:
+      - main
+      - lab-[1234]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Lint OpenAPI Specifications
+        uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: '*/api/src/main/resources/static/openapi/api.yml'
+          spectral_ruleset: config/.spectral.yaml
+
+      - name: Setup up JDK 20
+        uses: actions/setup-java@v3
+        with:
+          java-version: '20'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build
+        run: gradle build
