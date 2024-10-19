@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.matchmaker.api.generated.StatisticsApiDelegate
 import ru.ifmo.se.dating.matchmaker.model.generated.StatisticsAttitudesGet200ResponseInner
 
+typealias StatisticsAttitudesResponse =
+    ResponseEntity<List<StatisticsAttitudesGet200ResponseInner>>
+
 @Service
 internal class HttpStatisticsApi : StatisticsApiDelegate {
-    override fun statisticsAttitudesGet(
-    ): ResponseEntity<List<StatisticsAttitudesGet200ResponseInner>> =
+    override fun statisticsAttitudesGet(): StatisticsAttitudesResponse =
         ResponseEntityStub.create()
 }

@@ -18,4 +18,4 @@ import org.springframework.test.context.junit4.SpringRunner
         DatabaseInitializer::class,
     ],
 )
-abstract class PeopleTestSuite 
+abstract class PeopleTestSuite

@@ -14,13 +14,25 @@ import java.util.*
 @Service
 internal class HttpPeopleApi : PeopleApiDelegate {
     override fun peopleGet(
-        offset: Long, limit: Long, firstName: String?, lastName: String?,
-        picturesCountMin: Int?, picturesCountMax: Int?,
-        topicId: List<Long>?, heightMin: Int?,
-        heightMax: Int?, birthdayMin: LocalDate?, birthdayMax: LocalDate?,
-        zodiac: List<ZodiacSign>?, faculty: List<Faculty>?, latitude: Double?,
-        longitude: Double?, radius: Int?, updatedMin: OffsetDateTime?,
-        updatedMax: OffsetDateTime?, sortBy: List<String>?,
+        offset: Long,
+        limit: Long,
+        firstName: String?,
+        lastName: String?,
+        picturesCountMin: Int?,
+        picturesCountMax: Int?,
+        topicId: List<Long>?,
+        heightMin: Int?,
+        heightMax: Int?,
+        birthdayMin: LocalDate?,
+        birthdayMax: LocalDate?,
+        zodiac: List<ZodiacSign>?,
+        faculty: List<Faculty>?,
+        latitude: Double?,
+        longitude: Double?,
+        radius: Int?,
+        updatedMin: OffsetDateTime?,
+        updatedMax: OffsetDateTime?,
+        sortBy: List<String>?,
     ): ResponseEntity<List<Person>> =
         ResponseEntityStub.create()
 
@@ -31,12 +43,14 @@ internal class HttpPeopleApi : PeopleApiDelegate {
         ResponseEntityStub.create()
 
     override fun peoplePersonIdPatch(
-        personId: Long, personDraft: PersonDraft,
+        personId: Long,
+        personDraft: PersonDraft,
     ): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
     override fun peoplePost(
-        idempotencyKey: UUID, personDraft: PersonDraft,
+        idempotencyKey: UUID,
+        personDraft: PersonDraft,
     ): ResponseEntity<Person> =
         ResponseEntityStub.create()
 }

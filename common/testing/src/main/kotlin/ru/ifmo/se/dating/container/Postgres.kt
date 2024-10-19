@@ -5,17 +5,14 @@ import org.testcontainers.containers.PostgreSQLContainer
 class Postgres private constructor() : AutoCloseable {
     private val container = PostgreSQLContainer(DOCKER_IMAGE_NAME)
 
-    fun jdbcUrl(): String {
-        return container.jdbcUrl
-    }
+    fun jdbcUrl(): String =
+        container.jdbcUrl
 
-    fun username(): String {
-        return container.username
-    }
+    fun username(): String =
+        container.username
 
-    fun password(): String {
-        return container.password
-    }
+    fun password(): String =
+        container.password
 
     override fun close() {
         container.stop()
