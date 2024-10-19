@@ -1,0 +1,4 @@
+extends: ["spectral:oas"]
+rules:
+  operation-operationId: off
+  oas3-operation-security-defined: off

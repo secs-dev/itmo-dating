@@ -2,10 +2,18 @@ openapi: 3.0.3
 info:
   title: ITMO Dating Matchmaker
   version: 0.0.1
+  description: Service is responsible for issuing recommendations.
+  contact:
+    name: ITMO Dating Team
+    url: https://github.com/secs-dev/itmo-dating/issues
 servers:
   - url: /api/v1
 security:
   - bearerAuth: [USER, ADMIN]
+tags:
+  - name: Monitoring
+  - name: Suggestions
+  - name: Statistics
 paths:
   /monitoring/healthcheck:
     get:
@@ -14,16 +22,16 @@ paths:
       description: Returns 'ok', if service is alive, else we will cry
       security: []
       responses:
-        200:
+        "200":
           description: OK
           content:
             text/html:
               schema:
                 type: string
                 example: ok
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -45,7 +53,7 @@ paths:
             maximum: 50
             example: 8
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -53,11 +61,13 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PersonId"
-        401:
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -76,25 +86,27 @@ paths:
           schema:
             $ref: "#/components/schemas/AttitudeKind"
       responses:
-        204:
+        "204":
           description: Attitude was taken into account
-        401:
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        404:
+        "404":
           description: Person is not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        409:
+        "409":
           description: Attitude was already taken
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -112,19 +124,21 @@ paths:
           schema:
             $ref: "#/components/schemas/PersonId"
       responses:
-        204:
+        "204":
           description: Attitudes was reset
-        401:
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        404:
+        "404":
           description: Person is not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -136,7 +150,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/PersonIdPath"
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -144,19 +158,21 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PersonId"
-        401:
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        404:
+        "404":
           description: Person is not found. Error is available only with admin rights
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -168,7 +184,7 @@ paths:
       security:
         - bearerAuth: [ADMIN]
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -193,13 +209,13 @@ paths:
                     - personId
                     - likes
                     - skips
-        401:
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -228,13 +244,6 @@ components:
       enum:
         - like
         - skip
-    Attitude:
-      type: object
-      properties:
-        kind:
-          $ref: "#/components/schemas/AttitudeKind"
-      required:
-        - verdict
     GeneralError:
       type: object
       properties:
@@ -256,10 +265,6 @@ components:
         - status
         - message
   responses:
-    "200":
-      description: OK
-    "204":
-      description: No Content
     "400":
       description: Invalid arguments
       content:
@@ -274,18 +279,6 @@ components:
             $ref: "#/components/schemas/GeneralError"
     "403":
       description: Access forbidden
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralError"
-    "404":
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralError"
-    "409":
-      description: Duplicate request causing a conflict
       content:
         application/json:
           schema:
