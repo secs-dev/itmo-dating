@@ -2,10 +2,19 @@ openapi: 3.0.3
 info:
   title: ITMO Dating Matchmaker
   version: 0.0.1
+  description: Service is responsible for issuing recommendations.
+  contact:
+    name: ITMO Dating Team
+    url: https://github.com/secs-dev/itmo-dating/issues
 servers:
-  - url: /api/v1
+  - url: /api
+    x-internal: true
 security:
   - bearerAuth: [USER, ADMIN]
+tags:
+  - name: Monitoring
+  - name: Suggestions
+  - name: Statistics
 paths:
   /monitoring/healthcheck:
     get:
@@ -14,16 +23,18 @@ paths:
       description: Returns 'ok', if service is alive, else we will cry
       security: []
       responses:
-        200:
+        "200":
           description: OK
           content:
             text/html:
               schema:
                 type: string
+                pattern: ^[a-z]+$
+                maxLength: 32
                 example: ok
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -45,7 +56,7 @@ paths:
             maximum: 50
             example: 8
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -53,11 +64,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PersonId"
-        401:
+                maxItems: 50
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -76,25 +90,27 @@ paths:
           schema:
             $ref: "#/components/schemas/AttitudeKind"
       responses:
-        204:
+        "204":
           description: Attitude was taken into account
-        401:
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        404:
+        "404":
           description: Person is not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        409:
+        "409":
           description: Attitude was already taken
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -112,19 +128,21 @@ paths:
           schema:
             $ref: "#/components/schemas/PersonId"
       responses:
-        204:
+        "204":
           description: Attitudes was reset
-        401:
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        404:
+        "404":
           description: Person is not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -136,7 +154,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/PersonIdPath"
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -144,19 +162,22 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PersonId"
-        401:
+                maxItems: 10000
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        404:
+        "404":
           description: Person is not found. Error is available only with admin rights
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -168,7 +189,7 @@ paths:
       security:
         - bearerAuth: [ADMIN]
       responses:
-        200:
+        "200":
           description: OK
           content:
             application/json:
@@ -184,22 +205,27 @@ paths:
                       description: Count of people liked by the person
                       format: int32
                       minimum: 0
+                      maximum: 10000000
                     skips:
                       type: integer
                       description: Count of people skipped by the person
                       format: int32
                       minimum: 0
+                      maximum: 10000000
                   required:
                     - personId
                     - likes
                     - skips
-        401:
+                maxItems: 10000
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
           $ref: "#/components/responses/401"
-        403:
+        "403":
           $ref: "#/components/responses/403"
-        500:
+        "500":
           $ref: "#/components/responses/500"
-        503:
+        "503":
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
@@ -209,6 +235,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: Supports RFC8725
   parameters:
     PersonIdPath:
       name: person_id
@@ -222,19 +249,13 @@ components:
       description: A unique key of a person, autogenerated
       format: int64
       minimum: 1
-      example: 12345678
+      maximum: 10000000
+      example: 1234567
     AttitudeKind:
       type: string
       enum:
         - like
         - skip
-    Attitude:
-      type: object
-      properties:
-        kind:
-          $ref: "#/components/schemas/AttitudeKind"
-      required:
-        - verdict
     GeneralError:
       type: object
       properties:
@@ -242,24 +263,26 @@ components:
           type: integer
           format: int32
           description: HTTP Status Code
+          minimum: 100
+          maximum: 600
           example: 400
         status:
           type: string
           description: HTTP Status Description
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 64
           example: Bad Request
         message:
           type: string
           description: Detailed Message
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 128
           example: Username must contain only latin letter
       required:
         - code
         - status
         - message
   responses:
-    "200":
-      description: OK
-    "204":
-      description: No Content
     "400":
       description: Invalid arguments
       content:
@@ -274,18 +297,6 @@ components:
             $ref: "#/components/schemas/GeneralError"
     "403":
       description: Access forbidden
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralError"
-    "404":
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/GeneralError"
-    "409":
-      description: Duplicate request causing a conflict
       content:
         application/json:
           schema:
