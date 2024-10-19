@@ -28,7 +28,8 @@ paths:
             text/html:
               schema:
                 type: string
-                enum: [ok]
+                pattern: ^[a-z]+$
+                maxLength: 32
                 example: ok
         "500":
           $ref: "#/components/responses/500"

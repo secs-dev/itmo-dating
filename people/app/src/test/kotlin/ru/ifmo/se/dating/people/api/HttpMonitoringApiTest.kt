@@ -16,7 +16,7 @@ class HttpMonitoringApiTest : PeopleTestSuite() {
     }
 
     private fun getHealthcheck(): String {
-        val url = "http://localhost:8080/api/v1/monitoring/healthcheck"
+        val url = "http://localhost:8080/api/monitoring/healthcheck"
         val response = rest.getForEntity(url, String::class.java)
         return response.body!!
     }
