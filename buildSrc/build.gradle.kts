@@ -14,6 +14,6 @@ dependencies {
 
     implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.7")
 
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.3.4")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.3.5")
     implementation("io.spring.gradle:dependency-management-plugin:1.1.6")
 }
