@@ -20,7 +20,7 @@ jobs:
         uses: stoplightio/spectral-action@latest
         with:
           file_glob: '*/backend/api/src/main/resources/static/openapi/api.yml'
-          spectral_ruleset: config/.spectral.yaml
+          spectral_ruleset: ./backend/config/.spectral.yaml
 
       - name: Setup up JDK 20
         uses: actions/setup-java@v3
