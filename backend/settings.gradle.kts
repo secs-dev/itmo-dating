@@ -2,7 +2,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.8.0")
 }
 
-rootProject.name = "itmo-dating"
+rootProject.name = "itmo-dating-backend"
 
 include(
     ":common",

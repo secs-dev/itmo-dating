@@ -19,7 +19,7 @@ jobs:
       - name: Lint OpenAPI Specifications
         uses: stoplightio/spectral-action@latest
         with:
-          file_glob: '*/api/src/main/resources/static/openapi/api.yml'
+          file_glob: '*/backend/api/src/main/resources/static/openapi/api.yml'
           spectral_ruleset: config/.spectral.yaml
 
       - name: Setup up JDK 20

@@ -2,7 +2,7 @@ services:
   matchmaker:
     image: eclipse-temurin:21-jdk-alpine
     volumes:
-      - ./matchmaker/app/build/libs/matchmaker-app-1.0.0.jar:/matchmaker.jar
+      - ./backend/matchmaker/app/build/libs/matchmaker-app-1.0.0.jar:/matchmaker.jar
     command: java -jar /matchmaker.jar
     environment:
       POSTGRES_DB: ${ITMO_DATING_MATCHMAKER_POSTGRES_DB?:err}
@@ -27,7 +27,7 @@ services:
   people:
     image: eclipse-temurin:21-jdk-alpine
     volumes:
-      - ./people/app/build/libs/people-app-1.0.0.jar:/people.jar
+      - ./backend/people/app/build/libs/people-app-1.0.0.jar:/people.jar
     command: java -jar /people.jar
     environment:
       POSTGRES_DB: ${ITMO_DATING_PEOPLE_POSTGRES_DB?:err}
