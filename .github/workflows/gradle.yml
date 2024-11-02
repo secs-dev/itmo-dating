@@ -12,6 +12,9 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: ./backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,8 +22,8 @@ jobs:
       - name: Lint OpenAPI Specifications
         uses: stoplightio/spectral-action@latest
         with:
-          file_glob: '*/backend/api/src/main/resources/static/openapi/api.yml'
-          spectral_ruleset: ./backend/config/.spectral.yaml
+          file_glob: '*/api/src/main/resources/static/openapi/api.yml'
+          spectral_ruleset: ./config/.spectral.yaml
 
       - name: Setup up JDK 20
         uses: actions/setup-java@v3
