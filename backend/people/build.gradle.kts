@@ -1,10 +1,10 @@
 plugins {
     id("buildlogic.spring-conventions")
     id("org.openapi.generator") version "6.3.0"
+    application
 }
 
 dependencies {
-    api(project(":people-api"))
     api(libs.io.swagger.core.v3.swagger.annotations)
     api(libs.io.swagger.core.v3.swagger.models)
     api(libs.org.openapitools.jackson.databind.nullable)
@@ -12,13 +12,17 @@ dependencies {
     api(libs.org.springframework.spring.context)
     api(libs.org.springframework.boot.spring.boot)
     api(libs.org.springframework.boot.spring.boot.starter.web)
+    api(libs.org.springframework.boot.spring.boot.starter.jdbc)
+    api(libs.org.springdoc.springdoc.openapi.starter.webmvc.ui)
     api(libs.jakarta.validation.jakarta.validation.api)
     api(libs.com.fasterxml.jackson.core.jackson.databind)
+    api(libs.org.liquibase.liquibase.core)
+    api(libs.org.postgresql.postgresql)
+    testImplementation(project(":foundation-test"))
+    testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
 
-val apiResourcesDir = project(":people-api").layout.projectDirectory.asFile
-    .let { "$it/src/main/resources" }
-
+val apiResourcesDir = layout.projectDirectory.asFile.let { "$it/src/main/resources" }
 val generatedDir = layout.buildDirectory.dir("generated").get().toString()
 
 openApiGenerate {
@@ -44,4 +48,8 @@ sourceSets {
 
 tasks.compileKotlin.configure {
     dependsOn("openApiGenerate")
+}
+
+application {
+    mainClass = "${group}.people.ApplicationKt"
 }

@@ -9,13 +9,4 @@ include(
     ":foundation-test",
     ":matchmaker",
     ":people",
-    ":people-api",
-    ":people-app",
-    ":people-database",
-    ":people-server",
 )
-
-project(":people-api").projectDir = file("people/api")
-project(":people-app").projectDir = file("people/app")
-project(":people-server").projectDir = file("people/server")
-project(":people-database").projectDir = file("people/database")

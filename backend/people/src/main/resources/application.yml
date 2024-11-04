@@ -1,3 +1,11 @@
+server:
+  port: 8080
+springdoc:
+  api-docs:
+    path: /openapi
+  swagger-ui:
+    url: /openapi/api.yml
+    path: /swagger-ui.html
 spring:
   datasource:
     url: jdbc:postgresql://people-database:5432/${POSTGRES_DB}
