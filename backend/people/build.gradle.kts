@@ -5,19 +5,24 @@ plugins {
 }
 
 dependencies {
-    api(libs.io.swagger.core.v3.swagger.annotations)
-    api(libs.io.swagger.core.v3.swagger.models)
-    api(libs.org.openapitools.jackson.databind.nullable)
-    api(libs.org.springframework.spring.web)
-    api(libs.org.springframework.spring.context)
-    api(libs.org.springframework.boot.spring.boot)
-    api(libs.org.springframework.boot.spring.boot.starter.web)
-    api(libs.org.springframework.boot.spring.boot.starter.jdbc)
-    api(libs.org.springdoc.springdoc.openapi.starter.webmvc.ui)
-    api(libs.jakarta.validation.jakarta.validation.api)
-    api(libs.com.fasterxml.jackson.core.jackson.databind)
-    api(libs.org.liquibase.liquibase.core)
-    api(libs.org.postgresql.postgresql)
+    implementation(libs.io.swagger.core.v3.swagger.annotations)
+    implementation(libs.io.swagger.core.v3.swagger.models)
+    implementation(libs.org.openapitools.jackson.databind.nullable)
+    implementation(libs.org.springdoc.springdoc.openapi.starter.webmvc.ui)
+
+    implementation(libs.org.springframework.spring.web)
+    implementation(libs.org.springframework.spring.context)
+
+    implementation(libs.org.springframework.boot.spring.boot)
+    implementation(libs.org.springframework.boot.spring.boot.starter.web)
+
+    implementation(libs.org.springframework.boot.spring.boot.starter.jdbc)
+    implementation(libs.org.liquibase.liquibase.core)
+    implementation(libs.org.postgresql.postgresql)
+
+    implementation(libs.com.fasterxml.jackson.core.jackson.databind)
+    implementation(libs.jakarta.validation.jakarta.validation.api)
+
     testImplementation(project(":foundation-test"))
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
