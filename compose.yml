@@ -49,3 +49,8 @@ services:
       interval: 1s
       timeout: 1s
       retries: 16
+  tg-miniapp:
+    build:
+      context: frontend
+    ports:
+      - "443:443"
