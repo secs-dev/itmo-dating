@@ -24,7 +24,6 @@ dependencies {
     implementation(libs.jakarta.validation.jakarta.validation.api)
 
     testImplementation(project(":foundation-test"))
-    testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
 
 val apiResourcesDir = layout.projectDirectory.asFile.let { "$it/src/main/resources" }
