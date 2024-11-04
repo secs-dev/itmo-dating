@@ -8,7 +8,7 @@ dependencies {
     api(project(":people-database"))
     api(libs.org.springframework.boot.spring.boot.starter.web)
     api(libs.org.springdoc.springdoc.openapi.starter.webmvc.ui)
-    testImplementation(project(":common-testing"))
+    testImplementation(project(":foundation-test"))
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
 }
 

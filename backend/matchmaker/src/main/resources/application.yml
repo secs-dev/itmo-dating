@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   datasource:
     url: jdbc:postgresql://matchmaker-database:5432/${POSTGRES_DB}
@@ -6,3 +8,9 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:database/changelog.sql
+springdoc:
+  api-docs:
+    path: /openapi
+  swagger-ui:
+    url: /openapi/api.yml
+    path: /swagger-ui.html
