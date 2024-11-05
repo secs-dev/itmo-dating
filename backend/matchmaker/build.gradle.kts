@@ -1,7 +1,5 @@
 plugins {
-    id("buildlogic.spring-conventions")
-    id("org.openapi.generator") version "6.3.0"
-    application
+    id("buildlogic.foundation-conventions")
 }
 
 dependencies {
