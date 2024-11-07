@@ -1,6 +1,14 @@
+server:
+  port: 8080
+springdoc:
+  api-docs:
+    path: /openapi
+  swagger-ui:
+    url: /openapi/api.yml
+    path: /swagger-ui.html
 spring:
   datasource:
-    url: jdbc:postgresql://matchmaker-database:5432/${POSTGRES_DB}
+    url: jdbc:postgresql://people-database:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
