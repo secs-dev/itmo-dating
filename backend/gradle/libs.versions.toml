@@ -34,8 +34,5 @@ org-springframework-boot-spring-boot-starter-web = { module = "org.springframewo
 org-springframework-spring-context = { module = "org.springframework:spring-context", version.ref = "org-springframework-spring-context" }
 org-springframework-spring-web = { module = "org.springframework:spring-web", version.ref = "org-springframework-spring-web" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "org-testcontainers" }
-org-testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "org-testcontainers" }
 org-jooq-jooq = { module = "org.jooq:jooq" , version.ref = "org-jooq" }
 org-jooq-jooq-kotlin = { module = "org.jooq:jooq-kotlin" , version.ref = "org-jooq" }
-org-jooq-jooq-meta-extensions = { module = "org.jooq:jooq-meta-extensions", version.ref = "org-jooq" }
-org-jooq-jooq-meta-kotlin = { module = "org.jooq:jooq-meta-kotlin", version.ref = "org-jooq" }

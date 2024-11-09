@@ -4,8 +4,20 @@ plugins {
 }
 
 extra["generateJOOQ"] = { serviceName: String ->
+    val jooqVersion = "3.19.15"
+    val testContainersVersion = "1.20.3"
+
     val generatedDir = "$projectDir/build/generated"
     val jooqGeneratedDir = "$generatedDir/jooq/src/main/kotlin"
+
+    dependencies {
+        jooqCodegen("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+        jooqCodegen("org.jooq:jooq-meta-extensions:$jooqVersion")
+        jooqCodegen("org.jooq:jooq-meta-kotlin:$jooqVersion")
+        jooqCodegen("org.postgresql:postgresql:42.7.4")
+        jooqCodegen("org.testcontainers:postgresql:$testContainersVersion")
+        jooqCodegen("org.testcontainers:testcontainers:$testContainersVersion")
+    }
 
     sourceSets {
         main {
@@ -55,5 +67,9 @@ extra["generateJOOQ"] = { serviceName: String ->
                 }
             }
         }
+    }
+
+    tasks.compileKotlin.configure {
+        dependsOn(tasks.jooqCodegen)
     }
 }
