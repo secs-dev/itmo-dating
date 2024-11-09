@@ -14,6 +14,7 @@ data class Person(
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
     val creationMoment: OffsetDateTime,
+    val interests: Set<Interest>,
 ) {
     @JvmInline
     value class Id(private val number: Int) {
@@ -37,24 +38,34 @@ data class Person(
         }
     }
 
+    data class Interest(
+        val topicId: Topic.Id,
+        val rank: Int,
+    ) {
+        init {
+            expect(rank in 1..5, "Interest rank must be in [1, 5], got $rank")
+        }
+    }
+
     data class Draft(
         val firstName: Name,
         val lastName: Name,
         val height: Int,
         val birthday: LocalDate,
-        val facultyId: Faculty.Id
+        val facultyId: Faculty.Id,
+        val interests: Set<Interest>,
     ) {
         init {
-            validate(height, birthday)
+            validate(height, birthday, interests)
         }
     }
 
     init {
-        validate(height, birthday)
+        validate(height, birthday, interests)
     }
 
     companion object {
-        fun validate(height: Int, birthday: LocalDate) {
+        fun validate(height: Int, birthday: LocalDate, interests: Set<Interest>) {
             expect(
                 height in 50..280,
                 "Height must be between 50 and 280, but got $height",
@@ -63,6 +74,11 @@ data class Person(
             expect(
                 birthday.isAfter(LocalDate.of(1990, 1, 1)),
                 "Birthday must be after 1990-01-01, but got $birthday",
+            )
+
+            expect(
+                interests.size in 0..8,
+                "Person must have no more than 8 interests, got ${interests.size}",
             )
         }
     }
