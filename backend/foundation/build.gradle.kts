@@ -1,5 +1,6 @@
 plugins {
     id("buildlogic.kotlin-library-conventions")
+    id("buildlogic.jooq-conventions")
 }
 
 dependencies {
@@ -20,4 +21,14 @@ dependencies {
 
     api(libs.com.fasterxml.jackson.core.jackson.databind)
     api(libs.jakarta.validation.jakarta.validation.api)
+
+    api(libs.org.jooq.jooq)
+    api(libs.org.jooq.jooq.kotlin)
+
+    jooqCodegen("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+    jooqCodegen(libs.org.jooq.jooq.meta.extensions)
+    jooqCodegen(libs.org.jooq.jooq.meta.kotlin)
+    jooqCodegen(libs.org.postgresql.postgresql)
+    jooqCodegen(libs.org.testcontainers.postgresql)
+    jooqCodegen(libs.org.testcontainers.testcontainers)
 }
