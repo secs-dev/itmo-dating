@@ -5,6 +5,7 @@ import ru.ifmo.se.dating.validation.expectId
 import ru.ifmo.se.dating.validation.expectMatches
 import java.time.LocalDate
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 data class Person(
     val id: Id,
@@ -43,7 +44,14 @@ data class Person(
         val rank: Int,
     ) {
         init {
-            expect(rank in 1..5, "Interest rank must be in [1, 5], got $rank")
+            expect(
+                rank in rankRange,
+                "Interest rank must be in [${rankRange.first}, ${rankRange.last}], got $rank",
+            )
+        }
+
+        companion object {
+            private val rankRange = 1..5
         }
     }
 
@@ -65,25 +73,30 @@ data class Person(
     }
 
     companion object {
+        private val heightRange = 50..280
+        private val birthdayMin = LocalDate.of(1990, 1, 1)
+        private val interestsCountRange = 0..8
+
         fun validate(
             height: Int,
             birthday: LocalDate,
             interests: Set<Interest>,
         ) {
-            expect(
-                height in 50..280,
-                "Height must be between 50 and 280, but got $height",
-            )
+            expect(height in heightRange) {
+                append("Height must be between ${heightRange.first} and ${heightRange.last}, ")
+                append("but got $height")
+            }
 
-            expect(
-                birthday.isAfter(LocalDate.of(1990, 1, 1)),
-                "Birthday must be after 1990-01-01, but got $birthday",
-            )
+            expect(birthday.isAfter(birthdayMin)) {
+                append("Birthday must be after ")
+                append(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(birthdayMin))
+                append(", but got $birthday")
+            }
 
-            expect(
-                interests.size in 0..8,
-                "Person must have no more than 8 interests, got ${interests.size}",
-            )
+            expect(interests.size in interestsCountRange) {
+                append("Person must have no more than ${interestsCountRange.last} ")
+                append("interests, got ${interests.size}")
+            }
         }
     }
 }

@@ -31,12 +31,12 @@ data class Faculty(
     }
 
     companion object {
+        private val shortNameRegex = Regex("[A-Za-z]{2,16}")
+        private val fullNameRegex = Regex("[A-Za-z ]{6,128}")
+
         fun validate(shortName: String, fullName: String) {
             expectMatches("Short name", shortName, shortNameRegex)
             expectMatches("Full name", fullName, fullNameRegex)
         }
-
-        private val shortNameRegex = Regex("[A-Za-z]{2,16}")
-        private val fullNameRegex = Regex("[A-Za-z ]{6,128}")
     }
 }

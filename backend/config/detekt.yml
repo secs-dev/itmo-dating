@@ -178,7 +178,7 @@ style:
     maxChainedCalls: 3
   MaxLineLength:
     active: true
-    maxLineLength: 80
+    maxLineLength: 100
   MultilineLambdaItParameter:
     active: true
   MultilineRawStringIndentation:

@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.model.generated.FacultyMessage
-import ru.ifmo.se.dating.people.model.generated.PersonMessage
 import ru.ifmo.se.dating.people.model.generated.PersonDraftMessage
+import ru.ifmo.se.dating.people.model.generated.PersonMessage
 import ru.ifmo.se.dating.people.model.generated.ZodiacSignMessage
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -34,8 +34,7 @@ internal class HttpPeopleApi : PeopleApiDelegate {
         updatedMin: OffsetDateTime?,
         updatedMax: OffsetDateTime?,
         sortBy: List<String>?,
-    ): ResponseEntity<Flow<PersonMessage>> =
-        ResponseEntityStub.create()
+    ): ResponseEntity<Flow<PersonMessage>> = ResponseEntityStub.create()
 
     override suspend fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
         ResponseEntityStub.create()
@@ -46,12 +45,10 @@ internal class HttpPeopleApi : PeopleApiDelegate {
     override suspend fun peoplePersonIdPatch(
         personId: Long,
         personDraftMessage: PersonDraftMessage,
-    ): ResponseEntity<Unit> =
-        ResponseEntityStub.create()
+    ): ResponseEntity<Unit> = ResponseEntityStub.create()
 
     override suspend fun peoplePost(
         idempotencyKey: UUID,
         personDraftMessage: PersonDraftMessage,
-    ): ResponseEntity<PersonMessage> =
-        ResponseEntityStub.create()
+    ): ResponseEntity<PersonMessage> = ResponseEntityStub.create()
 }
