@@ -1,38 +1,58 @@
 [versions]
-com-fasterxml-jackson-core-jackson-databind = "2.18.1"
-io-swagger-core-v3-swagger-annotations = "2.2.25"
-io-swagger-core-v3-swagger-models = "2.2.25"
-jakarta-validation-jakarta-validation-api = "3.1.0"
-junit-junit = "4.13.2"
-org-liquibase-liquibase-core = "4.29.2"
-org-openapitools-jackson-databind-nullable = "0.2.6"
-org-postgresql-postgresql = "42.7.4"
-org-springdoc-springdoc-openapi-starter-webmvc-ui = "2.6.0"
 org-springframework-boot-spring-boot = "3.3.5"
-org-springframework-boot-spring-boot-starter-jdbc = "3.3.5"
-org-springframework-boot-spring-boot-starter-test = "3.3.5"
-org-springframework-boot-spring-boot-starter-web = "3.3.5"
-org-springframework-spring-context = "6.1.14"
-org-springframework-spring-web = "6.1.14"
-org-testcontainers = "1.20.3"
+org-springframework-spring = "6.1.14"
+
+io-swagger-core-v3-swagger = "2.2.25"
+org-openapitools-jackson-databind-nullable = "0.2.6"
+org-springdoc-springdoc-openapi-starter = "2.6.0"
+
 org-jooq = "3.19.15"
+org-liquibase-liquibase-core = "4.29.2"
+org-postgresql-postgresql = "42.7.4"
+org-postgresql-r2dbc-postgresql = "1.0.7.RELEASE"
+
+com-fasterxml-jackson-core-jackson-databind = "2.18.1"
+jakarta-validation-jakarta-validation-api = "3.1.0"
+
+org-jetbrains-kotlinx-kotlinx-coroutines = "1.9.0"
+io-projectreactor-kotlin-reactor-kotlin-extensions = "1.2.3"
+io-projectreactor-reactor-test = "3.6.11"
+junit-junit = "4.13.2"
+org-testcontainers = "1.20.3"
+
 
 [libraries]
-com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
-io-swagger-core-v3-swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version.ref = "io-swagger-core-v3-swagger-annotations" }
-io-swagger-core-v3-swagger-models = { module = "io.swagger.core.v3:swagger-models", version.ref = "io-swagger-core-v3-swagger-models" }
-jakarta-validation-jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-jakarta-validation-api" }
-junit-junit = { module = "junit:junit", version.ref = "junit-junit" }
-org-liquibase-liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "org-liquibase-liquibase-core" }
-org-openapitools-jackson-databind-nullable = { module = "org.openapitools:jackson-databind-nullable", version.ref = "org-openapitools-jackson-databind-nullable" }
-org-postgresql-postgresql = { module = "org.postgresql:postgresql", version.ref = "org-postgresql-postgresql" }
-org-springdoc-springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "org-springdoc-springdoc-openapi-starter-webmvc-ui" }
 org-springframework-boot-spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "org-springframework-boot-spring-boot-starter-jdbc" }
-org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "org-springframework-boot-spring-boot-starter-test" }
-org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "org-springframework-boot-spring-boot-starter-web" }
-org-springframework-spring-context = { module = "org.springframework:spring-context", version.ref = "org-springframework-spring-context" }
-org-springframework-spring-web = { module = "org.springframework:spring-web", version.ref = "org-springframework-spring-web" }
+org-springframework-boot-spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "org-springframework-boot-spring-boot" }
+org-springframework-boot-spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc", version.ref = "org-springframework-boot-spring-boot" }
+org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "org-springframework-boot-spring-boot" }
+
+org-springframework-spring-context = { module = "org.springframework:spring-context", version.ref = "org-springframework-spring" }
+org-springframework-spring-web = { module = "org.springframework:spring-web", version.ref = "org-springframework-spring" }
+
+org-springdoc-springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "org-springdoc-springdoc-openapi-starter" }
+
+io-swagger-core-v3-swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version.ref = "io-swagger-core-v3-swagger" }
+io-swagger-core-v3-swagger-models = { module = "io.swagger.core.v3:swagger-models", version.ref = "io-swagger-core-v3-swagger" }
+org-openapitools-jackson-databind-nullable = { module = "org.openapitools:jackson-databind-nullable", version.ref = "org-openapitools-jackson-databind-nullable" }
+
+jakarta-validation-jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-jakarta-validation-api" }
+com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
+
+org-jetbrains-kotlinx-kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "org-jetbrains-kotlinx-kotlinx-coroutines" }
+io-projectreactor-kotlin-reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version.ref = "io-projectreactor-kotlin-reactor-kotlin-extensions" }
+
+org-jooq-jooq = { module = "org.jooq:jooq", version.ref = "org-jooq" }
+org-jooq-jooq-kotlin = { module = "org.jooq:jooq-kotlin", version.ref = "org-jooq" }
+org-jooq-jooq-meta-extensions = { module = "org.jooq:jooq-meta-extensions", version.ref = "org-jooq" }
+org-jooq-jooq-meta-kotlin = { module = "org.jooq:jooq-meta-kotlin", version.ref = "org-jooq" }
+
+org-liquibase-liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "org-liquibase-liquibase-core" }
+org-postgresql-postgresql = { module = "org.postgresql:postgresql", version.ref = "org-postgresql-postgresql" }
+org-postgresql-r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", version.ref = "org-postgresql-r2dbc-postgresql" }
+
+junit-junit = { module = "junit:junit", version.ref = "junit-junit" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "org-testcontainers" }
-org-jooq-jooq = { module = "org.jooq:jooq" , version.ref = "org-jooq" }
-org-jooq-jooq-kotlin = { module = "org.jooq:jooq-kotlin" , version.ref = "org-jooq" }
+org-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "org-testcontainers" }
+org-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "org-testcontainers" }
+io-projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "io-projectreactor-reactor-test" }

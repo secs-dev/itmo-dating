@@ -1,20 +1,21 @@
 package ru.ifmo.se.dating.matchmaker.api
 
+import kotlinx.coroutines.flow.Flow
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate
-import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKind
+import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
 
 @Service
 internal class HttpPeopleApi : PeopleApiDelegate {
-    override fun peoplePersonIdAttitudesIncomingAttitudeKindPost(
+    override suspend fun peoplePersonIdAttitudesIncomingAttitudeKindPost(
         personId: Long,
-        attitudeKind: AttitudeKind,
+        attitudeKind: AttitudeKindMessage,
     ): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
     override fun peoplePersonIdMatchesGet(
         personId: Long,
-    ): ResponseEntity<List<Long>> =
+    ): ResponseEntity<Flow<Long>> =
         ResponseEntityStub.create()
 }

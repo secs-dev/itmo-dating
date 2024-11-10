@@ -65,7 +65,11 @@ data class Person(
     }
 
     companion object {
-        fun validate(height: Int, birthday: LocalDate, interests: Set<Interest>) {
+        fun validate(
+            height: Int,
+            birthday: LocalDate,
+            interests: Set<Interest>,
+        ) {
             expect(
                 height in 50..280,
                 "Height must be between 50 and 280, but got $height",

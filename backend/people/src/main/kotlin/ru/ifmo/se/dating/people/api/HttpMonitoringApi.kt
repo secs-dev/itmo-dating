@@ -9,7 +9,7 @@ import javax.sql.DataSource
 internal class HttpMonitoringApi(
     private val data: DataSource,
 ) : MonitoringApiDelegate {
-    override fun monitoringHealthcheckGet(): ResponseEntity<String> =
+    override suspend fun monitoringHealthcheckGet(): ResponseEntity<String> =
         data.connection.use { connection ->
             connection.createStatement().use { statement ->
                 statement.executeQuery("SELECT current_schema").use { result ->

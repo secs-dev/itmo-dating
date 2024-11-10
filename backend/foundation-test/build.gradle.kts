@@ -4,6 +4,10 @@ plugins {
 
 dependencies {
     api(libs.org.springframework.boot.spring.boot.starter.test)
-    api(libs.org.testcontainers.postgresql)
+
     api(libs.junit.junit)
+    api(libs.org.testcontainers.postgresql)
+    api(libs.org.testcontainers.r2dbc)
+    api(libs.org.testcontainers.junit.jupiter)
+    api(libs.io.projectreactor.reactor.test)
 }

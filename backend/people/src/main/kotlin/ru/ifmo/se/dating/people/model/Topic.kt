@@ -29,10 +29,10 @@ data class Topic(
     }
 
     companion object {
+        private val nameRegex = Regex("^[A-Za-z]{3,32}$")
+
         fun validate(name: String) {
             expectMatches("Topic name", name, nameRegex)
         }
-
-        private val nameRegex = Regex("^[A-Za-z]{3,32}$")
     }
 }

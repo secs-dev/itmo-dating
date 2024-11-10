@@ -1,12 +1,13 @@
 package ru.ifmo.se.dating.people.api
 
+import kotlinx.coroutines.flow.Flow
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
-import ru.ifmo.se.dating.people.model.generated.Faculty
-import ru.ifmo.se.dating.people.model.generated.Person
-import ru.ifmo.se.dating.people.model.generated.PersonDraft
-import ru.ifmo.se.dating.people.model.generated.ZodiacSign
+import ru.ifmo.se.dating.people.model.generated.FacultyMessage
+import ru.ifmo.se.dating.people.model.generated.PersonMessage
+import ru.ifmo.se.dating.people.model.generated.PersonDraftMessage
+import ru.ifmo.se.dating.people.model.generated.ZodiacSignMessage
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
@@ -25,32 +26,32 @@ internal class HttpPeopleApi : PeopleApiDelegate {
         heightMax: Int?,
         birthdayMin: LocalDate?,
         birthdayMax: LocalDate?,
-        zodiac: List<ZodiacSign>?,
-        faculty: List<Faculty>?,
+        zodiac: List<ZodiacSignMessage>?,
+        faculty: List<FacultyMessage>?,
         latitude: Double?,
         longitude: Double?,
         radius: Int?,
         updatedMin: OffsetDateTime?,
         updatedMax: OffsetDateTime?,
         sortBy: List<String>?,
-    ): ResponseEntity<List<Person>> =
+    ): ResponseEntity<Flow<PersonMessage>> =
         ResponseEntityStub.create()
 
-    override fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
+    override suspend fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
-    override fun peoplePersonIdGet(personId: Long): ResponseEntity<Person> =
+    override suspend fun peoplePersonIdGet(personId: Long): ResponseEntity<PersonMessage> =
         ResponseEntityStub.create()
 
-    override fun peoplePersonIdPatch(
+    override suspend fun peoplePersonIdPatch(
         personId: Long,
-        personDraft: PersonDraft,
+        personDraftMessage: PersonDraftMessage,
     ): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 
-    override fun peoplePost(
+    override suspend fun peoplePost(
         idempotencyKey: UUID,
-        personDraft: PersonDraft,
-    ): ResponseEntity<Person> =
+        personDraftMessage: PersonDraftMessage,
+    ): ResponseEntity<PersonMessage> =
         ResponseEntityStub.create()
 }

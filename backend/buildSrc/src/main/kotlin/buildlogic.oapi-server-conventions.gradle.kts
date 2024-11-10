@@ -15,9 +15,11 @@ extra["generateOAPIServer"] = { serviceName: String ->
         invokerPackage = "$group.$serviceName"
         apiPackage = "$group.$serviceName.api.generated"
         modelPackage = "$group.$serviceName.model.generated"
+        modelNameSuffix = "Message"
         configOptions = mapOf(
             "delegatePattern" to "true",
             "useSpringBoot3" to "true",
+            "reactive" to "true",
         )
     }
 
