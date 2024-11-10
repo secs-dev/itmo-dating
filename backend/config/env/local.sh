@@ -1,2 +1,1 @@
-cd "$(dirname "$0")"
-export $(cat .env | xargs)
+export $(cat "$(dirname "$0")/.env" | xargs)
