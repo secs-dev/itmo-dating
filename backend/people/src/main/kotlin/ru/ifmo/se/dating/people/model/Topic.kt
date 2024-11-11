@@ -8,7 +8,7 @@ data class Topic(
     val name: String,
 ) {
     @JvmInline
-    value class Id(private val number: Int) {
+    value class Id(val number: Int) {
         init {
             expectId(number)
         }

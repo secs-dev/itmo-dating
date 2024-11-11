@@ -4,7 +4,6 @@ import ru.ifmo.se.dating.validation.expect
 import ru.ifmo.se.dating.validation.expectId
 import ru.ifmo.se.dating.validation.expectMatches
 import java.time.LocalDate
-import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 data class Person(
@@ -14,11 +13,10 @@ data class Person(
     val height: Int,
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
-    val creationMoment: OffsetDateTime,
     val interests: Set<Interest>,
 ) {
     @JvmInline
-    value class Id(private val number: Int) {
+    value class Id(val number: Int) {
         init {
             expectId(number)
         }
@@ -27,7 +25,7 @@ data class Person(
     }
 
     @JvmInline
-    value class Name(private val text: String) {
+    value class Name(val text: String) {
         init {
             expectMatches("First/Last Name", text, nameRegex)
         }
