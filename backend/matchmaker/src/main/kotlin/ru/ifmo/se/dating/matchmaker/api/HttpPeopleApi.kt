@@ -2,11 +2,11 @@ package ru.ifmo.se.dating.matchmaker.api
 
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
 
-@Service
+@Controller
 internal class HttpPeopleApi : PeopleApiDelegate {
     override suspend fun peoplePersonIdAttitudesIncomingAttitudeKindPost(
         personId: Long,

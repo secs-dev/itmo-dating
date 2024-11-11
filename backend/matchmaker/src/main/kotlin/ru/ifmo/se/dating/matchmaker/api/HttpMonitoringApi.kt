@@ -3,10 +3,10 @@ package ru.ifmo.se.dating.matchmaker.api
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.http.ResponseEntity
 import org.springframework.r2dbc.core.DatabaseClient
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.MonitoringApiDelegate
 
-@Service
+@Controller
 internal class HttpMonitoringApi(
     private val data: DatabaseClient,
 ) : MonitoringApiDelegate {

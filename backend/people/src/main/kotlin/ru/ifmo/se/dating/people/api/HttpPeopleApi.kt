@@ -2,7 +2,7 @@ package ru.ifmo.se.dating.people.api
 
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.model.generated.FacultyMessage
 import ru.ifmo.se.dating.people.model.generated.PersonDraftMessage
@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
 
-@Service
+@Controller
 internal class HttpPeopleApi : PeopleApiDelegate {
     override fun peopleGet(
         offset: Long,
