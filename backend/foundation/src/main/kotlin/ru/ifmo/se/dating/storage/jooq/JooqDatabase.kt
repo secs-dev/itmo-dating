@@ -6,7 +6,7 @@ import org.jooq.Publisher
 
 typealias DSLBlock<T> = DSLContext.() -> Publisher<T>
 
-internal interface JooqDatabase {
+interface JooqDatabase {
     fun <T : Any> flow(block: DSLBlock<T>): Flow<T>
     suspend fun <T : Any> only(block: DSLBlock<T>): T
     suspend fun <T : Any> maybe(block: DSLBlock<T>): T?
