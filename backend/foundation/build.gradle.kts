@@ -1,6 +1,7 @@
 plugins {
-    id("buildlogic.spring-conventions")
+    id("buildlogic.kotlin-library-conventions")
     id("buildlogic.jooq-conventions")
+    kotlin("plugin.spring")
 }
 
 dependencies {

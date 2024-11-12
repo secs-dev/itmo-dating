@@ -8,7 +8,7 @@ import javax.crypto.KeyGenerator
 class KeysTest {
     @Test
     fun secretRoundTrip() {
-        for (i in 0..32) {
+        repeat(32) {
             val key = KeyGenerator.getInstance("AES").generateKey()
             assertEquals(key, Keys.serialize(key).let { Keys.deserializeSecret(it) })
         }
@@ -16,10 +16,11 @@ class KeysTest {
 
     @Test
     fun publicRoundTrip() {
-        for (i in 0..8) {
+        repeat(8) {
             val pair = KeyPairGenerator.getInstance("RSA").genKeyPair()
-            assertEquals(pair.public, Keys.serialize(pair.public).let { Keys.deserializePublic(it) })
-            assertEquals(pair.private, Keys.serialize(pair.private).let { Keys.deserializePrivate(it) })
+            val (public, private) = pair.public to pair.private
+            assertEquals(public, Keys.deserializePublic(Keys.serialize(public)))
+            assertEquals(private, Keys.deserializePrivate(Keys.serialize(private)))
         }
     }
 

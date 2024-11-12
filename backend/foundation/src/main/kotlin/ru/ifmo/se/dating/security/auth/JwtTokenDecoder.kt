@@ -7,7 +7,6 @@ import ru.ifmo.se.dating.exception.AuthenticationException
 import java.security.PublicKey
 import java.time.Clock
 import java.util.*
-import javax.crypto.SecretKey
 
 class JwtTokenDecoder(
     private val clock: Clock,

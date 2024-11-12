@@ -31,9 +31,7 @@ object Keys {
 
     private fun split(string: String): Pair<String, ByteArray> {
         val parts = string.split(":")
-        if (parts.size != 2) {
-            throw IllegalArgumentException("Invalid serialized key format")
-        }
+        require(parts.size == 2)
         val algorithm = parts[0]
         val encodedKey = parts[1]
         return algorithm to Base64.getDecoder().decode(encodedKey)
