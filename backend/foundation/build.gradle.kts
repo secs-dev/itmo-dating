@@ -17,6 +17,10 @@ dependencies {
     api(libs.io.swagger.core.v3.swagger.models)
     api(libs.org.openapitools.jackson.databind.nullable)
 
+    api(libs.io.jsonwebtoken.jjwt.api)
+    runtimeOnly(libs.io.jsonwebtoken.jjwt.impl)
+    runtimeOnly(libs.io.jsonwebtoken.jjwt.jackson)
+
     api(libs.jakarta.validation.jakarta.validation.api)
     api(libs.com.fasterxml.jackson.core.jackson.databind)
 
@@ -31,5 +35,6 @@ dependencies {
     api(libs.org.liquibase.liquibase.core)
     api(libs.org.postgresql.postgresql)
     api(libs.org.postgresql.r2dbc.postgresql)
-}
 
+    testImplementation(libs.junit.junit)
+}

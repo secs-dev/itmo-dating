@@ -6,6 +6,8 @@ io-swagger-core-v3-swagger = "2.2.25"
 org-openapitools-jackson-databind-nullable = "0.2.6"
 org-springdoc-springdoc-openapi-starter = "2.6.0"
 
+io-jsonwebtoken = "0.12.6"
+
 org-jooq = "3.19.15"
 org-liquibase-liquibase-core = "4.29.2"
 org-postgresql-postgresql = "42.7.4"
@@ -16,10 +18,10 @@ jakarta-validation-jakarta-validation-api = "3.1.0"
 
 org-jetbrains-kotlinx-kotlinx-coroutines = "1.9.0"
 io-projectreactor-kotlin-reactor-kotlin-extensions = "1.2.3"
+
 io-projectreactor-reactor-test = "3.6.11"
 junit-junit = "4.13.2"
 org-testcontainers = "1.20.3"
-
 
 [libraries]
 org-springframework-boot-spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "org-springframework-boot-spring-boot" }
@@ -35,6 +37,10 @@ org-springdoc-springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:s
 io-swagger-core-v3-swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version.ref = "io-swagger-core-v3-swagger" }
 io-swagger-core-v3-swagger-models = { module = "io.swagger.core.v3:swagger-models", version.ref = "io-swagger-core-v3-swagger" }
 org-openapitools-jackson-databind-nullable = { module = "org.openapitools:jackson-databind-nullable", version.ref = "org-openapitools-jackson-databind-nullable" }
+
+io-jsonwebtoken-jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "io-jsonwebtoken" }
+io-jsonwebtoken-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "io-jsonwebtoken" }
+io-jsonwebtoken-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "io-jsonwebtoken" }
 
 jakarta-validation-jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-jakarta-validation-api" }
 com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
