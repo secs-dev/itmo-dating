@@ -11,9 +11,13 @@ class DatabaseInitializer :
 
     override fun initialize(ctx: ConfigurableApplicationContext) {
         TestPropertyValues.of(
-            "spring.datasource.url=${postgres.jdbcUrl()}",
-            "spring.datasource.username=${postgres.username()}",
-            "spring.datasource.password=${postgres.password()}",
+            "spring.datasource.url=${postgres.jdbcUrl}",
+            "spring.datasource.username=${postgres.username}",
+            "spring.datasource.password=${postgres.password}",
+
+            "spring.r2dbc.url=${postgres.r2dbcUrl}",
+            "spring.r2dbc.username=${postgres.username}",
+            "spring.r2dbc.password=${postgres.password}",
         ).applyTo(ctx.environment)
     }
 }

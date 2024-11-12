@@ -1,11 +1,11 @@
 package ru.ifmo.se.dating.matchmaker.api
 
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.AttitudesApiDelegate
 
-@Service
+@Controller
 internal class HttpAttitudesApi : AttitudesApiDelegate {
-    override fun attitudesDelete(sourceId: Long): ResponseEntity<Unit> =
+    override suspend fun attitudesDelete(sourceId: Long): ResponseEntity<Unit> =
         ResponseEntityStub.create()
 }
