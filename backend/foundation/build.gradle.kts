@@ -1,5 +1,5 @@
 plugins {
-    id("buildlogic.kotlin-library-conventions")
+    id("buildlogic.spring-conventions")
     id("buildlogic.jooq-conventions")
 }
 
