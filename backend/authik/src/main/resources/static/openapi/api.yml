@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: ITMO Dating Authik
+  version: 0.0.1
+  description: Service is responsible for authentication.
+  contact:
+    name: ITMO Dating Team
+    url: https://github.com/secs-dev/itmo-dating/issues
+servers:
+  - url: /api
+    x-internal: true
+security:
+  - bearerAuth: [USER, ADMIN]
+tags:
+  - name: Monitoring
+  - name: Telegram
+paths:
+  /monitoring/healthcheck:
+    get:
+      tags: [Monitoring]
+      summary: Checks if service is alive
+      description: Returns 'ok', if service is alive, else we will cry
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                pattern: ^[a-z]+$
+                maxLength: 32
+                example: ok
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
+components:
+  schemas:
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: HTTP Status Code
+          minimum: 100
+          maximum: 600
+          example: 400
+        status:
+          type: string
+          description: HTTP Status Description
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 64
+          example: Bad Request
+        message:
+          type: string
+          description: Detailed Message
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 128
+          example: Username must contain only latin letter
+      required:
+        - code
+        - status
+        - message
+  responses:
+    "400":
+      description: Invalid arguments
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "401":
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "403":
+      description: Access forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "503":
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    Unexpected:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
