@@ -50,7 +50,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TelegramWebAppInitData"
+              $ref: "#/components/schemas/TelegramInitData"
       responses:
         "200":
           description: Data is valid, identity verified
@@ -82,6 +82,20 @@ components:
       bearerFormat: JWT
       description: Supports RFC8725
   schemas:
+    TelegramInitData:
+      description: https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
+      type: object
+      properties:
+        string:
+          type: string
+          maxLength: 8192
+        hash:
+          type: string
+          pattern: ^[A-Fa-f0-9]{64}$
+          maxLength: 64
+      required:
+        - string
+        - hash
     TelegramWebAppInitData:
       description: https://core.telegram.org/bots/webapps#webappinitdata
       type: object
@@ -94,6 +108,9 @@ components:
           type: integer
           format: int64
           minimum: 1577826000
+        raw:
+          type: string
+          minLength: 8192
         hash:
           type: string
           pattern: ^[A-Fa-f0-9]{64}$
@@ -101,6 +118,7 @@ components:
       required:
         - user
         - auth_date
+        - raw
         - hash
     TelegramWebAppUser:
       description: https://core.telegram.org/bots/webapps#webappuser
@@ -130,21 +148,13 @@ components:
       type: string
       pattern: ^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+=]*$
       maxLength: 1024
-    UserId:
-      description: ITMO Dating User Identity number
-      type: integer
-      minimum: 0
-      maximum: 150000000
     AuthGrant:
       description: Access token
       type: object
       properties:
-        userId:
-          $ref: '#/components/schemas/UserId'
         access:
           $ref: '#/components/schemas/AccessToken'
       required:
-        - userId
         - access
     GeneralError:
       type: object

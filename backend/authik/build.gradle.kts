@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.commons.codec.commons.codec)
     implementation(project(":foundation"))
     testImplementation(project(":foundation-test"))
 }

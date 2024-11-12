@@ -15,6 +15,7 @@ org-postgresql-r2dbc-postgresql = "1.0.7.RELEASE"
 
 com-fasterxml-jackson-core-jackson-databind = "2.18.1"
 jakarta-validation-jakarta-validation-api = "3.1.0"
+commons-codec-commons-codec = "1.17.1"
 
 org-jetbrains-kotlinx-kotlinx-coroutines = "1.9.0"
 io-projectreactor-kotlin-reactor-kotlin-extensions = "1.2.3"
@@ -44,6 +45,7 @@ io-jsonwebtoken-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", versio
 
 jakarta-validation-jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-jakarta-validation-api" }
 com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
+commons-codec-commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec-commons-codec" }
 
 org-jetbrains-kotlinx-kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "org-jetbrains-kotlinx-kotlinx-coroutines" }
 io-projectreactor-kotlin-reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-extensions", version.ref = "io-projectreactor-kotlin-reactor-kotlin-extensions" }
