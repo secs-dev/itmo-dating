@@ -1,0 +1,1 @@
+export {RegistrationCommonInfo} from "./registration-common-info"
