@@ -1,0 +1,227 @@
+openapi: 3.0.3
+info:
+  title: ITMO Dating Authik
+  version: 0.0.1
+  description: Service is responsible for authentication.
+  contact:
+    name: ITMO Dating Team
+    url: https://github.com/secs-dev/itmo-dating/issues
+servers:
+  - url: /api
+    x-internal: true
+security:
+  - bearerAuth: [USER, ADMIN]
+tags:
+  - name: Monitoring
+  - name: Telegram
+paths:
+  /monitoring/healthcheck:
+    get:
+      tags: [Monitoring]
+      summary: Checks if service is alive
+      description: Returns 'ok', if service is alive, else we will cry
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                pattern: ^[a-z]+$
+                maxLength: 32
+                example: ok
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
+  /auth/telegram/web-app:
+    put:
+      tags: [Telegram]
+      summary: Authenticate via Telegram
+      description: |
+        Takes data received via the Telegram Mini App, 
+        validates and returns JWT access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TelegramInitData"
+      responses:
+        "200":
+          description: Data is valid, identity verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthGrant"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          description: User is banned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        "503":
+          description: Telegram is unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+        default:
+          $ref: "#/components/responses/Unexpected"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supports RFC8725
+  schemas:
+    TelegramInitData:
+      description: https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
+      type: object
+      properties:
+        string:
+          type: string
+          maxLength: 8192
+        hash:
+          type: string
+          pattern: ^[A-Fa-f0-9]{64}$
+          maxLength: 64
+      required:
+        - string
+        - hash
+    TelegramWebAppInitData:
+      description: https://core.telegram.org/bots/webapps#webappinitdata
+      type: object
+      properties:
+        query_id:
+          type: string
+        user:
+          $ref: "#/components/schemas/TelegramWebAppUser"
+        auth_date:
+          type: integer
+          format: int64
+          minimum: 1577826000
+        raw:
+          type: string
+          minLength: 8192
+        hash:
+          type: string
+          pattern: ^[A-Fa-f0-9]{64}$
+          maxLength: 64
+      required:
+        - user
+        - auth_date
+        - raw
+        - hash
+    TelegramWebAppUser:
+      description: https://core.telegram.org/bots/webapps#webappuser
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+        first_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        last_name:
+          type: string
+          maxLength: 128
+          minLength: 1
+        username:
+          type: string
+          maxLength: 128
+          minLength: 1
+      required:
+        - id
+        - first_name
+    AccessToken:
+      description: A JWT token required to access resources
+      type: string
+      pattern: ^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+=]*$
+      maxLength: 1024
+    AuthGrant:
+      description: Access token
+      type: object
+      properties:
+        access:
+          $ref: '#/components/schemas/AccessToken'
+      required:
+        - access
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: HTTP Status Code
+          minimum: 100
+          maximum: 600
+          example: 400
+        status:
+          type: string
+          description: HTTP Status Description
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 64
+          example: Bad Request
+        message:
+          type: string
+          description: Detailed Message
+          pattern: ^[A-Za-z0-9 .,'-]+$
+          maxLength: 128
+          example: Username must contain only latin letter
+      required:
+        - code
+        - status
+        - message
+  responses:
+    "400":
+      description: Invalid arguments
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "401":
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "403":
+      description: Access forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    "503":
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"
+    Unexpected:
+      description: Unknown error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/GeneralError"

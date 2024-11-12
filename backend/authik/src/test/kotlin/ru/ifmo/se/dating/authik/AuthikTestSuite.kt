@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.matchmaker
+package ru.ifmo.se.dating.authik
 
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -19,4 +19,4 @@ import ru.ifmo.se.dating.Application
         DatabaseInitializer::class,
     ],
 )
-abstract class MatchmakerTestSuite
+abstract class AuthikTestSuite

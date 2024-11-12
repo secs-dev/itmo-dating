@@ -1,0 +1,20 @@
+spring:
+  config:
+    import: application-foundation.yml
+  datasource:
+    url: jdbc:postgresql://authik-database:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  r2dbc:
+    url: r2dbc:postgresql://authik-database:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+security:
+  auth:
+    token:
+      sign:
+        public: ${TOKEN_SIGN_KEY_PUBLIC}
+        private: ${TOKEN_SIGN_KEY_PRIVATE}
+      duration: PT2H
+    telegram:
+      token: ${TELEGRAM_BOT_TOKEN}
