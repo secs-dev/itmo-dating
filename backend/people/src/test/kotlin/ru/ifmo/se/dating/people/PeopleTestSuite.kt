@@ -6,6 +6,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import ru.ifmo.se.dating.Application
+import ru.ifmo.se.dating.PostgresInitializer
 
 @RunWith(SpringRunner::class)
 @ActiveProfiles(profiles = ["test"])
@@ -16,7 +17,7 @@ import ru.ifmo.se.dating.Application
 )
 @ContextConfiguration(
     initializers = [
-        DatabaseInitializer::class,
+        PostgresInitializer::class,
     ],
 )
 abstract class PeopleTestSuite

@@ -1,11 +1,11 @@
-package ru.ifmo.se.dating.people
+package ru.ifmo.se.dating
 
 import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import ru.ifmo.se.dating.container.Postgres
 
-class DatabaseInitializer :
+class PostgresInitializer :
     ApplicationContextInitializer<ConfigurableApplicationContext> {
     private val postgres: Postgres = Postgres.start()
 
