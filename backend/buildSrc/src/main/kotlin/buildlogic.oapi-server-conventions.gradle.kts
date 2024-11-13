@@ -36,6 +36,6 @@ extra["generateOAPIServer"] = { serviceName: String ->
     }
 
     application {
-        mainClass = "$group.$serviceName.ApplicationKt"
+        mainClass = "$group.ApplicationKt"
     }
 }
