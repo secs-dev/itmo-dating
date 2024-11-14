@@ -1,6 +1,6 @@
 import {Link} from "atomic-router-react";
 import {Text} from "@telegram-apps/telegram-ui"
-import {AuthTest} from "@/pages/auth-test/ui";
+import {AuthTest} from "@/widgets";
 export const Home = () => {
    return (
        <>
