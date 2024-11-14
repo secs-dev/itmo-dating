@@ -1,9 +1,9 @@
 import {RegistrationCommonInfo} from "@/widgets";
 import {Section} from "@telegram-apps/telegram-ui";
 import {useState} from "react";
-import {fetchTgUser} from "@/features/fetch-tg-user/api";
+import {fetchTgUser} from "@/features/fetch-tg-user/api/fetchTgUser.ts";
 import {RegistrationData} from "@/entities";
-import {mountRegTg} from "../api";
+import {mountRegTg} from "../api/mountMainButton.ts";
 export const Registration = () => {
     const tgUser = fetchTgUser()
     mountRegTg()

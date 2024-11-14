@@ -1,1 +1,1 @@
-export {RegistrationPictures} from "./ui"
+export {RegistrationPictures} from "./ui/RegistrationPictures.tsx"

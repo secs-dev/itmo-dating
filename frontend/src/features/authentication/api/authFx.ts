@@ -1,6 +1,7 @@
 import {createEffect, createStore} from 'effector';
-import { persist } from 'effector-storage/session'
-import {AuthRequest, AuthResponse} from '../model'
+import {persist} from 'effector-storage/session'
+import {AuthRequest} from '../model/AuthRequest.ts'
+import {AuthResponse} from "../model/AuthResponse.ts";
 import axios from "axios";
 import {AuthState, initialAuthState} from "@/entities";
 import {backendAuthikUrl} from "@/shared/api";
@@ -29,13 +30,6 @@ export const authFx = createEffect<AuthRequest, AuthState, Error>({
     },
 });
 
-export const logoutFx = createEffect<void, AuthState, Error>({
-    handler: async () => {
-        console.log("deauth success")
-        return initialAuthState
-    },
-});
-
 const fillAuthState = (response: AuthResponse): AuthState => {
     return {
         token: response.access,
@@ -49,29 +43,4 @@ const fillAuthState = (response: AuthResponse): AuthState => {
 export const $isAuthenticated = $authStore.map(state => state.isAuthenticated)
 
 $authStore.on(authFx.doneData, (_, result) => result);
-$authStore.on(authFx.failData, (_, error) => ({ ...initialAuthState, loading: false, error: error.message }));
-
-$authStore.on(logoutFx.doneData, (_, result) => result);
-
-
-export function prepareInitDataRaw(initDataRaw: string | undefined): any {
-    if (initDataRaw == undefined)
-        throw new Error("initDataRaw is undefined")
-    let hash: string | undefined;
-
-    const pairs: string[] = [];
-
-    new URLSearchParams(initDataRaw).forEach((value, key) => {
-        if (key === 'hash') {
-            hash = value;
-            return;
-        }
-
-        pairs.push(`${key}=${value}`);
-    });
-
-    pairs.sort();
-
-    const tgInitDataRaw = pairs.join('\n')
-    return {tgInitDataRaw, hash}
-}
+$authStore.on(authFx.failData, (_, error) => ({...initialAuthState, loading: false, error: error.message}));

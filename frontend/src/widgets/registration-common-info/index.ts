@@ -1,1 +1,1 @@
-export {RegistrationCommonInfo} from "./ui"
+export {RegistrationCommonInfo} from "./ui/RegistrationCommonInfo.tsx"

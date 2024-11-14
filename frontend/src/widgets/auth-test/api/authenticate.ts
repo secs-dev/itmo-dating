@@ -1,5 +1,5 @@
 import {retrieveLaunchParams} from "@telegram-apps/sdk";
-import {authFx, prepareInitDataRaw} from "@/features/authentication/api";
+import {authFx, prepareInitDataRaw} from "@/features";
 
 export function authenticate() {
     const { initDataRaw} = retrieveLaunchParams();

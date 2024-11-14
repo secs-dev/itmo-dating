@@ -1,4 +1,4 @@
-import {mainButton, secondaryButton} from "@telegram-apps/sdk";
+import {mainButton} from "@telegram-apps/sdk";
 
 export function mountRegTg() {
     if (mainButton.mount.isAvailable()) {
@@ -14,10 +14,4 @@ export function mountRegTg() {
         // mainButton.
     }
     console.log("mb is vis " + mainButton.isMounted())
-}
-
-export function unmountRegTg() {
-    if (secondaryButton.mount.isSupported()) {
-        secondaryButton.unmount()
-    }
 }

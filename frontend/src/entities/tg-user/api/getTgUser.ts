@@ -1,5 +1,5 @@
 import {type User} from "@telegram-apps/sdk";
-import {TgUser} from "../model";
+import {TgUser} from "../model/TgUser.ts";
 
 export function getTgUser(user: User | undefined): TgUser | null {
     if (user == undefined)
