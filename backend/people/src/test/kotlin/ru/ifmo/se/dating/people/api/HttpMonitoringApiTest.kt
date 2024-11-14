@@ -1,7 +1,6 @@
 package ru.ifmo.se.dating.people.api
 
 import org.junit.Assert
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
 import ru.ifmo.se.dating.people.PeopleTestSuite

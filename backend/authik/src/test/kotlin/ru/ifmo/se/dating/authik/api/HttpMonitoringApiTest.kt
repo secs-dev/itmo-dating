@@ -1,7 +1,6 @@
 package ru.ifmo.se.dating.authik.api
 
 import org.junit.Assert
-import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
 import ru.ifmo.se.dating.authik.AuthikTestSuite
