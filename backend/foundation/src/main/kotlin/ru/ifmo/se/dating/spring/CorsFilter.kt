@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono
 
 @Component
 class CorsFilter : WebFilter {
+    // FIXME
     override fun filter(ctx: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         ctx.response.headers.add("Access-Control-Allow-Origin", "*")
         ctx.response.headers.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
