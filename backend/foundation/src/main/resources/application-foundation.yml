@@ -1,5 +1,9 @@
 server:
   port: 8080
+  ssl:
+    certificate: "classpath:cert.pem"
+    certificate-private-key: "classpath:privkey.pem"
+    trust-certificate: "classpath:chain.pem"
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver

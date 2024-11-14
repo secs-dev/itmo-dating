@@ -1,6 +1,7 @@
 package ru.ifmo.se.dating.authik.telegram
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.apache.commons.codec.digest.HmacUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -12,11 +13,12 @@ import ru.ifmo.se.dating.validation.expect
 
 @Component
 class InitDataParser(
-    private val jackson: ObjectMapper,
-
     @Value("\${security.auth.telegram.token}")
     telegramToken: String,
 ) {
+    private val jackson = jacksonObjectMapper().apply {
+        registerKotlinModule()
+    }
     private val algorithm = "HmacSHA256"
     private val hmac =
         HmacUtils(algorithm, HmacUtils(algorithm, "WebAppData").hmac(telegramToken))

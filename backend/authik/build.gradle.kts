@@ -8,6 +8,7 @@ dependencies {
     implementation(libs.commons.codec.commons.codec)
     implementation(project(":foundation"))
     testImplementation(project(":foundation-test"))
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.+")
 }
 
 val serviceName = "authik"

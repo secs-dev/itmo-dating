@@ -132,14 +132,28 @@ components:
           type: string
           maxLength: 128
           minLength: 1
+          nullable: true
         last_name:
           type: string
           maxLength: 128
           minLength: 1
+          nullable: true
         username:
           type: string
           maxLength: 128
           minLength: 1
+        language_code:
+          type: string
+          maxLength: 10
+          minLength: 1
+          nullable: true
+        allows_write_to_pm:
+          type: boolean
+          nullable: true
+        photo_url:
+          type: string
+          maxLength: 256
+          nullable: true
       required:
         - id
         - first_name
