@@ -5,8 +5,8 @@
   "type": "module",
   "homepage": "http://localhost:5731/itmo-dating-mini-app",
   "dependencies": {
-    "@telegram-apps/sdk-react": "^2.0.7",
-    "@telegram-apps/telegram-ui": "^2.1.5",
+    "@telegram-apps/sdk": "^2.6.0",
+    "@telegram-apps/telegram-ui": "^2.1.8",
     "eruda": "^3.0.1",
     "@ant-design/icons": "^5.2.6",
     "antd": "^5.13.2",

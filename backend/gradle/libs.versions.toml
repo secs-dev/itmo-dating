@@ -13,7 +13,8 @@ org-liquibase-liquibase-core = "4.29.2"
 org-postgresql-postgresql = "42.7.4"
 org-postgresql-r2dbc-postgresql = "1.0.7.RELEASE"
 
-com-fasterxml-jackson-core-jackson-databind = "2.18.1"
+com-fasterxml-jackson = "2.18.1"
+
 jakarta-validation-jakarta-validation-api = "3.1.0"
 commons-codec-commons-codec = "1.17.1"
 
@@ -44,7 +45,8 @@ io-jsonwebtoken-jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref 
 io-jsonwebtoken-jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "io-jsonwebtoken" }
 
 jakarta-validation-jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation-jakarta-validation-api" }
-com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
+com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson" }
+com-fasterxml-jackson-module-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "com-fasterxml-jackson" }
 commons-codec-commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec-commons-codec" }
 
 org-jetbrains-kotlinx-kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "org-jetbrains-kotlinx-kotlinx-coroutines" }

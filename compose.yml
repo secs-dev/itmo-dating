@@ -1,9 +1,7 @@
 services:
   authik:
-    image: eclipse-temurin:21-jdk-alpine
-    volumes:
-      - ./backend/authik/build/libs/authik-1.0.0.jar:/authik.jar
-    command: java -jar /authik.jar
+    build:
+      context: ./backend/authik
     environment:
       POSTGRES_DB: ${ITMO_DATING_AUTHIK_POSTGRES_DB?:err}
       POSTGRES_USER: ${ITMO_DATING_AUTHIK_POSTGRES_USER?:err}
@@ -28,10 +26,8 @@ services:
       timeout: 1s
       retries: 16
   matchmaker:
-    image: eclipse-temurin:21-jdk-alpine
-    volumes:
-      - ./backend/matchmaker/build/libs/matchmaker-1.0.0.jar:/matchmaker.jar
-    command: java -jar /matchmaker.jar
+    build:
+      context: ./backend/matchmaker
     environment:
       POSTGRES_DB: ${ITMO_DATING_MATCHMAKER_POSTGRES_DB?:err}
       POSTGRES_USER: ${ITMO_DATING_MATCHMAKER_POSTGRES_USER?:err}
@@ -53,10 +49,8 @@ services:
       timeout: 1s
       retries: 16
   people:
-    image: eclipse-temurin:21-jdk-alpine
-    volumes:
-      - ./backend/people/build/libs/people-1.0.0.jar:/people.jar
-    command: java -jar /people.jar
+    build:
+      context: ./backend/people
     environment:
       POSTGRES_DB: ${ITMO_DATING_PEOPLE_POSTGRES_DB?:err}
       POSTGRES_USER: ${ITMO_DATING_PEOPLE_POSTGRES_USER?:err}

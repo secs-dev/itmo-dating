@@ -20,6 +20,7 @@ extra["generateOAPIServer"] = { serviceName: String ->
             "delegatePattern" to "true",
             "useSpringBoot3" to "true",
             "reactive" to "true",
+            "serializationLibrary" to "jackson"
         )
     }
 

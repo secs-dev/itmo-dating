@@ -24,6 +24,7 @@ dependencies {
 
     api(libs.jakarta.validation.jakarta.validation.api)
     api(libs.com.fasterxml.jackson.core.jackson.databind)
+    api(libs.com.fasterxml.jackson.module.jackson.module.kotlin)
 
     api(libs.org.jetbrains.kotlinx.kotlinx.coroutines.reactor)
     api(libs.io.projectreactor.kotlin.reactor.kotlin.extensions)
