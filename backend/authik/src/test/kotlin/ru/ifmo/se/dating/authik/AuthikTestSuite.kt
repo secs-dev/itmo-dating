@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import ru.ifmo.se.dating.Application
 import ru.ifmo.se.dating.PostgresInitializer
+import ru.ifmo.se.dating.SecurityInitializer
 
 @RunWith(SpringRunner::class)
 @ActiveProfiles(profiles = ["test"])
@@ -18,6 +19,7 @@ import ru.ifmo.se.dating.PostgresInitializer
 @ContextConfiguration(
     initializers = [
         PostgresInitializer::class,
+        SecurityInitializer::class,
     ],
 )
 abstract class AuthikTestSuite
