@@ -24,7 +24,7 @@ export const authFx = createEffect<AuthRequest, AuthState, Error>({
                     });
             return fillAuthState(response.data);
         } catch (error) {
-            console.log(error)
+            console.error(error)
             throw new Error('Auth failed');
         }
     },
