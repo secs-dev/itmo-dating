@@ -17,6 +17,12 @@ fun expectId(number: Int) {
     expect(0 < number, "Unique id must be a positive number, got $number")
 }
 
+fun <T : Comparable<T>> expectInRange(name: String, value: T, range: ClosedRange<T>) {
+    expect(value in range) {
+        append("$name must be in range $range, got $value")
+    }
+}
+
 fun expectMatches(name: String, text: String, regex: Regex) {
     expect(regex.matches(text)) {
         append("$name must match ${regex.pattern}, ")
