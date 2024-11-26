@@ -19,6 +19,7 @@ function remove() {
 }
 
 function generate() {
+  echo "Generation key pair..."
   keytool \
     -genkeypair \
     -alias      "$ALIAS" \
@@ -31,8 +32,13 @@ function generate() {
     -storeType  PKCS12 \
     -storepass  "$PASSWORD"
 
-  openssl pkcs12 -in "$KEYSTORE" -nocerts -out "$ALIAS-private.pem"
-  openssl pkcs12 -in "$KEYSTORE" -nokeys  -out "$ALIAS-public.pem"
+  echo "Exporting a private key..."
+  openssl pkcs12 -in "$KEYSTORE" -nocerts -out "$ALIAS-private.pem" \
+    -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
+
+  echo "Exporting a public key..."
+  openssl pkcs12 -in "$KEYSTORE" -nokeys  -out "$ALIAS-public.pem"  \
+    -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
 
   copy "$KEYSTORE"
   copy "$ALIAS-private.pem"
