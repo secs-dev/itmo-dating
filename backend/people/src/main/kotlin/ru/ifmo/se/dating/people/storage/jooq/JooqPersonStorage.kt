@@ -12,12 +12,15 @@ import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.security.auth.User
+import ru.ifmo.se.dating.storage.TxEnv
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
 
 @Repository
-class JooqPersonStorage(private val database: JooqDatabase) : PersonStorage {
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    override suspend fun upsert(draft: Person.Draft) {
+class JooqPersonStorage(
+    private val database: JooqDatabase,
+    private val txEnv: TxEnv,
+) : PersonStorage {
+    override suspend fun upsert(draft: Person.Draft) = txEnv.transactional {
         database.only {
             val record = draft.toRecord()
             insertInto(PERSON)
@@ -38,6 +41,8 @@ class JooqPersonStorage(private val database: JooqDatabase) : PersonStorage {
                 .set(PERSON.UPDATE_MOMENT, currentOffsetDateTime())
                 .where(PERSON.ACCOUNT_ID.eq(draft.id.number))
         }
+
+        Unit
     }
 
     override suspend fun setReadyMoment(id: User.Id) = database.only {

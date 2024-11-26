@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.storage.jooq.exception
+package ru.ifmo.se.dating.storage.exception
 
 import ru.ifmo.se.dating.exception.StorageException
 

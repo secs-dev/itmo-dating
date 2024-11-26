@@ -1,7 +1,10 @@
-package ru.ifmo.se.dating.storage.jooq.exception
+package ru.ifmo.se.dating.storage.jooq
 
 import org.jooq.exception.IntegrityConstraintViolationException
 import ru.ifmo.se.dating.exception.StorageException
+import ru.ifmo.se.dating.storage.exception.LinkViolationException
+import ru.ifmo.se.dating.storage.exception.UniqueViolationException
+import ru.ifmo.se.dating.storage.exception.UnknownException
 
 private typealias Mapping =
     (IntegrityConstraintViolationException) -> StorageException

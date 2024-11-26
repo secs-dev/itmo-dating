@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toFlux
 import ru.ifmo.se.dating.storage.jooq.DSLBlock
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
-import ru.ifmo.se.dating.storage.jooq.exception.toStorage
+import ru.ifmo.se.dating.storage.jooq.toStorage
 
 @Component
 class SpringJooqDatabase(private val database: DatabaseClient) : JooqDatabase {

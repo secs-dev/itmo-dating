@@ -3,19 +3,24 @@ package ru.ifmo.se.dating.people.logic.basic
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
-import ru.ifmo.se.dating.people.exception.ConflictException
+import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.people.exception.IncompletePersonException
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.security.auth.User
+import ru.ifmo.se.dating.storage.exception.LinkViolationException
 
 @Service
 class BasicPersonService(private val storage: PersonStorage) : PersonService {
-    override suspend fun edit(draft: Person.Draft) =
+    override suspend fun edit(draft: Person.Draft) = try {
         storage.upsert(draft)
+    } catch (exception: LinkViolationException) {
+        throw InvalidValueException("faculty or location id does not exist", exception)
+    }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     override suspend fun save(expected: Person.Draft) {

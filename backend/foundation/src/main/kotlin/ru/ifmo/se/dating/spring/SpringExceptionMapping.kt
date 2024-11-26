@@ -5,10 +5,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import ru.ifmo.se.dating.api.GeneralErrorMessage
-import ru.ifmo.se.dating.exception.AuthenticationException
 import ru.ifmo.se.dating.exception.GenericException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.NotFoundException
+import ru.ifmo.se.dating.exception.ConflictException
+import ru.ifmo.se.dating.exception.AuthenticationException
 
 interface SpringExceptionMapping {
     fun httpCode(exception: GenericException): HttpStatus?
@@ -31,9 +32,10 @@ interface SpringDomainExceptionMapping<T : GenericException> : SpringExceptionMa
 class SpringGenericExceptionHandler(private val mapping: SpringExceptionMapping) {
     val GenericException.httpCode: HttpStatus
         get() = mapping.httpCode(this) ?: when (this) {
+            is AuthenticationException -> HttpStatus.UNAUTHORIZED
+            is ConflictException -> HttpStatus.CONFLICT
             is InvalidValueException -> HttpStatus.BAD_REQUEST
             is NotFoundException -> HttpStatus.NOT_FOUND
-            is AuthenticationException -> HttpStatus.UNAUTHORIZED
             else -> throw NotImplementedError("$this")
         }
 
@@ -41,7 +43,7 @@ class SpringGenericExceptionHandler(private val mapping: SpringExceptionMapping)
     fun handle(exception: GenericException) =
         exception.toResponseEntity()
 
-    fun GenericException.toResponseEntity() =
+    fun GenericException.toResponseEntity(): ResponseEntity<GeneralErrorMessage> =
         ResponseEntity
             .status(this.httpCode)
             .body(
