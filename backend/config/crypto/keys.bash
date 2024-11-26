@@ -11,6 +11,7 @@ INSTALL_PATH="foundation/src/main/resources/keystore"
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
 
 function copy() {
+  mkdir -p "../../$INSTALL_PATH"
   cp "$1" "../../$INSTALL_PATH/$1"
 }
 
