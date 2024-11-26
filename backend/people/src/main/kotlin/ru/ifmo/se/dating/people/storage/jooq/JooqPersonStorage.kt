@@ -21,7 +21,13 @@ class JooqPersonStorage(private val database: JooqDatabase) : PersonStorage {
         database.only {
             val record = draft.toRecord()
             insertInto(PERSON)
-                .values(record)
+                .set(PERSON.ACCOUNT_ID, draft.id.number)
+                .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
+                .also { q -> draft.lastName?.text?.let { q.set(PERSON.LAST_NAME, it) } }
+                .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
+                .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
+                .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
+                .also { q -> draft.locationId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
                 .onConflict(PERSON.ACCOUNT_ID)
                 .doUpdate()
                 .set(record)
