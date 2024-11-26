@@ -48,7 +48,6 @@ internal class HttpPeopleApi : PeopleApiDelegate {
     ): ResponseEntity<Unit> = ResponseEntityStub.create()
 
     override suspend fun peoplePost(
-        idempotencyKey: UUID,
         personDraftMessage: PersonDraftMessage,
-    ): ResponseEntity<PersonMessage> = ResponseEntityStub.create()
+    ): ResponseEntity<Unit> = ResponseEntityStub.create()
 }
