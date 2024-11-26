@@ -233,29 +233,6 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
-    post:
-      tags: [People]
-      summary: Create a person
-      description: Creates a person with given parameters, idempotent
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PersonDraft"
-      responses:
-        "204":
-          description: Created
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "500":
-          $ref: "#/components/responses/500"
-        "503":
-          $ref: "#/components/responses/503"
-        default:
-          $ref: "#/components/responses/Unexpected"
   /people/{person_id}:
     get:
       tags: [People]
@@ -269,7 +246,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Person"
+                $ref: "#/components/schemas/PersonVariant"
         "401":
           $ref: "#/components/responses/401"
         "403":
@@ -405,10 +382,10 @@ components:
           description: A date when person was born
           format: date
           maxLength: 32
-        faculty:
-          $ref: "#/components/schemas/Faculty"
-        location:
-          $ref: "#/components/schemas/Location"
+        faculty_id:
+          $ref: "#/components/schemas/FacultyId"
+        location_id:
+          $ref: "#/components/schemas/LocationId"
     PersonDraft:
       allOf:
         - $ref: "#/components/schemas/PersonVariant"
@@ -431,11 +408,8 @@ components:
           properties:
             zodiac:
               $ref: "#/components/schemas/ZodiacSign"
-            updateMoment:
-              $ref: "#/components/schemas/UpdateMoment"
           required:
             - zodiac
-            - updateMoment
     PersonVariant:
       type: object
       discriminator:
@@ -467,17 +441,25 @@ components:
         - capricorn
         - aquarius
         - pisces
+    FacultyId:
+      type: integer
+      description: A unique key of a faculty
+      format: int64
+      minimum: 1
+      maximum: 1024
+      example: 234
     Faculty:
-      type: string
+      type: object
       description: Where does a person study
-      enum:
-        - csr # Control Systems and Robotics
-        - secs # Software Engineering and Computer Systems
-        - itp # Information Technologies and Programming
-        - it # Infocommunication Technologies
-        - phys # Physics
-        - infchem # Infochemistry
-        - biotech # Biotechnologies
+      properties:
+        id:
+          $ref: "#/components/schemas/FacultyId"
+        longName:
+          type: string
+          description: A unique name of a faculty
+          pattern: ^[A-Z][a-z]{4,64}$
+          maxLength: 64
+          example: Software Engineering and Computer Systems
     Latitude:
       type: number
       description: The north-south position on the Earth surface
@@ -565,9 +547,18 @@ components:
         - name
         - icon
         - color
+    LocationId:
+      type: integer
+      description: A unique key of a location
+      format: int64
+      minimum: 1
+      maximum: 100000
+      example: 234
     Location:
       type: object
       properties:
+        id:
+          $ref: "#/components/schemas/LocationId"
         name:
           type: string
           description: User readable location name
