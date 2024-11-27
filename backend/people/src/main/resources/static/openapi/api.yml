@@ -418,9 +418,9 @@ components:
           description: A date when person was born
           format: date
           maxLength: 32
-        faculty_id:
+        facultyId:
           $ref: "#/components/schemas/FacultyId"
-        location_id:
+        locationId:
           $ref: "#/components/schemas/LocationId"
     PersonDraft:
       allOf:
@@ -456,11 +456,11 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/PersonStatus'
-        user_id:
+        userId:
           $ref: "#/components/schemas/PersonId"
       required:
         - status
-        - user_id
+        - userId
     ZodiacSign:
       type: string
       description: Astrological sign, caclulated based on a birthday
@@ -541,7 +541,7 @@ components:
     Interest:
       type: object
       properties:
-        topic_id:
+        topicId:
           $ref: "#/components/schemas/TopicId"
         level:
           type: integer
@@ -550,7 +550,7 @@ components:
           minimum: 1
           maximum: 5
       required:
-        - topic_id
+        - topicId
         - level
     TopicId:
       type: integer
