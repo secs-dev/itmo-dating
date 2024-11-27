@@ -35,3 +35,22 @@ CREATE TABLE people.person (
     update_moment   timestamptz,
     ready_moment    timestamptz
 );
+
+--changeset vityaman:data
+
+INSERT INTO people.faculty (long_name)
+VALUES
+    ('Control Systems and Robotics'),
+    ('Software Engineering and Computer Systems'),
+    ('Information Technologies and Programming'),
+    ('Infocommunication Technologies'),
+    ('Physics'),
+    ('Infochemistry'),
+    ('Biotechnologies');
+
+INSERT INTO people.location (name, latitude, longitude)
+VALUES
+    ('Yandex, Benois', 59.958988, 30.406129),
+    ('ITMO, Kronverkskiy', 59.957427, 30.308053),
+    ('ITMO, Birzhevaya', 59.943970, 30.295717),
+    ('ITMO, Lomonosova', 59.926567, 30.339097);

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.people.api.generated.MonitoringApiDelegate
 
 @Controller
-internal class HttpMonitoringApi(
+class HttpMonitoringApi(
     private val data: DatabaseClient,
 ) : MonitoringApiDelegate {
     override suspend fun monitoringHealthcheckGet(): ResponseEntity<String> =

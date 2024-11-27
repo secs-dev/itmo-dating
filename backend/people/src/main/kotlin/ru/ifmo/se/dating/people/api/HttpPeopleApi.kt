@@ -22,7 +22,7 @@ import java.time.LocalDate
 import java.time.OffsetDateTime
 
 @Controller
-internal class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
+class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
     override fun peopleGet(
         offset: Long,
         limit: Long,
