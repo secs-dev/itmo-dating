@@ -158,7 +158,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/components/schemas/Faculty"
+              $ref: "#/components/schemas/FacultyId"
             maxItems: 128
         - name: latitude
           in: query
@@ -200,18 +200,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
-              enum:
-                - first_name
-                - last_name
-                - height
-                - birthday
-                - updated
-                - -first_name
-                - -last_name
-                - -height
-                - -birthday
-                - -updated
+              $ref: "#/components/schemas/PersonSortingKey"
             maxItems: 10
       responses:
         "200":
@@ -470,6 +459,19 @@ components:
       required:
         - status
         - userId
+    PersonSortingKey:
+      type: string
+      enum:
+        - first_name
+        - last_name
+        - height
+        - birthday
+        - updated
+        - -first_name
+        - -last_name
+        - -height
+        - -birthday
+        - -updated
     ZodiacSign:
       type: string
       description: Astrological sign, caclulated based on a birthday

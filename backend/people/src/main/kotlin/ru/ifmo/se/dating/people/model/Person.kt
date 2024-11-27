@@ -47,6 +47,14 @@ data class Person(
         }
     }
 
+    enum class Field {
+        FIRST_NAME,
+        LAST_NAME,
+        HEIGHT,
+        BIRTHDAY,
+        UPDATED,
+    }
+
     init {
         Draft(
             id = id,

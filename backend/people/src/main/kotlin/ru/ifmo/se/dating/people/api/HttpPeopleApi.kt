@@ -1,22 +1,18 @@
 package ru.ifmo.se.dating.people.api
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.exception.orThrowNotFound
+import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.model.Faculty
 import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
-import ru.ifmo.se.dating.people.model.generated.FacultyMessage
-import ru.ifmo.se.dating.people.model.generated.PersonDraftMessage
-import ru.ifmo.se.dating.people.model.generated.PersonMessage
-import ru.ifmo.se.dating.people.model.generated.PersonVariantMessage
-import ru.ifmo.se.dating.people.model.generated.PersonStatusMessage
-import ru.ifmo.se.dating.people.model.generated.PersonPatchMessage
-import ru.ifmo.se.dating.people.model.generated.ZodiacSignMessage
+import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -36,14 +32,41 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
         birthdayMin: LocalDate?,
         birthdayMax: LocalDate?,
         zodiac: List<ZodiacSignMessage>?,
-        faculty: List<FacultyMessage>?,
+        faculty: List<Long>?,
         latitude: Double?,
         longitude: Double?,
         radius: Int?,
         updatedMin: OffsetDateTime?,
         updatedMax: OffsetDateTime?,
-        sortBy: List<String>?,
-    ): ResponseEntity<Flow<PersonMessage>> = ResponseEntityStub.create()
+        sortBy: List<PersonSortingKeyMessage>?,
+    ): ResponseEntity<Flow<PersonMessage>> {
+        if (listOfNotNull(
+                picturesCountMin,
+                picturesCountMax,
+                topicId,
+                zodiac,
+                latitude,
+                longitude,
+                radius,
+                updatedMin,
+                updatedMax,
+                sortBy
+            ).isNotEmpty()
+        ) {
+            TODO("Unsupported GET /people query parameter was provided")
+        }
+
+        return service.getFiltered(
+            Page(offset = offset.toInt(), limit = limit.toInt()),
+            PersonService.Filter(
+                firstName = firstName?.let { Regex(it) } ?: Regex(".*"),
+                lastName = lastName?.let { Regex(it) } ?: Regex(".*"),
+                height = (heightMin ?: Int.MIN_VALUE)..(heightMax ?: Int.MAX_VALUE),
+                birthday = (birthdayMin ?: LocalDate.MIN)..(birthdayMax ?: LocalDate.MAX),
+                faculty = (faculty ?: listOf()).map { Faculty.Id(it.toInt()) }.toSet(),
+            ),
+        ).map { it.toMessage() }.let { ResponseEntity.ok(it) }
+    }
 
     override suspend fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
         ResponseEntityStub.create()

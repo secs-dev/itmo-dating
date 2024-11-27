@@ -1,5 +1,7 @@
 package ru.ifmo.se.dating.people.storage.jooq
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.jooq.impl.DSL.currentOffsetDateTime
@@ -60,6 +62,11 @@ class JooqPersonStorage(
         selectFrom(PERSON)
             .where(PERSON.ACCOUNT_ID.eq(id.number))
     }?.toModel()
+
+    override fun selectAllReady(): Flow<Person> = database.flow {
+        selectFrom(PERSON)
+            .where(PERSON.READY_MOMENT.isNotNull)
+    }.map { it.toModel() as Person }
 
     fun Person.Draft.toRecord() = PersonRecord(
         accountId = id.number,

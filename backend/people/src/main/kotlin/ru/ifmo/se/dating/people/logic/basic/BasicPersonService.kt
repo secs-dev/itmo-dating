@@ -1,11 +1,16 @@
 package ru.ifmo.se.dating.people.logic.basic
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.take
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
-import ru.ifmo.se.dating.exception.ConflictException
+import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.exception.IncompletePersonException
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.model.Person
@@ -48,4 +53,14 @@ class BasicPersonService(private val storage: PersonStorage) : PersonService {
 
     override suspend fun getById(id: User.Id): PersonVariant? =
         storage.selectById(id)
+
+    override fun getFiltered(page: Page, filter: PersonService.Filter): Flow<Person> =
+        storage.selectAllReady()
+            .drop(page.offset)
+            .take(page.limit)
+            .filter { filter.firstName.matches(it.firstName.text) }
+            .filter { filter.lastName.matches(it.lastName.text) }
+            .filter { filter.height.contains(it.height) }
+            .filter { filter.birthday.contains(it.birthday) }
+            .filter { filter.faculty.isEmpty() || filter.faculty.contains(it.facultyId) }
 }
