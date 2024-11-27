@@ -71,6 +71,8 @@ exceptions:
 formatting:
   NoWildcardImports:
     active: false
+  ImportOrdering:
+    active: false
 
 naming:
   BooleanPropertyNaming:

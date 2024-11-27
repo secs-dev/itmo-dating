@@ -18,6 +18,7 @@ class JooqPersonStorage(
     private val database: JooqDatabase,
     private val txEnv: TxEnv,
 ) : PersonStorage {
+    @Suppress("CyclomaticComplexMethod")
     override suspend fun upsert(draft: Person.Draft) = txEnv.transactional {
         database.only {
             insertInto(PERSON)
@@ -51,6 +52,7 @@ class JooqPersonStorage(
     override suspend fun setReadyMoment(id: User.Id) = database.only {
         update(PERSON)
             .set(PERSON.READY_MOMENT, currentOffsetDateTime())
+            .set(PERSON.UPDATE_MOMENT, currentOffsetDateTime())
             .where(PERSON.ACCOUNT_ID.eq(id.number))
     }.let { }
 

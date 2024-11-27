@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.server.ServerWebInputException
 import ru.ifmo.se.dating.api.GeneralErrorMessage
+import ru.ifmo.se.dating.exception.AuthenticationException
 import ru.ifmo.se.dating.exception.GenericException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.exception.ConflictException
-import ru.ifmo.se.dating.exception.AuthenticationException
 
 interface SpringExceptionMapping {
     fun httpCode(exception: GenericException): HttpStatus?
