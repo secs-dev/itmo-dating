@@ -14,10 +14,10 @@ import ru.ifmo.se.dating.people.model.generated.FacultyMessage
 import ru.ifmo.se.dating.people.model.generated.PersonDraftMessage
 import ru.ifmo.se.dating.people.model.generated.PersonMessage
 import ru.ifmo.se.dating.people.model.generated.PersonVariantMessage
-import ru.ifmo.se.dating.people.model.generated.ZodiacSignMessage
 import ru.ifmo.se.dating.people.model.generated.PersonStatusMessage
+import ru.ifmo.se.dating.people.model.generated.PersonPatchMessage
+import ru.ifmo.se.dating.people.model.generated.ZodiacSignMessage
 import ru.ifmo.se.dating.security.auth.User
-import ru.ifmo.se.dating.validation.expect
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
@@ -56,14 +56,10 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
 
     override suspend fun peoplePersonIdPatch(
         personId: Long,
-        personDraftMessage: PersonDraftMessage,
+        personPatchMessage: PersonPatchMessage,
     ): ResponseEntity<Unit> {
-        expect(personId == personDraftMessage.userId) {
-            append("Path provided personId does not match with body")
-        }
-
-        val status = personDraftMessage.status
-        val model = personDraftMessage.toModel()
+        val status = personPatchMessage.status
+        val model = personPatchMessage.toModel(personId.toInt())
 
         when (status) {
             PersonStatusMessage.draft -> service.edit(model)
@@ -74,8 +70,8 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
     }
 
     companion object {
-        fun PersonDraftMessage.toModel() = Person.Draft(
-            id = User.Id(userId.toInt()),
+        fun PersonPatchMessage.toModel(id: Int) = Person.Draft(
+            id = User.Id(id),
             firstName = firstName?.let { Person.Name(it) },
             lastName = lastName?.let { Person.Name(it) },
             height = height,

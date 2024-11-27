@@ -293,7 +293,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PersonDraft"
+              $ref: "#/components/schemas/PersonPatch"
       responses:
         "204":
           description: Updated
@@ -422,6 +422,15 @@ components:
           $ref: "#/components/schemas/FacultyId"
         locationId:
           $ref: "#/components/schemas/LocationId"
+    PersonPatch:
+      allOf:
+        - type: object
+          properties:
+            status:
+              $ref: '#/components/schemas/PersonStatus'
+          required:
+            - status
+        - $ref: "#/components/schemas/PersonInfo"
     PersonDraft:
       allOf:
         - $ref: "#/components/schemas/PersonVariant"
