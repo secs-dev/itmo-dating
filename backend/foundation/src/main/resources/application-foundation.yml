@@ -17,3 +17,6 @@ springdoc:
   swagger-ui:
     url: /openapi/api.yml
     path: /swagger-ui.html
+logging:
+  level:
+    web: DEBUG

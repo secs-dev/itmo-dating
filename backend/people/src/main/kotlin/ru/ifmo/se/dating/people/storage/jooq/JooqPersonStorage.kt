@@ -4,8 +4,6 @@ import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.jooq.impl.DSL.currentOffsetDateTime
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
 import ru.ifmo.se.dating.people.model.Faculty
 import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
@@ -22,7 +20,6 @@ class JooqPersonStorage(
 ) : PersonStorage {
     override suspend fun upsert(draft: Person.Draft) = txEnv.transactional {
         database.only {
-            val record = draft.toRecord()
             insertInto(PERSON)
                 .set(PERSON.ACCOUNT_ID, draft.id.number)
                 .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
@@ -30,10 +27,16 @@ class JooqPersonStorage(
                 .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
                 .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
                 .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
-                .also { q -> draft.locationId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
+                .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
                 .onConflict(PERSON.ACCOUNT_ID)
                 .doUpdate()
-                .set(record)
+                .set(PERSON.ACCOUNT_ID, draft.id.number)
+                .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
+                .also { q -> draft.lastName?.text?.let { q.set(PERSON.LAST_NAME, it) } }
+                .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
+                .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
+                .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
+                .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
         }
 
         database.only {
