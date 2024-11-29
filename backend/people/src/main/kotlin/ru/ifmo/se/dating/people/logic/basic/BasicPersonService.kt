@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.take
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
 import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
@@ -17,18 +15,21 @@ import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.security.auth.User
+import ru.ifmo.se.dating.storage.TxEnv
 import ru.ifmo.se.dating.storage.exception.LinkViolationException
 
 @Service
-class BasicPersonService(private val storage: PersonStorage) : PersonService {
+class BasicPersonService(
+    private val storage: PersonStorage,
+    private val txEnv: TxEnv,
+) : PersonService {
     override suspend fun edit(draft: Person.Draft) = try {
         storage.upsert(draft)
     } catch (exception: LinkViolationException) {
         throw InvalidValueException("faculty or location id does not exist", exception)
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    override suspend fun save(expected: Person.Draft) {
+    override suspend fun save(expected: Person.Draft) = txEnv.transactional {
         val variant = getById(expected.id)
             .orThrowNotFound("person with id ${expected.id}")
 
