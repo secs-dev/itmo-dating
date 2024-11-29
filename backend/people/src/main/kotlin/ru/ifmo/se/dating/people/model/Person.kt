@@ -1,6 +1,7 @@
 package ru.ifmo.se.dating.people.model
 
 import ru.ifmo.se.dating.security.auth.User
+import ru.ifmo.se.dating.validation.expect
 import ru.ifmo.se.dating.validation.expectInRange
 import ru.ifmo.se.dating.validation.expectMatches
 import java.time.LocalDate
@@ -14,7 +15,9 @@ data class Person(
     val height: Int,
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
-    val locationId: Location.Id
+    val locationId: Location.Id,
+    val version: Version,
+    val isPublished: Boolean,
 ) : PersonVariant() {
     @JvmInline
     value class Name(val text: String) {
@@ -24,6 +27,13 @@ data class Person(
 
         companion object {
             private val regex = Regex("[A-Za-z,.'-]{2,32}")
+        }
+    }
+
+    @JvmInline
+    value class Version(val number: Int) {
+        init {
+            expect(0 <= number, "Version must be non negative")
         }
     }
 

@@ -32,8 +32,10 @@ CREATE TABLE people.person (
     faculty_id      integer                 REFERENCES people.faculty(id),
     location_id     integer                 REFERENCES people.location(id),
     creation_moment timestamptz             NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    update_moment   timestamptz,
-    ready_moment    timestamptz
+    update_moment   timestamptz             NOT NULL,
+    ready_moment    timestamptz,
+    version         integer                 NOT NULL DEFAULT 0,
+    is_published    boolean                 NOT NULL DEFAULT FALSE
 );
 
 --changeset vityaman:data
