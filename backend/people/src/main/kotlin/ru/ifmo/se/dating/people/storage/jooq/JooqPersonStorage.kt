@@ -12,44 +12,32 @@ import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.security.auth.User
-import ru.ifmo.se.dating.storage.TxEnv
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
 
 @Repository
-class JooqPersonStorage(
-    private val database: JooqDatabase,
-    private val txEnv: TxEnv,
-) : PersonStorage {
+class JooqPersonStorage(private val database: JooqDatabase) : PersonStorage {
     @Suppress("CyclomaticComplexMethod")
-    override suspend fun upsert(draft: Person.Draft) = txEnv.transactional {
-        database.only {
-            insertInto(PERSON)
-                .set(PERSON.ACCOUNT_ID, draft.id.number)
-                .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
-                .also { q -> draft.lastName?.text?.let { q.set(PERSON.LAST_NAME, it) } }
-                .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
-                .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
-                .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
-                .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
-                .onConflict(PERSON.ACCOUNT_ID)
-                .doUpdate()
-                .set(PERSON.ACCOUNT_ID, draft.id.number)
-                .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
-                .also { q -> draft.lastName?.text?.let { q.set(PERSON.LAST_NAME, it) } }
-                .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
-                .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
-                .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
-                .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
-        }
-
-        database.only {
-            update(PERSON)
-                .set(PERSON.UPDATE_MOMENT, currentOffsetDateTime())
-                .where(PERSON.ACCOUNT_ID.eq(draft.id.number))
-        }
-
-        Unit
-    }
+    override suspend fun upsert(draft: Person.Draft) = database.only {
+        insertInto(PERSON)
+            .set(PERSON.ACCOUNT_ID, draft.id.number)
+            .set(PERSON.UPDATE_MOMENT, currentOffsetDateTime())
+            .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
+            .also { q -> draft.lastName?.text?.let { q.set(PERSON.LAST_NAME, it) } }
+            .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
+            .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
+            .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
+            .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
+            .onConflict(PERSON.ACCOUNT_ID)
+            .doUpdate()
+            .set(PERSON.ACCOUNT_ID, draft.id.number)
+            .set(PERSON.UPDATE_MOMENT, currentOffsetDateTime())
+            .also { q -> draft.firstName?.text?.let { q.set(PERSON.FIRST_NAME, it) } }
+            .also { q -> draft.lastName?.text?.let { q.set(PERSON.LAST_NAME, it) } }
+            .also { q -> draft.height?.let { q.set(PERSON.HEIGHT, it) } }
+            .also { q -> draft.birthday?.let { q.set(PERSON.BIRTHDAY, it) } }
+            .also { q -> draft.facultyId?.number?.let { q.set(PERSON.FACULTY_ID, it) } }
+            .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
+    }.let { }
 
     override suspend fun setReadyMoment(id: User.Id) = database.only {
         update(PERSON)
@@ -67,16 +55,6 @@ class JooqPersonStorage(
         selectFrom(PERSON)
             .where(PERSON.READY_MOMENT.isNotNull)
     }.map { it.toModel() as Person }
-
-    fun Person.Draft.toRecord() = PersonRecord(
-        accountId = id.number,
-        firstName = firstName?.text,
-        lastName = lastName?.text,
-        height = height,
-        birthday = birthday,
-        facultyId = facultyId?.number,
-        locationId = locationId?.number,
-    )
 
     fun PersonRecord.toModel(): PersonVariant =
         if (readyMoment != null) {
