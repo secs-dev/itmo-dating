@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import ru.ifmo.se.dating.logging.Log
 import ru.ifmo.se.dating.matchmaker.client.model.generated.PersonUpdateMessage
 import ru.ifmo.se.dating.people.external.MatchmakerApi
 import ru.ifmo.se.dating.people.logic.PersonOutbox
@@ -21,8 +20,6 @@ class BasicPersonOutbox(
     private val matchmaker: MatchmakerApi,
     override val tx: TxEnv,
 ) : PersonOutbox() {
-    private val log = Log.forClass(javaClass)
-
     override suspend fun acquireById(id: User.Id): Person =
         storage.selectById(id, FetchPolicy.WRITE_LOCKED) as Person
 
@@ -50,7 +47,6 @@ class BasicPersonOutbox(
         timeUnit = TimeUnit.SECONDS,
     )
     fun doRecovery(): Unit = runBlocking {
-        log.info("doRecovery")
         recover()
     }
 }

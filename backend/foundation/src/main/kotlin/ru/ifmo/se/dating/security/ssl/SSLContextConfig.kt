@@ -31,11 +31,13 @@ class SSLContextConfig(
             keystore.load(inputStream, keyStorePassword.toCharArray())
         }
 
-        val keyManager = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
-        keyManager.init(keystore, keyStorePassword.toCharArray())
+        val keyManager = KeyManagerFactory.getDefaultAlgorithm()
+            .let { KeyManagerFactory.getInstance(it) }
+            .apply { init(keystore, keyStorePassword.toCharArray()) }
 
-        val trustManager = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-        trustManager.init(keystore)
+        val trustManager = TrustManagerFactory.getDefaultAlgorithm()
+            .let { TrustManagerFactory.getInstance(it) }
+            .apply { init(keystore) }
 
         return SslContextBuilder.forClient()
             .keyManager(keyManager)

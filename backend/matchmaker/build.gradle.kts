@@ -9,4 +9,7 @@ dependencies {
     testImplementation(project(":foundation-test"))
 }
 
-(extra["generateOAPIServer"] as (String) -> Unit)("matchmaker")
+val serviceName = "matchmaker"
+
+(extra["generateOAPIServer"] as (String) -> Unit)(serviceName)
+(extra["generateJOOQ"] as (String) -> Unit)(serviceName)
