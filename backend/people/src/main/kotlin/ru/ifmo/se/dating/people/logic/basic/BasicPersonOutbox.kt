@@ -5,6 +5,8 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.logging.Log
+import ru.ifmo.se.dating.matchmaker.client.model.generated.PersonUpdateMessage
+import ru.ifmo.se.dating.people.external.MatchmakerApi
 import ru.ifmo.se.dating.people.logic.PersonOutbox
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.storage.PersonStorage
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class BasicPersonOutbox(
     private val storage: PersonStorage,
+    private val matchmaker: MatchmakerApi,
     override val tx: TxEnv,
 ) : PersonOutbox() {
     private val log = Log.forClass(javaClass)
@@ -26,10 +29,14 @@ class BasicPersonOutbox(
     override suspend fun isPublished(event: Person): Boolean =
         event.isPublished
 
-    override suspend fun doProcess(event: Person) = buildString {
-        append("Processing a person with id ${event.id}: ")
-        append("'${event.firstName} ${event.lastName}'...")
-    }.let { log.info(it) }
+    override suspend fun doProcess(event: Person) {
+        matchmaker.putPersonUpdate(
+            personId = event.id.number.toLong(),
+            update = PersonUpdateMessage(
+                version = event.version.number,
+            ),
+        )
+    }
 
     override suspend fun markPublished(event: Person) =
         storage.markSent(event.id)
@@ -42,5 +49,8 @@ class BasicPersonOutbox(
         initialDelayString = "30",
         timeUnit = TimeUnit.SECONDS,
     )
-    fun doRecovery(): Unit = runBlocking { recover() }
+    fun doRecovery(): Unit = runBlocking {
+        log.info("doRecovery")
+        recover()
+    }
 }

@@ -9,3 +9,6 @@ spring:
     url: r2dbc:postgresql://people-database:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+service:
+    matchmaker:
+      url: https://matchmaker:8080/api
