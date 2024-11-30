@@ -3,9 +3,10 @@ package ru.ifmo.se.dating.matchmaker.api
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import ru.ifmo.se.dating.logging.Log
 import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate
+import ru.ifmo.se.dating.matchmaker.logic.AttitudeService
 import ru.ifmo.se.dating.matchmaker.logic.PersonService
+import ru.ifmo.se.dating.matchmaker.model.Attitude
 import ru.ifmo.se.dating.matchmaker.model.PersonUpdate
 import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
 import ru.ifmo.se.dating.matchmaker.model.generated.PersonUpdateMessage
@@ -15,14 +16,18 @@ import ru.ifmo.se.dating.spring.security.SpringSecurityContext
 @Controller
 class HttpPeopleApi(
     private val personService: PersonService,
+    private val attitudeService: AttitudeService,
 ) : PeopleApiDelegate {
-    private val log = Log.forClass(javaClass)
-
     override suspend fun peoplePersonIdAttitudesIncomingAttitudeKindPost(
         personId: Long,
         attitudeKind: AttitudeKindMessage,
     ): ResponseEntity<Unit> {
-        log.info("Got user with id ${SpringSecurityContext.principal()}")
+        val sourceId = SpringSecurityContext.principal()
+        val targetId = User.Id(personId.toInt())
+        val kind = attitudeKind.toModel()
+
+        attitudeService.express(Attitude(sourceId, targetId, kind))
+
         return ResponseEntity.ok(Unit)
     }
 
@@ -44,4 +49,9 @@ class HttpPeopleApi(
         id = User.Id(personId.toInt()),
         version = PersonUpdate.Version(version),
     )
+
+    private fun AttitudeKindMessage.toModel() = when (this) {
+        AttitudeKindMessage.like -> Attitude.Kind.LIKE
+        AttitudeKindMessage.skip -> Attitude.Kind.SKIP
+    }
 }
