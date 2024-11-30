@@ -7,7 +7,6 @@ ENV="$2"
 
 ALIAS="itmo-dating"
 KEYSTORE="keystore.p12"
-TRUSTSTORE="truststore.p12"
 INSTALL_PATH="foundation/src/main/resources/keystore"
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
 
@@ -43,25 +42,13 @@ function generate() {
   openssl pkcs12 -in "$KEYSTORE" -nokeys  -out "$ALIAS-public.pem"  \
     -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
 
-  echo "Creating truststore..."
-  keytool \
-    -importcert \
-    -noprompt \
-    -keystore   "$TRUSTSTORE" \
-    -alias      "$ALIAS" \
-    -file       "$ALIAS-public.pem" \
-    -storeType  PKCS12 \
-    -storepass  "$PASSWORD"
-
   copy "$KEYSTORE"
-  copy "$TRUSTSTORE"
   copy "$ALIAS-private.pem"
   copy "$ALIAS-public.pem"
 }
 
 function clear() {
   remove "$KEYSTORE"
-  remove "$TRUSTSTORE"
   remove "$ALIAS-private.pem"
   remove "$ALIAS-public.pem"
 }

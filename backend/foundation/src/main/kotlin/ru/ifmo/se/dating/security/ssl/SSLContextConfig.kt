@@ -21,15 +21,6 @@ class SSLContextConfig(
     @Value("\${server.ssl.key-store-password}")
     private val keyStorePassword: String,
 
-    @Value("\${server.ssl.trust-store-type}")
-    private val trustStoreType: String,
-
-    @Value("\${server.ssl.trust-store}")
-    private val trustStore: Resource,
-
-    @Value("\${server.ssl.trust-store-password}")
-    private val trustStorePassword: String,
-
     @Value("\${server.ssl.protocol}")
     private val sslProtocol: String,
 ) {
@@ -40,16 +31,11 @@ class SSLContextConfig(
             keystore.load(inputStream, keyStorePassword.toCharArray())
         }
 
-        val truststore = KeyStore.getInstance(trustStoreType)
-        trustStore.inputStream.use { inputStream ->
-            truststore.load(inputStream, trustStorePassword.toCharArray())
-        }
-
         val keyManager = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
         keyManager.init(keystore, keyStorePassword.toCharArray())
 
         val trustManager = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-        trustManager.init(truststore)
+        trustManager.init(keystore)
 
         return SslContextBuilder.forClient()
             .keyManager(keyManager)
