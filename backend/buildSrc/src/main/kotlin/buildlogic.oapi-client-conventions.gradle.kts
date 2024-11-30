@@ -6,27 +6,26 @@ plugins {
     application
 }
 
-extra["generateOAPIServer"] = { serviceName: String ->
+extra["generateOAPIClient"] = { serviceName: String ->
     val serviceTitle = serviceName.replaceFirstChar { it.titlecase() }
     val group = group
 
-    val apiResourcesDir = layout.projectDirectory.asFile.let { "$it/src/main/resources" }
-    val generatedDir = layout.buildDirectory.dir("generated/server").get().toString()
+    val root = rootProject.layout.projectDirectory.asFile.let { "$it/$serviceName" }
+    val apiResourcesDir = layout.projectDirectory.asFile.let { "$root/src/main/resources" }
+    val generatedDir = layout.buildDirectory.dir("generated/client").get().toString()
 
-    val taskName = "openApiGenerate${serviceTitle}Server"
+    val taskName = "openApiGenerate${serviceTitle}Client"
     tasks.register<OpenAPIGenerateTask>(taskName) {
-        generatorName = "kotlin-spring"
+        generatorName = "kotlin"
         inputSpec = "$apiResourcesDir/static/openapi/api.yml"
         outputDir = generatedDir
-        invokerPackage = "$group"
-        apiPackage = "$group.$serviceName.api.generated"
-        modelPackage = "$group.$serviceName.model.generated"
+        packageName = "$group.$serviceName.client.generated"
+        modelPackage = "$group.$serviceName.client.model.generated"
         modelNameSuffix = "Message"
         configOptions = mapOf(
-            "delegatePattern" to "true",
+            "library" to "jvm-spring-webclient",
             "useSpringBoot3" to "true",
-            "reactive" to "true",
-            "serializationLibrary" to "jackson"
+            "serializationLibrary" to "jackson",
         )
     }
 
@@ -40,9 +39,5 @@ extra["generateOAPIServer"] = { serviceName: String ->
 
     tasks.compileKotlin.configure {
         dependsOn(taskName)
-    }
-
-    application {
-        mainClass = "$group.ApplicationKt"
     }
 }

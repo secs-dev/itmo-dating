@@ -13,3 +13,4 @@ val serviceName = "people"
 
 (extra["generateOAPIServer"] as (String) -> Unit)(serviceName)
 (extra["generateJOOQ"] as (String) -> Unit)(serviceName)
+(extra["generateOAPIClient"] as (String) -> Unit)("matchmaker")
