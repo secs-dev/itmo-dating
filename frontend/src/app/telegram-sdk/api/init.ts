@@ -7,6 +7,8 @@ import {
     $debug,
     init as initSDK,
 } from '@telegram-apps/sdk';
+import {mountMainButton} from "@/entities/main-button";
+import {mountBackButton} from "@/entities/back-button";
 
 /**
  * Initializes the application and configures its dependencies.
@@ -30,7 +32,9 @@ export function init(debug: boolean): void {
     }
 
     // Mount all components used in the project.
-    backButton.mount();
+    mountMainButton()
+    mountBackButton()
+
     miniApp.mount();
     themeParams.mount();
     initData.restore();

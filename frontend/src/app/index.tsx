@@ -1,20 +1,21 @@
 import {useEffect} from "react";
-import { router } from "./routes/api";
-import { RouterProvider } from "atomic-router-react";
+import {router} from "./routes/api";
+import {RouterProvider} from "atomic-router-react";
 
 import {$errorStore} from "@/shared/api";
 import {message} from "antd";
 import {Routes} from "@/app/routes/ui";
 
-import { init, mockTgEnv } from './telegram-sdk';
-import { retrieveLaunchParams } from '@telegram-apps/sdk';
+import {init, mockTgEnv} from './telegram-sdk';
+import {retrieveLaunchParams} from '@telegram-apps/sdk';
 
 
 export const App = () => {
-    mockTgEnv().then( () => {
-    init(retrieveLaunchParams().startParam === 'debug' || import.meta.env.DEV);
-}
-    )
+    mockTgEnv()
+        .then(() => {
+            init(retrieveLaunchParams().startParam === 'debug' || import.meta.env.DEV);
+        })
+
     const [messageApi, contextHolder] = message.useMessage();
     useEffect(() => {
         $errorStore.watch(state => {
@@ -26,7 +27,7 @@ export const App = () => {
     return (
         <RouterProvider router={router}>
             {contextHolder}
-            <Routes />
+            <Routes/>
         </RouterProvider>
     );
 };
