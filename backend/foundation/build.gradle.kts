@@ -8,6 +8,7 @@ dependencies {
     api(libs.org.springframework.boot.spring.boot)
     api(libs.org.springframework.boot.spring.boot.starter.webflux)
     api(libs.org.springframework.boot.spring.boot.starter.data.r2dbc)
+    api(libs.org.springframework.boot.spring.boot.starter.security)
 
     api(libs.org.springframework.spring.web)
     api(libs.org.springframework.spring.context)

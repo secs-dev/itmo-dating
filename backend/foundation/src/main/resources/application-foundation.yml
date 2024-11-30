@@ -17,3 +17,8 @@ springdoc:
   swagger-ui:
     url: /openapi/api.yml
     path: /swagger-ui.html
+security:
+  auth:
+    token:
+      sign:
+        public: ${TOKEN_SIGN_KEY_PUBLIC}

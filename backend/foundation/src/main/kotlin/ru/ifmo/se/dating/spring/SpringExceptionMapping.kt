@@ -41,17 +41,17 @@ class SpringGenericExceptionHandler(private val mapping: SpringExceptionMapping)
         }
 
     @ExceptionHandler(GenericException::class)
-    fun handle(exception: GenericException) =
-        exception.toResponseEntity()
+    fun handle(exception: GenericException): ResponseEntity<GeneralErrorMessage> =
+        toResponseEntity(exception)
 
-    fun GenericException.toResponseEntity(): ResponseEntity<GeneralErrorMessage> =
+    fun toResponseEntity(exception: GenericException): ResponseEntity<GeneralErrorMessage> =
         ResponseEntity
-            .status(this.httpCode)
+            .status(exception.httpCode)
             .body(
                 GeneralErrorMessage(
-                    code = this.httpCode.value(),
-                    status = this.httpCode.reasonPhrase,
-                    message = this.message!!,
+                    code = exception.httpCode.value(),
+                    status = exception.httpCode.reasonPhrase,
+                    message = exception.message!!,
                 ),
             )
 }

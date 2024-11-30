@@ -3,22 +3,28 @@ package ru.ifmo.se.dating.matchmaker.api
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import ru.ifmo.se.dating.logging.Log
 import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.matchmaker.logic.PersonService
 import ru.ifmo.se.dating.matchmaker.model.PersonUpdate
 import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
 import ru.ifmo.se.dating.matchmaker.model.generated.PersonUpdateMessage
 import ru.ifmo.se.dating.security.auth.User
+import ru.ifmo.se.dating.spring.security.SpringSecurityContext
 
 @Controller
 class HttpPeopleApi(
     private val personService: PersonService,
 ) : PeopleApiDelegate {
+    private val log = Log.forClass(javaClass)
+
     override suspend fun peoplePersonIdAttitudesIncomingAttitudeKindPost(
         personId: Long,
         attitudeKind: AttitudeKindMessage,
-    ): ResponseEntity<Unit> =
-        ResponseEntityStub.create()
+    ): ResponseEntity<Unit> {
+        log.info("Got user with id ${SpringSecurityContext.principal()}")
+        return ResponseEntity.ok(Unit)
+    }
 
     override fun peoplePersonIdMatchesGet(
         personId: Long,

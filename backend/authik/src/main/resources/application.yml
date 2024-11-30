@@ -13,7 +13,6 @@ security:
   auth:
     token:
       sign:
-        public: ${TOKEN_SIGN_KEY_PUBLIC}
         private: ${TOKEN_SIGN_KEY_PRIVATE}
       duration: PT2H
     telegram:
