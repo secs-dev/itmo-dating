@@ -1,5 +1,6 @@
 package ru.ifmo.se.dating.matchmaker.logic.basic
 
+import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
@@ -7,6 +8,7 @@ import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.matchmaker.logic.AttitudeService
 import ru.ifmo.se.dating.matchmaker.model.Attitude
 import ru.ifmo.se.dating.matchmaker.storage.AttitudeStorage
+import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.exception.LinkViolationException
 import ru.ifmo.se.dating.storage.exception.UniqueViolationException
 
@@ -25,4 +27,7 @@ class BasicAttitudeService(
     } catch (exception: LinkViolationException) {
         throw NotFoundException("source or target ids does not exist", exception)
     }
+
+    override fun suggestions(client: User.Id, limit: Int): Flow<User.Id> =
+        storage.selectUnknownFor(client, limit)
 }
