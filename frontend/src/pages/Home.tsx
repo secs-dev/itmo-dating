@@ -7,6 +7,8 @@ export const Home = () => {
            <Link to={"/itmo-dating-mini-app/registration"}><Text weight="1">TEXT</Text></Link>
            <br/>
            <AuthTest/>
+           <br/>
+           <Link to={"/itmo-dating-mini-app/main"}><Text weight="1">Main</Text></Link>
        </>
     )
 }

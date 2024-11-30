@@ -5,11 +5,13 @@ const basePath = "/itmo-dating-mini-app"
 export const routes = {
     home: createRoute(),
     registration: createRoute(),
+    main: createRoute()
 };
 
 export const routesMap = [
     { path: "", route: routes.home },
     { path: "/registration", route: routes.registration},
+    { path: "/main", route: routes.main},
 ];
 
 const history =  createBrowserHistory();
