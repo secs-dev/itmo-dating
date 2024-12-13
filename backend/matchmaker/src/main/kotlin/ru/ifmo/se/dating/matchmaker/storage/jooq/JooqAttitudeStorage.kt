@@ -18,7 +18,7 @@ class JooqAttitudeStorage(private val database: JooqDatabase) : AttitudeStorage 
         insertInto(ATTITUDE)
             .set(ATTITUDE.SOURCE_ID, attitude.sourceId.number)
             .set(ATTITUDE.TARGET_ID, attitude.targetId.number)
-            .set(ATTITUDE.ATTITUDE_, attitude.kind.toRecord())
+            .set(ATTITUDE.KIND, attitude.kind.toRecord())
     }.let { }
 
     override fun selectLikedBack(id: User.Id): Flow<User.Id> = database.flow {
@@ -30,8 +30,8 @@ class JooqAttitudeStorage(private val database: JooqDatabase) : AttitudeStorage 
             .where(
                 outgoing.SOURCE_ID.eq(id.number)
                     .and(incoming.TARGET_ID.eq(id.number))
-                    .and(outgoing.ATTITUDE_.eq(AttitudeKind.like))
-                    .and(incoming.ATTITUDE_.eq(AttitudeKind.like))
+                    .and(outgoing.KIND.eq(AttitudeKind.like))
+                    .and(incoming.KIND.eq(AttitudeKind.like))
                     .and(outgoing.TARGET_ID.eq(incoming.SOURCE_ID))
             )
     }.map { User.Id(it[0] as Int) }
