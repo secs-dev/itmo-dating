@@ -1,15 +1,15 @@
 package ru.ifmo.se.dating.spring.security
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.http.HttpHeaders
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextImpl
 import org.springframework.security.web.server.context.ServerSecurityContextRepository
 import org.springframework.stereotype.Component
-import org.springframework.http.HttpHeaders
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import ru.ifmo.se.dating.exception.AuthenticationException

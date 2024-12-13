@@ -3,7 +3,6 @@ package ru.ifmo.se.dating.matchmaker.api
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.SuggestionsApiDelegate

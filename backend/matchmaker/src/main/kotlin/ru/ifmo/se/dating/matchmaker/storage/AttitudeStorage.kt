@@ -6,5 +6,6 @@ import ru.ifmo.se.dating.security.auth.User
 
 interface AttitudeStorage {
     suspend fun insert(attitude: Attitude)
+    fun selectLikedBack(id: User.Id): Flow<User.Id>
     fun selectUnknownFor(id: User.Id, limit: Int): Flow<User.Id>
 }

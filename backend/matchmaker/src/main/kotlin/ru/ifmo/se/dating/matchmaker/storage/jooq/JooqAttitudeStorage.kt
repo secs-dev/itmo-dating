@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.map
 import org.jooq.generated.enums.AttitudeKind
 import org.jooq.generated.tables.references.ATTITUDE
 import org.jooq.generated.tables.references.PERSON
-import org.jooq.impl.DSL.*
+import org.jooq.impl.DSL.notExists
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.matchmaker.model.Attitude
 import ru.ifmo.se.dating.matchmaker.storage.AttitudeStorage
@@ -20,6 +20,21 @@ class JooqAttitudeStorage(private val database: JooqDatabase) : AttitudeStorage 
             .set(ATTITUDE.TARGET_ID, attitude.targetId.number)
             .set(ATTITUDE.ATTITUDE_, attitude.kind.toRecord())
     }.let { }
+
+    override fun selectLikedBack(id: User.Id): Flow<User.Id> = database.flow {
+        val outgoing = ATTITUDE.`as`("outgoing")
+        val incoming = ATTITUDE.`as`("incoming")
+
+        select(outgoing.TARGET_ID.`as`("match_id"))
+            .from(outgoing, incoming)
+            .where(
+                outgoing.SOURCE_ID.eq(id.number)
+                    .and(incoming.TARGET_ID.eq(id.number))
+                    .and(outgoing.ATTITUDE_.eq(AttitudeKind.like))
+                    .and(incoming.ATTITUDE_.eq(AttitudeKind.like))
+                    .and(outgoing.TARGET_ID.eq(incoming.SOURCE_ID))
+            )
+    }.map { User.Id(it[0] as Int) }
 
     override fun selectUnknownFor(id: User.Id, limit: Int): Flow<User.Id> = database.flow {
         val attitudes =

@@ -1,6 +1,8 @@
 package ru.ifmo.se.dating.matchmaker.api
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate
@@ -33,8 +35,15 @@ class HttpPeopleApi(
 
     override fun peoplePersonIdMatchesGet(
         personId: Long,
-    ): ResponseEntity<Flow<Long>> =
-        ResponseEntityStub.create()
+    ): ResponseEntity<Flow<Long>> = flow {
+        val sourceId = SpringSecurityContext.principal()
+        val targetId = User.Id(personId.toInt())
+        require(sourceId == targetId)
+
+        attitudeService.matches(sourceId)
+            .map { it.number.toLong() }
+            .collect { emit(it) }
+    }.let { ResponseEntity.ok(it) }
 
     override suspend fun peoplePersonIdPut(
         personId: Long,

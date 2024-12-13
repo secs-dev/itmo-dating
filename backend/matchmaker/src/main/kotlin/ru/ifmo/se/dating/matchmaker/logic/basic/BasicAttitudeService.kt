@@ -28,6 +28,9 @@ class BasicAttitudeService(
         throw NotFoundException("source or target ids does not exist", exception)
     }
 
+    override fun matches(client: User.Id): Flow<User.Id> =
+        storage.selectLikedBack(client)
+
     override fun suggestions(client: User.Id, limit: Int): Flow<User.Id> =
         storage.selectUnknownFor(client, limit)
 }
