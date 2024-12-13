@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring
+package ru.ifmo.se.dating.spring.api
 
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus

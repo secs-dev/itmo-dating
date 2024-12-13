@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring
+package ru.ifmo.se.dating.spring.storage
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jdbc.datasource.SingleConnectionDataSource

@@ -3,7 +3,7 @@ package ru.ifmo.se.dating.authik.api
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.authik.exception.DomainException
-import ru.ifmo.se.dating.spring.SpringDomainExceptionMapping
+import ru.ifmo.se.dating.spring.exception.SpringDomainExceptionMapping
 
 @Controller
 class HttpExceptionMapping : SpringDomainExceptionMapping<DomainException> {

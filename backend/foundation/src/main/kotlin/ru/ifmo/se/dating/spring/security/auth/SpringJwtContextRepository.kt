@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring.security
+package ru.ifmo.se.dating.spring.security.auth
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.reactor.awaitSingle
@@ -14,7 +14,7 @@ import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import ru.ifmo.se.dating.exception.AuthenticationException
 import ru.ifmo.se.dating.exception.GenericException
-import ru.ifmo.se.dating.spring.SpringGenericExceptionHandler
+import ru.ifmo.se.dating.spring.exception.SpringGenericExceptionHandler
 
 @Component
 class DomainExceptionMarshalling(

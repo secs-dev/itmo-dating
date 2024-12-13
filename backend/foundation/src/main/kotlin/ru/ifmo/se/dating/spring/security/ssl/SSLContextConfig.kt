@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.security.ssl
+package ru.ifmo.se.dating.spring.security.ssl
 
 import io.netty.handler.ssl.SslContext
 import io.netty.handler.ssl.SslContextBuilder

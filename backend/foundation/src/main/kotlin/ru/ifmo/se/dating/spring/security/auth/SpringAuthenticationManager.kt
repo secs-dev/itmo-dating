@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring.security
+package ru.ifmo.se.dating.spring.security.auth
 
 import kotlinx.coroutines.reactor.mono
 import org.springframework.security.authentication.ReactiveAuthenticationManager

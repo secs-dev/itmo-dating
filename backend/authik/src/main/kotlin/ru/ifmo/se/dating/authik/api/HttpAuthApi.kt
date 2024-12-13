@@ -6,14 +6,14 @@ import ru.ifmo.se.dating.authik.api.generated.AuthApiDelegate
 import ru.ifmo.se.dating.authik.logic.AuthService
 import ru.ifmo.se.dating.authik.model.generated.AuthGrantMessage
 import ru.ifmo.se.dating.authik.model.generated.TelegramInitDataMessage
-import ru.ifmo.se.dating.authik.telegram.InitDataParser
+import ru.ifmo.se.dating.authik.external.telegram.TelegramInitDataParser
 import ru.ifmo.se.dating.exception.AuthenticationException
 import ru.ifmo.se.dating.exception.GenericException
 import ru.ifmo.se.dating.text.abbreviated
 
 @Controller
 class HttpAuthApi(
-    private val telegramParser: InitDataParser,
+    private val telegramParser: TelegramInitDataParser,
     private val auth: AuthService,
 ) : AuthApiDelegate {
     override suspend fun authTelegramWebAppPut(

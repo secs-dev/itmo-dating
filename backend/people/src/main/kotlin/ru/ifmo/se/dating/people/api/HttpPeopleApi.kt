@@ -69,7 +69,7 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
     }
 
     override suspend fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
-        ResponseEntityStub.create()
+        TODO("Not implemented")
 
     override suspend fun peoplePersonIdGet(personId: Long): ResponseEntity<PersonVariantMessage> =
         service.getById(User.Id(personId.toInt()))

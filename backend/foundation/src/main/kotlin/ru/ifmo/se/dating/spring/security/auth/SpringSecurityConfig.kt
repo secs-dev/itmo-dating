@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring.security
+package ru.ifmo.se.dating.spring.security.auth
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

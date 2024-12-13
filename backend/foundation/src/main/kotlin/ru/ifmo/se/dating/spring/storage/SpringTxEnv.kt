@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring
+package ru.ifmo.se.dating.spring.storage
 
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Component

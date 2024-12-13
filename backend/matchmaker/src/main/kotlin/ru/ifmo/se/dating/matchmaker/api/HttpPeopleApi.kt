@@ -13,7 +13,7 @@ import ru.ifmo.se.dating.matchmaker.model.PersonUpdate
 import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
 import ru.ifmo.se.dating.matchmaker.model.generated.PersonUpdateMessage
 import ru.ifmo.se.dating.security.auth.User
-import ru.ifmo.se.dating.spring.security.SpringSecurityContext
+import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
 
 @Controller
 class HttpPeopleApi(

@@ -10,7 +10,7 @@ typealias StatisticsAttitudesResponse =
     ResponseEntity<Flow<StatisticsAttitudesGet200ResponseInnerMessage>>
 
 @Controller
-internal class HttpStatisticsApi : StatisticsApiDelegate {
+class HttpStatisticsApi : StatisticsApiDelegate {
     override fun statisticsAttitudesGet(): StatisticsAttitudesResponse =
-        ResponseEntityStub.create()
+        TODO("Not implemented")
 }

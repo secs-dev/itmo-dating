@@ -28,7 +28,7 @@ function generate() {
     -keysize    4096 \
     -validity   1 \
     -dname      "CN=localhost" \
-    -ext        "san=dns:authik,dns:matchmaker,dns:people" \
+    -ext        "san=dns:localhost,dns:authik,dns:matchmaker,dns:people" \
     -keypass    "$PASSWORD" \
     -keystore   "$KEYSTORE" \
     -storeType  PKCS12 \
@@ -59,10 +59,10 @@ fi
 
 if [ "$MODE" = "generate" ]; then
   generate
-elif [ "$MODE" = "clear" ]; then
+elif [ "$MODE" = "clean" ]; then
   clear
 else
   echo "Error: Invalid argument '$MODE'."
-  echo "Usage: $0 <generate|clear>"
+  echo "Usage: $0 <generate|clean>"
   exit 1
 fi

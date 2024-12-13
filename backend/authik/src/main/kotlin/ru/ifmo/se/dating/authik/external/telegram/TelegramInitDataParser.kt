@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.authik.telegram
+package ru.ifmo.se.dating.authik.external.telegram
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
@@ -12,7 +12,7 @@ import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.validation.expect
 
 @Component
-class InitDataParser(
+class TelegramInitDataParser(
     @Value("\${security.auth.telegram.token}")
     telegramToken: String,
 ) {

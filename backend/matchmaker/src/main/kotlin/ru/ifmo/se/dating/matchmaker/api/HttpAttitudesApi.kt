@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.AttitudesApiDelegate
 
 @Controller
-internal class HttpAttitudesApi : AttitudesApiDelegate {
+class HttpAttitudesApi : AttitudesApiDelegate {
     override suspend fun attitudesDelete(sourceId: Long): ResponseEntity<Unit> =
-        ResponseEntityStub.create()
+        TODO("Not implemented")
 }

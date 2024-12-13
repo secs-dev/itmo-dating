@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.api.generated.SuggestionsApiDelegate
 import ru.ifmo.se.dating.matchmaker.logic.AttitudeService
-import ru.ifmo.se.dating.spring.security.SpringSecurityContext
+import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
 
 @Controller
 class HttpSuggestionsApi(

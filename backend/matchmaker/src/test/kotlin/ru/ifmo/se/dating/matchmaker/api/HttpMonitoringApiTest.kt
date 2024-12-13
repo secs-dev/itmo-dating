@@ -1,27 +1,25 @@
 package ru.ifmo.se.dating.matchmaker.api
 
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.web.client.TestRestTemplate
 import ru.ifmo.se.dating.matchmaker.MatchmakerTestSuite
 
 class HttpMonitoringApiTest : MatchmakerTestSuite() {
-    @Autowired
-    private lateinit var rest: TestRestTemplate
-
     @Test
     fun emptyTest() = Unit
 
-//    TODO write test with https
-//    @Test
-    fun healthcheck() {
+    @Test
+    fun healthcheck(): Unit = runBlocking {
         Assert.assertEquals(getHealthcheck(), "public")
     }
 
-    private fun getHealthcheck(): String {
-        val url = "http://localhost:8080/api/monitoring/healthcheck"
-        val response = rest.getForEntity(url, String::class.java)
-        return response.body!!
-    }
+    private suspend fun getHealthcheck(): String = self
+        .get()
+        .uri("monitoring/healthcheck")
+        .retrieve()
+        .toEntity(String::class.java)
+        .awaitSingle()
+        .body!!
 }

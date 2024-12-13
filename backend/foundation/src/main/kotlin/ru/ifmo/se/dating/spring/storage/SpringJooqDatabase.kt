@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring
+package ru.ifmo.se.dating.spring.storage
 
 import io.r2dbc.spi.Connection
 import kotlinx.coroutines.flow.Flow
