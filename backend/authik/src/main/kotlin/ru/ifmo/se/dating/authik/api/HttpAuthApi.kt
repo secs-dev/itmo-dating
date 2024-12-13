@@ -19,7 +19,14 @@ class HttpAuthApi(
     override suspend fun authTelegramWebAppPut(
         telegramInitDataMessage: TelegramInitDataMessage,
     ): ResponseEntity<AuthGrantMessage> {
-        val initData = try {
+        val initData = parseInitData(telegramInitDataMessage)
+        val token = auth.authenticate(initData)
+        val response = AuthGrantMessage(access = token.text)
+        return ResponseEntity.ok(response)
+    }
+
+    private fun parseInitData(telegramInitDataMessage: TelegramInitDataMessage) =
+        try {
             telegramParser.parse(telegramInitDataMessage)
         } catch (error: GenericException) {
             throw AuthenticationException(
@@ -27,8 +34,4 @@ class HttpAuthApi(
                 error,
             )
         }
-        val token = auth.authenticate(initData)
-        val response = AuthGrantMessage(access = token.text)
-        return ResponseEntity.ok(response)
-    }
 }

@@ -31,3 +31,6 @@ build/
 # Secrets
 *.pem
 *.p12
+
+# Java
+*.hprof

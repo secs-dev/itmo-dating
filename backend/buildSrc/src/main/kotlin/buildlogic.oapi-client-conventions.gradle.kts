@@ -12,7 +12,7 @@ extra["generateOAPIClient"] = { serviceName: String ->
 
     val root = rootProject.layout.projectDirectory.asFile.let { "$it/$serviceName" }
     val apiResourcesDir = layout.projectDirectory.asFile.let { "$root/src/main/resources" }
-    val generatedDir = layout.buildDirectory.dir("generated/client").get().toString()
+    val generatedDir = layout.buildDirectory.dir("generated/client/$serviceName").get().toString()
 
     val taskName = "openApiGenerate${serviceTitle}Client"
     tasks.register<OpenAPIGenerateTask>(taskName) {
