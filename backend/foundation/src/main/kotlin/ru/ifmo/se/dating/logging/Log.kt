@@ -6,7 +6,9 @@ interface Log {
     fun debug(message: String)
 
     companion object {
-        fun forClass(klass: Class<Any>) = named(klass.name)
-        private fun named(name: String) = Slf4jLog(name)
+        inline fun <reified T : Any> T.autoLog() = forClass(T::class.java)
+
+        fun <T> forClass(klass: Class<T>) = withName(klass.name)
+        private fun withName(name: String) = Slf4jLog(name)
     }
 }
