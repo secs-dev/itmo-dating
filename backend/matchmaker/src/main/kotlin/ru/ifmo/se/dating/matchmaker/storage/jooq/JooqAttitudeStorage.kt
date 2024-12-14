@@ -9,6 +9,7 @@ import org.jooq.impl.DSL.notExists
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.matchmaker.model.Attitude
 import ru.ifmo.se.dating.matchmaker.storage.AttitudeStorage
+import ru.ifmo.se.dating.matchmaker.storage.jooq.mapping.toRecord
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
 
@@ -53,9 +54,4 @@ class JooqAttitudeStorage(private val database: JooqDatabase) : AttitudeStorage 
             )
             .limit(limit)
     }.map { User.Id(it[PERSON.ACCOUNT_ID.name] as Int) }
-
-    private fun Attitude.Kind.toRecord() = when (this) {
-        Attitude.Kind.LIKE -> AttitudeKind.like
-        Attitude.Kind.SKIP -> AttitudeKind.skip
-    }
 }

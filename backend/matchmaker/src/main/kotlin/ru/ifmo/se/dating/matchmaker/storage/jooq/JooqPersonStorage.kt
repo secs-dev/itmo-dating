@@ -1,10 +1,10 @@
 package ru.ifmo.se.dating.matchmaker.storage.jooq
 
-import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.matchmaker.model.PersonUpdate
 import ru.ifmo.se.dating.matchmaker.storage.PersonStorage
+import ru.ifmo.se.dating.matchmaker.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
 
@@ -25,14 +25,4 @@ class JooqPersonStorage(private val database: JooqDatabase) : PersonStorage {
             .set(PERSON.IS_ACTIVE, person.status == PersonUpdate.Status.ACTIVE)
             .set(PERSON.VERSION, person.version.number)
     }.let { }
-
-    private fun PersonRecord.toModel() = PersonUpdate(
-        id = User.Id(accountId),
-        status = if (isActive) {
-            PersonUpdate.Status.ACTIVE
-        } else {
-            PersonUpdate.Status.HIDDEN
-        },
-        version = PersonUpdate.Version(version),
-    )
 }

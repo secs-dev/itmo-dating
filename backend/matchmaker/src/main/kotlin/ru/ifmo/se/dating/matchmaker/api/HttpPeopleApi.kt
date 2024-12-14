@@ -5,13 +5,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import ru.ifmo.se.dating.exception.AuthorizationException
 import ru.ifmo.se.dating.matchmaker.api.generated.PeopleApiDelegate
+import ru.ifmo.se.dating.matchmaker.api.mapping.toModel
 import ru.ifmo.se.dating.matchmaker.logic.AttitudeService
 import ru.ifmo.se.dating.matchmaker.logic.PersonService
 import ru.ifmo.se.dating.matchmaker.model.Attitude
-import ru.ifmo.se.dating.matchmaker.model.PersonUpdate
 import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
-import ru.ifmo.se.dating.matchmaker.model.generated.PersonStatusMessage
 import ru.ifmo.se.dating.matchmaker.model.generated.PersonUpdateMessage
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
@@ -39,7 +39,11 @@ class HttpPeopleApi(
     ): ResponseEntity<Flow<Long>> = flow {
         val sourceId = SpringSecurityContext.principal()
         val targetId = User.Id(personId.toInt())
-        require(sourceId == targetId)
+        if (sourceId != targetId) {
+            throw AuthorizationException(
+                "caller with is $sourceId can't read matches of user with id $targetId",
+            )
+        }
 
         attitudeService.matches(sourceId)
             .map { it.number.toLong() }
@@ -53,21 +57,5 @@ class HttpPeopleApi(
         val update = personUpdateMessage.toModel(personId)
         personService.account(update)
         return ResponseEntity.ok(Unit)
-    }
-
-    private fun PersonUpdateMessage.toModel(personId: Long) = PersonUpdate(
-        id = User.Id(personId.toInt()),
-        status = status.toModel(),
-        version = PersonUpdate.Version(version),
-    )
-
-    private fun PersonStatusMessage.toModel() = when (this) {
-        PersonStatusMessage.hidden -> PersonUpdate.Status.HIDDEN
-        PersonStatusMessage.active -> PersonUpdate.Status.ACTIVE
-    }
-
-    private fun AttitudeKindMessage.toModel() = when (this) {
-        AttitudeKindMessage.like -> Attitude.Kind.LIKE
-        AttitudeKindMessage.skip -> Attitude.Kind.SKIP
     }
 }

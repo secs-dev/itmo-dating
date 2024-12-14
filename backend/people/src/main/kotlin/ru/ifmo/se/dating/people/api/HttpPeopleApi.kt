@@ -8,11 +8,10 @@ import ru.ifmo.se.dating.exception.AuthorizationException
 import ru.ifmo.se.dating.exception.orThrowNotFound
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
+import ru.ifmo.se.dating.people.api.mapping.toMessage
+import ru.ifmo.se.dating.people.api.mapping.toModel
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.model.Faculty
-import ru.ifmo.se.dating.people.model.Location
-import ru.ifmo.se.dating.people.model.Person
-import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
@@ -101,47 +100,5 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
         }
 
         return ResponseEntity.ok(Unit)
-    }
-
-    companion object {
-        fun PersonPatchMessage.toModel(id: Int) = Person.Draft(
-            id = User.Id(id),
-            firstName = firstName?.let { Person.Name(it) },
-            lastName = lastName?.let { Person.Name(it) },
-            height = height,
-            birthday = birthday,
-            facultyId = facultyId?.let { Faculty.Id(it.toInt()) },
-            locationId = locationId?.let { Location.Id(it.toInt()) },
-        )
-
-        fun PersonVariant.toMessage() = when (this) {
-            is Person.Draft -> toMessage()
-            is Person -> toMessage()
-        }
-
-        private fun Person.toMessage() = PersonMessage(
-            status = PersonStatusMessage.ready,
-            userId = id.number.toLong(),
-            firstName = firstName.text,
-            lastName = lastName.text,
-            height = height,
-            birthday = birthday,
-            facultyId = facultyId.number.toLong(),
-            locationId = locationId.number.toLong(),
-            interests = emptySet(),
-            zodiac = ZodiacSignMessage.leo,
-        )
-
-        private fun Person.Draft.toMessage() = PersonDraftMessage(
-            status = PersonStatusMessage.draft,
-            userId = id.number.toLong(),
-            firstName = firstName?.text,
-            lastName = lastName?.text,
-            height = height,
-            birthday = birthday,
-            facultyId = facultyId?.number?.toLong(),
-            locationId = locationId?.number?.toLong(),
-            interests = emptySet(),
-        )
     }
 }
