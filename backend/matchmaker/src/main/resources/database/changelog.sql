@@ -5,7 +5,8 @@ CREATE SCHEMA matchmaker;
 
 CREATE TABLE matchmaker.person (
     account_id      integer     PRIMARY KEY,
-    version         integer     NOT NULL
+    version         integer     NOT NULL,
+    is_active       boolean     NOT NULL
 );
 
 CREATE TYPE matchmaker.attitude_kind

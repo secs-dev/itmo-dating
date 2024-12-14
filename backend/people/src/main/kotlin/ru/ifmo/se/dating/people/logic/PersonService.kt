@@ -12,6 +12,7 @@ interface PersonService {
     suspend fun edit(draft: Person.Draft)
     suspend fun save(expected: Person.Draft)
     suspend fun getById(id: User.Id): PersonVariant?
+    suspend fun delete(id: User.Id)
 
     fun getFiltered(page: Page, filter: Filter): Flow<Person>
 

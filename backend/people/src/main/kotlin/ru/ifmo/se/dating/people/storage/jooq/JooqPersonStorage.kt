@@ -2,16 +2,15 @@ package ru.ifmo.se.dating.people.storage.jooq
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.jooq.impl.DSL.currentOffsetDateTime
 import org.jooq.impl.DSL.not
 import org.springframework.stereotype.Repository
-import ru.ifmo.se.dating.people.model.Faculty
-import ru.ifmo.se.dating.people.model.Location
+import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.PersonStorage
+import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.FetchPolicy
 import ru.ifmo.se.dating.storage.TxEnv
@@ -51,11 +50,24 @@ class JooqPersonStorage(
         }
     }.toModel()
 
-    override suspend fun setReadyMoment(id: User.Id) = database.only {
-        update(PERSON)
-            .set(PERSON.READY_MOMENT, currentOffsetDateTime())
-            .where(PERSON.ACCOUNT_ID.eq(id.number))
-    }.let { }
+    override suspend fun setReadyMoment(id: User.Id) {
+        database.maybe {
+            update(PERSON)
+                .set(PERSON.READY_MOMENT, currentOffsetDateTime())
+                .set(PERSON.VERSION, PERSON.VERSION.plus(1))
+                .where(PERSON.ACCOUNT_ID.eq(id.number))
+        } ?: throw NotFoundException("user with id $id")
+    }
+
+    override suspend fun resetReadyMoment(id: User.Id) {
+        database.maybe {
+            update(PERSON)
+                .setNull(PERSON.READY_MOMENT)
+                .set(PERSON.VERSION, PERSON.VERSION.plus(1))
+                .where(PERSON.ACCOUNT_ID.eq(id.number))
+                .returning()
+        } ?: throw NotFoundException("user with id $id")
+    }
 
     override suspend fun selectById(id: User.Id, policy: FetchPolicy): PersonVariant? =
         database.maybe {
@@ -70,10 +82,10 @@ class JooqPersonStorage(
             .where(PERSON.READY_MOMENT.isNotNull.and(not(PERSON.IS_PUBLISHED)))
     }.map { User.Id(it[PERSON.ACCOUNT_ID.name]!! as Int) }
 
-    override suspend fun markSent(id: User.Id) = txEnv.transactional {
+    override suspend fun setIsPublished(id: User.Id, isPublished: Boolean) = txEnv.transactional {
         database.only {
             update(PERSON)
-                .set(PERSON.IS_PUBLISHED, true)
+                .set(PERSON.IS_PUBLISHED, isPublished)
                 .where(PERSON.ACCOUNT_ID.eq(id.number))
         }
     }.let { }
@@ -82,29 +94,4 @@ class JooqPersonStorage(
         selectFrom(PERSON)
             .where(PERSON.READY_MOMENT.isNotNull)
     }.map { it.toModel() as Person }
-
-    fun PersonRecord.toModel(): PersonVariant =
-        if (readyMoment != null) {
-            Person(
-                id = User.Id(accountId),
-                firstName = Person.Name(firstName!!),
-                lastName = Person.Name(lastName!!),
-                height = height!!,
-                birthday = birthday!!,
-                facultyId = Faculty.Id(facultyId!!),
-                locationId = Location.Id(locationId!!),
-                version = Person.Version(version!!),
-                isPublished = isPublished!!,
-            )
-        } else {
-            Person.Draft(
-                id = User.Id(accountId),
-                firstName = firstName?.let { Person.Name(it) },
-                lastName = lastName?.let { Person.Name(it) },
-                height = height,
-                birthday = birthday,
-                facultyId = facultyId?.let { Faculty.Id(it) },
-                locationId = locationId?.let { Location.Id(it) },
-            )
-        }
 }

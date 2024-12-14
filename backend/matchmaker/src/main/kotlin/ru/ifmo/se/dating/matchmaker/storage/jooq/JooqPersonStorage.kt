@@ -18,14 +18,21 @@ class JooqPersonStorage(private val database: JooqDatabase) : PersonStorage {
     override suspend fun upsert(person: PersonUpdate) = database.only {
         insertInto(PERSON)
             .set(PERSON.ACCOUNT_ID, person.id.number)
+            .set(PERSON.IS_ACTIVE, person.status == PersonUpdate.Status.ACTIVE)
             .set(PERSON.VERSION, person.version.number)
             .onConflict()
             .doUpdate()
+            .set(PERSON.IS_ACTIVE, person.status == PersonUpdate.Status.ACTIVE)
             .set(PERSON.VERSION, person.version.number)
     }.let { }
 
     private fun PersonRecord.toModel() = PersonUpdate(
         id = User.Id(accountId),
+        status = if (isActive) {
+            PersonUpdate.Status.ACTIVE
+        } else {
+            PersonUpdate.Status.HIDDEN
+        },
         version = PersonUpdate.Version(version),
     )
 }

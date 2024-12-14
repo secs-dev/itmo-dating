@@ -42,7 +42,8 @@ class BasicPersonService(
     }
 
     override suspend fun save(expected: Person.Draft) = txEnv.transactional {
-        val variant = getById(expected.id).orThrowNotFound("person with id ${expected.id}")
+        val variant = getById(expected.id)
+            .orThrowNotFound("person with id ${expected.id}")
 
         if (variant is Person) {
             throw ConflictException("person already saved")
@@ -60,6 +61,11 @@ class BasicPersonService(
 
     override suspend fun getById(id: User.Id): PersonVariant? =
         storage.selectById(id)
+
+    override suspend fun delete(id: User.Id) = txEnv.transactional {
+        storage.resetReadyMoment(id)
+        storage.setIsPublished(id, false)
+    }.let { background.launch { outbox.process(id) } }.let { }
 
     override fun getFiltered(page: Page, filter: PersonService.Filter): Flow<Person> =
         storage.selectAllReady()

@@ -6,17 +6,20 @@ import ru.ifmo.se.dating.validation.expectInRange
 import ru.ifmo.se.dating.validation.expectMatches
 import java.time.LocalDate
 
-sealed class PersonVariant
+sealed class PersonVariant {
+    abstract val id: User.Id
+    abstract val version: Person.Version
+}
 
 data class Person(
-    val id: User.Id,
+    override val id: User.Id,
     val firstName: Name,
     val lastName: Name,
     val height: Int,
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
     val locationId: Location.Id,
-    val version: Version,
+    override val version: Version,
     val isPublished: Boolean,
 ) : PersonVariant() {
     @JvmInline
@@ -38,13 +41,14 @@ data class Person(
     }
 
     data class Draft(
-        val id: User.Id,
+        override val id: User.Id,
         val firstName: Name? = null,
         val lastName: Name? = null,
         val height: Int? = null,
         val birthday: LocalDate? = null,
         val facultyId: Faculty.Id? = null,
         val locationId: Location.Id? = null,
+        override val version: Version = Version(0),
     ) : PersonVariant() {
         init {
             height?.let { expectInRange("Height", it, heightRange) }
@@ -55,14 +59,6 @@ data class Person(
             private val heightRange = 50..280
             private val birthdayRange = LocalDate.of(1990, 1, 1)..LocalDate.of(2032, 1, 1)
         }
-    }
-
-    enum class Field {
-        FIRST_NAME,
-        LAST_NAME,
-        HEIGHT,
-        BIRTHDAY,
-        UPDATED,
     }
 
     init {

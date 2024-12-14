@@ -5,6 +5,7 @@ import ru.ifmo.se.dating.validation.expect
 
 data class PersonUpdate(
     val id: User.Id,
+    val status: Status,
     val version: Version,
 ) {
     @JvmInline
@@ -15,5 +16,10 @@ data class PersonUpdate(
 
         override fun compareTo(other: Version): Int =
             this.number.compareTo(other.number)
+    }
+
+    enum class Status {
+        HIDDEN,
+        ACTIVE,
     }
 }

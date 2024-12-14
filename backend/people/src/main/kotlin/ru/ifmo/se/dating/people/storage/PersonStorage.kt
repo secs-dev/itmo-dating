@@ -8,10 +8,13 @@ import ru.ifmo.se.dating.storage.FetchPolicy
 
 interface PersonStorage {
     suspend fun upsert(draft: Person.Draft): PersonVariant
+
     suspend fun setReadyMoment(id: User.Id)
+    suspend fun resetReadyMoment(id: User.Id)
+
     suspend fun selectById(id: User.Id, policy: FetchPolicy = FetchPolicy.SNAPSHOT): PersonVariant?
     fun selectAllReady(): Flow<Person>
 
     fun selectNotSentIds(limit: Int): Flow<User.Id>
-    suspend fun markSent(id: User.Id)
+    suspend fun setIsPublished(id: User.Id, isPublished: Boolean)
 }

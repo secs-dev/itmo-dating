@@ -22,3 +22,6 @@ security:
     token:
       sign:
         public: ${TOKEN_SIGN_KEY_PUBLIC}
+logging:
+  level:
+    web: DEBUG

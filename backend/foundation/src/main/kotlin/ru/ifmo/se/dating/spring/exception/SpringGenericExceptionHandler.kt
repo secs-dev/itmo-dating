@@ -12,6 +12,7 @@ class SpringGenericExceptionHandler(private val mapping: SpringExceptionMapping)
     val GenericException.httpCode: HttpStatus
         get() = mapping.httpCode(this) ?: when (this) {
             is AuthenticationException -> HttpStatus.UNAUTHORIZED
+            is AuthorizationException -> HttpStatus.UNAUTHORIZED
             is ConflictException -> HttpStatus.CONFLICT
             is InvalidValueException -> HttpStatus.BAD_REQUEST
             is NotFoundException -> HttpStatus.NOT_FOUND

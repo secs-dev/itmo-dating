@@ -8,5 +8,7 @@ object User {
         init {
             expectId(number)
         }
+
+        override fun toString(): String = number.toString()
     }
 }

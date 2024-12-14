@@ -34,7 +34,7 @@ CREATE TABLE people.person (
     creation_moment timestamptz             NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_moment   timestamptz             NOT NULL,
     ready_moment    timestamptz,
-    version         integer                 NOT NULL DEFAULT 0,
+    version         integer                 NOT NULL DEFAULT 1,
     is_published    boolean                 NOT NULL DEFAULT FALSE
 );
 

@@ -46,7 +46,11 @@ class JooqAttitudeStorage(private val database: JooqDatabase) : AttitudeStorage 
 
         select(PERSON.ACCOUNT_ID)
             .from(PERSON)
-            .where(PERSON.ACCOUNT_ID.ne(id.number).and(notExists(attitudes)))
+            .where(
+                PERSON.ACCOUNT_ID.ne(id.number)
+                    .and(notExists(attitudes))
+                    .and(PERSON.IS_ACTIVE)
+            )
             .limit(limit)
     }.map { User.Id(it[PERSON.ACCOUNT_ID.name] as Int) }
 

@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import ru.ifmo.se.dating.exception.AuthorizationException
 import ru.ifmo.se.dating.exception.orThrowNotFound
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
@@ -14,6 +15,7 @@ import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
+import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
@@ -68,8 +70,17 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
         ).map { it.toMessage() }.let { ResponseEntity.ok(it) }
     }
 
-    override suspend fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> =
-        TODO("Not implemented")
+    override suspend fun peoplePersonIdDelete(personId: Long): ResponseEntity<Unit> {
+        val callerId = SpringSecurityContext.principal()
+        val targetId = User.Id(personId.toInt())
+        if (callerId != targetId) {
+            throw AuthorizationException("caller $callerId can't delete $targetId")
+        }
+
+        service.delete(targetId)
+
+        return ResponseEntity.ok(Unit)
+    }
 
     override suspend fun peoplePersonIdGet(personId: Long): ResponseEntity<PersonVariantMessage> =
         service.getById(User.Id(personId.toInt()))

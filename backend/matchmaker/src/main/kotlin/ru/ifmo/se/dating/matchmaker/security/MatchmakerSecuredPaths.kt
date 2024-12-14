@@ -12,7 +12,7 @@ import ru.ifmo.se.dating.spring.security.auth.SpringSecuredPaths
 class MatchmakerSecuredPaths : SpringSecuredPaths {
     override val matcher: ServerWebExchangeMatcher = And(
         Path("/api/**"),
-        Not(Path("api/people/{person_id}", HttpMethod.PUT)),
-        Not(Path("api/monitoring/healthcheck", HttpMethod.GET)),
+        Not(Path("/api/people/{person_id}", HttpMethod.PUT)),
+        Not(Path("/api/monitoring/healthcheck", HttpMethod.GET)),
     )
 }

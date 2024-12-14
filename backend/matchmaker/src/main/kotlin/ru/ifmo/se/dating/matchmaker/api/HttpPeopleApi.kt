@@ -11,6 +11,7 @@ import ru.ifmo.se.dating.matchmaker.logic.PersonService
 import ru.ifmo.se.dating.matchmaker.model.Attitude
 import ru.ifmo.se.dating.matchmaker.model.PersonUpdate
 import ru.ifmo.se.dating.matchmaker.model.generated.AttitudeKindMessage
+import ru.ifmo.se.dating.matchmaker.model.generated.PersonStatusMessage
 import ru.ifmo.se.dating.matchmaker.model.generated.PersonUpdateMessage
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
@@ -56,8 +57,14 @@ class HttpPeopleApi(
 
     private fun PersonUpdateMessage.toModel(personId: Long) = PersonUpdate(
         id = User.Id(personId.toInt()),
+        status = status.toModel(),
         version = PersonUpdate.Version(version),
     )
+
+    private fun PersonStatusMessage.toModel() = when (this) {
+        PersonStatusMessage.hidden -> PersonUpdate.Status.HIDDEN
+        PersonStatusMessage.active -> PersonUpdate.Status.ACTIVE
+    }
 
     private fun AttitudeKindMessage.toModel() = when (this) {
         AttitudeKindMessage.like -> Attitude.Kind.LIKE
