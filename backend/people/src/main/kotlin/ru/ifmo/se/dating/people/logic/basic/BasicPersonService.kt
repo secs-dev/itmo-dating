@@ -49,7 +49,7 @@ class BasicPersonService(
             throw ConflictException("person already saved")
         }
 
-        if (variant is Person.Draft && expected != variant) {
+        if (variant is Person.Draft && expected.copy(version = variant.version) != variant) {
             throw ConflictException("provided person does not match an existing")
         }
 

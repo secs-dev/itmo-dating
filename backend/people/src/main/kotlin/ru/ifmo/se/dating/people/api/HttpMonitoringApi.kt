@@ -10,11 +10,13 @@ import ru.ifmo.se.dating.people.api.generated.MonitoringApiDelegate
 class HttpMonitoringApi(
     private val data: DatabaseClient,
 ) : MonitoringApiDelegate {
-    override suspend fun monitoringHealthcheckGet(): ResponseEntity<String> =
+    override suspend fun monitoringHealthcheckGet(): ResponseEntity<String> {
         data
             .sql("SELECT current_schema")
             .map { row, _ -> row.get(0, String::class.java) }
             .one()
             .map { pong -> ResponseEntity.ok(pong) }
             .awaitSingle()
+        return ResponseEntity.ok("pong")
+    }
 }

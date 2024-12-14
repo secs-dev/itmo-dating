@@ -12,7 +12,7 @@ class HttpMonitoringApiTest : AuthikTestSuite() {
 
     @Test
     fun healthcheck(): Unit = runBlocking {
-        Assert.assertEquals(getHealthcheck(), "public")
+        Assert.assertEquals("pong", getHealthcheck())
     }
 
     private suspend fun getHealthcheck(): String = self
