@@ -43,7 +43,7 @@ jobs:
 
     - if: matrix.build-mode == 'manual' && matrix.language == 'java-kotlin'
       working-directory: ./backend
-      run: ./gradlew bootJar
+      run: gradle bootJar
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
