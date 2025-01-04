@@ -8,6 +8,10 @@ repositories {
     gradlePluginPortal()
 }
 
+kotlin {
+    jvmToolchain(22)
+}
+
 dependencies {
     val kotlinVersion = "2.0.10"
     val jooqVersion = "3.19.15"
