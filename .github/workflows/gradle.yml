@@ -15,9 +15,9 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Lint OpenAPI Specifications
         uses: stoplightio/spectral-action@latest
@@ -25,14 +25,14 @@ jobs:
           file_glob: 'backend/*/src/main/resources/static/openapi/api.yml'
           spectral_ruleset: backend/config/.spectral.yaml
 
-      - name: Setup up JDK 20
-        uses: actions/setup-java@v3
+      - name: Setup up JDK 23
+        uses: actions/setup-java@v4
         with:
-          java-version: '20'
+          java-version: '23'
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Generate Key Pair
         run: bash config/crypto/keys.bash generate test
