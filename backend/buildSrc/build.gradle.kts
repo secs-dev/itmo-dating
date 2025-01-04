@@ -8,11 +8,16 @@ repositories {
     gradlePluginPortal()
 }
 
+kotlin {
+    jvmToolchain(22)
+}
+
 dependencies {
+    val kotlinVersion = "2.0.10"
     val jooqVersion = "3.19.15"
 
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin.coreLibrariesVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-allopen:${kotlin.coreLibrariesVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
 
     implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.7")
 
