@@ -1,6 +1,7 @@
 [versions]
-org-springframework-boot-spring-boot = "3.3.5"
-org-springframework-spring = "6.1.14"
+org-springframework-boot-spring-boot = "3.4.1"
+org-springframework-spring = "6.2.1"
+org-springframework-cloud = "4.2.0"
 
 io-swagger-core-v3-swagger = "2.2.25"
 org-openapitools-jackson-databind-nullable = "0.2.6"
@@ -34,6 +35,8 @@ org-springframework-boot-spring-boot-starter-test = { module = "org.springframew
 
 org-springframework-spring-context = { module = "org.springframework:spring-context", version.ref = "org-springframework-spring" }
 org-springframework-spring-web = { module = "org.springframework:spring-web", version.ref = "org-springframework-spring" }
+
+org-springframework-cloud-spring-cloud-starter-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway", version.ref = "org-springframework-cloud" }
 
 org-springdoc-springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "org-springdoc-springdoc-openapi-starter" }
 

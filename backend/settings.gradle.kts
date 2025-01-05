@@ -7,6 +7,7 @@ rootProject.name = "itmo-dating-backend"
 include(
     ":foundation",
     ":foundation-test",
+    ":gateway",
     ":authik",
     ":matchmaker",
     ":people",
