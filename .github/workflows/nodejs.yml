@@ -1,0 +1,36 @@
+name: NodeJS
+
+on:
+    push:
+      branches: 
+        - main
+        - lab-[1234]
+    pull_request:
+      branches:
+        - main
+        - lab-[1234]
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      
+      - name: Install dependencies
+        run: npm install
+    
+      - name: Build
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check Formatting
+        run: npm run format

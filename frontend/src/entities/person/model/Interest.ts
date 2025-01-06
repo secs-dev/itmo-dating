@@ -1,6 +1,6 @@
-import {Topic} from "@/entities/person/model/Topic.ts";
+import { Topic } from '@/entities/person/model/Topic.ts'
 
 export interface Interest {
-    topic: Topic
-    level: number
+  topic: Topic
+  level: number
 }

@@ -1,4 +1,4 @@
 export interface UploadedFile {
-    id: number,
-    src: string
+  id: number
+  src: string
 }

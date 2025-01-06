@@ -1,1 +1,1 @@
-export {type AuthState, initialAuthState} from "./model/AuthState.ts"
+export { type AuthState, initialAuthState } from './model/AuthState.ts'

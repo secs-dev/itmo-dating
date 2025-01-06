@@ -1,1 +1,1 @@
-export {RegistrationPictureElement} from "./ui/RegistrationPictureElement.tsx"
+export { RegistrationPictureElement } from './ui/RegistrationPictureElement.tsx'
