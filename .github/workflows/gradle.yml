@@ -5,10 +5,14 @@ on:
     branches: 
       - main
       - lab-[1234]
+    paths-ignore:
+      - frontend
   pull_request:
     branches:
       - main
       - lab-[1234]
+    paths-ignore:
+      - frontend
 
 jobs:
   build:
