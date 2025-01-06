@@ -11,7 +11,7 @@ services:
       TELEGRAM_BOT_TOKEN: ${ITMO_DATING_AUTHIK_TELEGRAM_BOT_TOKEN?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     ports:
-      - 8082:8080
+      - "127.0.0.1:8081:8080/tcp"
     depends_on:
       authik-database:
         condition: service_healthy
@@ -36,7 +36,7 @@ services:
       TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     ports:
-      - 8080:8080
+      - "127.0.0.1:8082:8080/tcp"
     depends_on:
       matchmaker-database:
         condition: service_healthy
@@ -61,7 +61,7 @@ services:
       TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     ports:
-      - 8081:8080
+      - "127.0.0.1:8083:8080/tcp"
     depends_on:
       people-database:
         condition: service_healthy
@@ -76,6 +76,13 @@ services:
       interval: 1s
       timeout: 1s
       retries: 16
+  gateway:
+    build:
+      context: ./backend/gateway
+    environment:
+      KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+    ports:
+      - "444:8080"
   tg-miniapp:
     build:
       context: frontend

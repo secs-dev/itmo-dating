@@ -26,6 +26,6 @@ dependencies {
     implementation("org.jooq:jooq-codegen:$jooqVersion")
     implementation("org.jooq:jooq-codegen-gradle:$jooqVersion")
 
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.3.5")
-    implementation("io.spring.gradle:dependency-management-plugin:1.1.6")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.4.1")
+    implementation("io.spring.gradle:dependency-management-plugin:1.1.7")
 }
