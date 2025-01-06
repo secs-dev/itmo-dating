@@ -6,3 +6,25 @@ server:
     key-store-password: ${KEY_STORE_PASSWORD}
     protocol: TLSv1.3
     enabled-protocols: TLSv1.3
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: authik
+          uri: https://authik:8080
+          predicates:
+            - Path=/authik/**
+          filters:
+            - RewritePath=/authik/(?<segment>.*), /${segment}
+        - id: matchmaker
+          uri: https://matchmaker:8080
+          predicates:
+            - Path=/matchmaker/**
+          filters:
+            - RewritePath=/matchmaker/(?<segment>.*), /${segment}
+        - id: people
+          uri: https://people:8080
+          predicates:
+            - Path=/people/**
+          filters:
+            - RewritePath=/people/(?<segment>.*), /${segment}
