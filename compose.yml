@@ -26,6 +26,13 @@ services:
       interval: 1s
       timeout: 1s
       retries: 16
+  gateway:
+    build:
+      context: ./backend/gateway
+    environment:
+      KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+    ports:
+      - 8083:8080
   matchmaker:
     build:
       context: ./backend/matchmaker

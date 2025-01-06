@@ -5,6 +5,7 @@
 For building and testing a project check the [GitHub Workflow](../.github/workflows/gradle.yml).
 
 To run the backend you need to make Spring Boot jars and run docker compose, but before do not forget to prepare environment variables and secret keys.
+But before ensure that frontend is already built. 
 
 ```bash
 source config/env/local.sh

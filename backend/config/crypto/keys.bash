@@ -6,21 +6,25 @@ MODE="$1"
 ENV="$2"
 
 ALIAS="itmo-dating"
+ALIAS_BACKEND="$ALIAS-backend"
 KEYSTORE="keystore.p12"
-INSTALL_PATH="foundation/src/main/resources/keystore"
+BACKEND_INSTALL_PATH="foundation/src/main/resources/keystore"
+GATEWAY_INSTALL_PATH="gateway/src/main/resources/keystore"
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
 
 function copy() {
-  mkdir -p "../../$INSTALL_PATH"
-  cp "$1" "../../$INSTALL_PATH/$1"
+  mkdir -p "../../$BACKEND_INSTALL_PATH"
+  mkdir -p "../../$GATEWAY_INSTALL_PATH"
+  cp "$1" "../../$BACKEND_INSTALL_PATH/$1"
+  cp "$1" "../../$GATEWAY_INSTALL_PATH/$1"
 }
 
 function remove() {
-  rm -f "$1" "../../$INSTALL_PATH/$1"
+  rm -f "$1" "../../$BACKEND_INSTALL_PATH/$1" "../../$GATEWAY_INSTALL_PATH/$1"
 }
 
 function generate() {
-  echo "Generation key pair keystore..."
+  echo "Generating the backend key pair keystore..."
   keytool \
     -genkeypair \
     -alias      "$ALIAS" \
@@ -34,23 +38,23 @@ function generate() {
     -storeType  PKCS12 \
     -storepass  "$PASSWORD"
 
-  echo "Exporting a private key..."
-  openssl pkcs12 -in "$KEYSTORE" -nocerts -out "$ALIAS-private.pem" \
+  echo "Exporting the backend private key..."
+  openssl pkcs12 -in "$KEYSTORE" -nocerts -out "$ALIAS_BACKEND-private.pem" \
     -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
 
-  echo "Exporting a public key..."
-  openssl pkcs12 -in "$KEYSTORE" -nokeys  -out "$ALIAS-public.pem"  \
+  echo "Exporting the backend public key..."
+  openssl pkcs12 -in "$KEYSTORE" -nokeys  -out "$ALIAS_BACKEND-public.pem"  \
     -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
 
   copy "$KEYSTORE"
-  copy "$ALIAS-private.pem"
-  copy "$ALIAS-public.pem"
+  copy "$ALIAS_BACKEND-private.pem"
+  copy "$ALIAS_BACKEND-public.pem"
 }
 
 function clear() {
   remove "$KEYSTORE"
-  remove "$ALIAS-private.pem"
-  remove "$ALIAS-public.pem"
+  remove "$ALIAS_BACKEND-private.pem"
+  remove "$ALIAS_BACKEND-public.pem"
 }
 
 if [ "$ENV" = "test" ]; then
