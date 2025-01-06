@@ -1,1 +1,1 @@
-export {fetchTgUser} from "./api/fetchTgUser.ts"
+export { fetchTgUser } from './api/fetchTgUser.ts'

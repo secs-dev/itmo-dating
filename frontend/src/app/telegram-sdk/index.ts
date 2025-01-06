@@ -1,1 +1,1 @@
-export {init, mockTgEnv} from "./api"
+export { init, mockTgEnv } from './api'

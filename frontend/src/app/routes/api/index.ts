@@ -1,1 +1,1 @@
-export {routes, routesMap, router} from "./routing.ts"
+export { routes, routesMap, router } from './routing.ts'

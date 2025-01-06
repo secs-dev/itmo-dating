@@ -1,4 +1,4 @@
 export interface Interest {
-    topicId: number,
-    level: number,
+  topicId: number
+  level: number
 }

@@ -1,1 +1,1 @@
-export {Main} from "./ui/Main.tsx"
+export { Main } from './ui/Main.tsx'

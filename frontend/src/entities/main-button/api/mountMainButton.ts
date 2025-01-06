@@ -1,7 +1,7 @@
-import {mainButton} from "@telegram-apps/sdk";
+import { mainButton } from '@telegram-apps/sdk'
 
 export function mountMainButton() {
-    if (mainButton.mount.isAvailable()) {
-        mainButton.mount()
-    }
+  if (mainButton.mount.isAvailable()) {
+    mainButton.mount()
+  }
 }

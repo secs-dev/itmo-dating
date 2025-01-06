@@ -1,7 +1,6 @@
-import {Coordinates} from "./Coordinates.ts";
+import { Coordinates } from './Coordinates.ts'
 
 export interface Location {
-    name: string,
-    coordinates: Coordinates
-
+  name: string
+  coordinates: Coordinates
 }

@@ -1,5 +1,5 @@
-import {JwtToken} from "@/shared/api";
+import { JwtToken } from '@/shared/api'
 
 export interface AuthResponse {
-    access: JwtToken;
+  access: JwtToken
 }

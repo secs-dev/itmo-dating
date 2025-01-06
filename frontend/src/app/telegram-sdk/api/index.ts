@@ -1,3 +1,3 @@
-export {init} from "./init.ts"
+export { init } from './init.ts'
 
-export {mockTgEnv} from "./mockEnv.ts"
+export { mockTgEnv } from './mockEnv.ts'

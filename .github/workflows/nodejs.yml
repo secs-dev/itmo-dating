@@ -1,0 +1,47 @@
+name: NodeJS
+
+on:
+  push:
+    branches: 
+      - main
+      - lab-[1234]
+    paths-ignore:
+      - backend
+  pull_request:
+    branches:
+      - main
+      - lab-[1234]
+    paths-ignore: 
+      - backend
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      
+      - name: Create Fake Certificates
+        run: |
+          mkdir -p .cert
+          touch .cert/privkey.pem
+          touch .cert/cert.pem
+          touch .cert/chain.pem
+
+      - name: Install Dependencies
+        run: npm install
+    
+      - name: Build
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check Formatting
+        run: npm run format

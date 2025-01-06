@@ -1,1 +1,1 @@
-export {AuthTest} from "./ui/AuthTest.tsx"
+export { AuthTest } from './ui/AuthTest.tsx'

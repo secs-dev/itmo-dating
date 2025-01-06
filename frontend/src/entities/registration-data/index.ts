@@ -1,1 +1,1 @@
-export type {RegistrationData} from "./model/RegistartionData.ts"
+export type { RegistrationData } from './model/RegistartionData.ts'

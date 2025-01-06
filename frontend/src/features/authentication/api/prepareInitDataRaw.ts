@@ -1,21 +1,26 @@
-export function prepareInitDataRaw(initDataRaw: string | undefined): any {
-    if (initDataRaw == undefined)
-        throw new Error("initDataRaw is undefined")
-    let hash: string | undefined;
+export function prepareInitDataRaw(initDataRaw: string | undefined): {
+  tgInitDataRaw: string
+  hash: string
+} {
+  if (initDataRaw == undefined) throw new Error('initDataRaw is undefined')
 
-    const pairs: string[] = [];
+  let hash: string | undefined
 
-    new URLSearchParams(initDataRaw).forEach((value, key) => {
-        if (key === 'hash') {
-            hash = value;
-            return;
-        }
+  const pairs: string[] = []
 
-        pairs.push(`${key}=${value}`);
-    });
+  new URLSearchParams(initDataRaw).forEach((value, key) => {
+    if (key === 'hash') {
+      hash = value
+      return
+    }
 
-    pairs.sort();
+    pairs.push(`${key}=${value}`)
+  })
 
-    const tgInitDataRaw = pairs.join('\n')
-    return {tgInitDataRaw, hash}
+  if (hash == undefined) throw new Error('hash is undefined')
+
+  pairs.sort()
+
+  const tgInitDataRaw = pairs.join('\n')
+  return { tgInitDataRaw, hash }
 }

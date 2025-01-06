@@ -1,1 +1,1 @@
-export {Registration} from "./ui/Registration.tsx"
+export { Registration } from './ui/Registration.tsx'
