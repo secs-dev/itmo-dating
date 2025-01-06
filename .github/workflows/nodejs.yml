@@ -23,7 +23,14 @@ jobs:
         with:
           node-version: latest
       
-      - name: Install dependencies
+      - name: Create Fake Certificates
+        run: |
+          mkdir -p .cert
+          touch .cert/privkey.pem
+          touch .cert/cert.pem
+          touch .cert/chain.pem
+
+      - name: Install Dependencies
         run: npm install
     
       - name: Build
