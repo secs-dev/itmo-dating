@@ -35,6 +35,7 @@ build/
 *.crt
 *.csr
 *.srl
+*.jks
 
 # Java
 *.hprof

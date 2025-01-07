@@ -21,3 +21,4 @@ DNS.1 = localhost
 DNS.2 = authik
 DNS.3 = matchmaker
 DNS.4 = people
+DNS.5 = server.dc1.consul

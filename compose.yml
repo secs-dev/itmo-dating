@@ -10,11 +10,11 @@ services:
       TOKEN_SIGN_KEY_PRIVATE: ${ITMO_DATING_AUTHIK_TOKEN_SIGN_KEY_PRIVATE?:err}
       TELEGRAM_BOT_TOKEN: ${ITMO_DATING_AUTHIK_TELEGRAM_BOT_TOKEN?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
-    ports:
-      - "127.0.0.1:8081:8080/tcp"
     depends_on:
       authik-database:
         condition: service_healthy
+      "server.dc1.consul":
+        condition: service_started
   authik-database:
     image: postgres
     environment:
@@ -35,11 +35,11 @@ services:
       POSTGRES_PASSWORD: ${ITMO_DATING_MATCHMAKER_POSTGRES_PASSWORD?:err}
       TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
-    ports:
-      - "127.0.0.1:8082:8080/tcp"
     depends_on:
       matchmaker-database:
         condition: service_healthy
+      "server.dc1.consul":
+        condition: service_started
   matchmaker-database:
     image: postgres
     environment:
@@ -60,11 +60,11 @@ services:
       POSTGRES_PASSWORD: ${ITMO_DATING_PEOPLE_POSTGRES_PASSWORD?:err}
       TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
-    ports:
-      - "127.0.0.1:8083:8080/tcp"
     depends_on:
       people-database:
         condition: service_healthy
+      "server.dc1.consul":
+        condition: service_started
   people-database:
     image: postgres
     environment:
@@ -83,6 +83,13 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     ports:
       - "444:8080"
+  "server.dc1.consul":
+    build:
+      context: ./backend/consul
+    command: sh ./consul/run.sh
+    ports:
+      - "127.0.0.1:8500:8500/tcp"
+      - "127.0.0.1:8501:8501/tcp"
   tg-miniapp:
     build:
       context: frontend

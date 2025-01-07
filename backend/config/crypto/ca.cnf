@@ -4,6 +4,7 @@ prompt = no
 default_md = sha256
 distinguished_name = dn
 req_extensions = req_ext
+x509_extensions = v3_ca
 
 [dn]
 C = RU
@@ -12,3 +13,9 @@ L = Saint-Petersburg
 O = ITMO Dating
 OU = IT
 CN = ITMO Dating Root CA
+
+[v3_ca]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign

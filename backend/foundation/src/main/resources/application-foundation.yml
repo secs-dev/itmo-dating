@@ -7,10 +7,37 @@ server:
     protocol: TLSv1.3
     enabled-protocols: TLSv1.3
 spring:
+  cloud:
+    consul:
+      scheme: https
+      host: server.dc1.consul
+      port: 8501
+      tls:
+        key-store-instance-type: JKS
+        certificate-path: keystore/itmo-dating-backend.jks
+        certificate-password: ${server.ssl.key-store-password}
+        key-store-path: keystore/itmo-dating-backend.jks
+        key-store-password: ${server.ssl.key-store-password}
+      discovery:
+        enabled: true
+        scheme: https
+        instance-id: ${spring.application.name}:${HOSTNAME}
+        heartbeat:
+          enabled: true
   datasource:
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: database/changelog.sql
+management:
+  health:
+    consul:
+      enabled: true
+    diskspace:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health
 springdoc:
   api-docs:
     path: /openapi
@@ -25,3 +52,4 @@ security:
 logging:
   level:
     web: DEBUG
+    org.springframework.cloud.consul: DEBUG

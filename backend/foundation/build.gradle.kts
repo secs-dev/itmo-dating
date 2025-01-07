@@ -9,9 +9,12 @@ dependencies {
     api(libs.org.springframework.boot.spring.boot.starter.webflux)
     api(libs.org.springframework.boot.spring.boot.starter.data.r2dbc)
     api(libs.org.springframework.boot.spring.boot.starter.security)
+    api(libs.org.springframework.boot.spring.boot.starter.actuator)
 
     api(libs.org.springframework.spring.web)
     api(libs.org.springframework.spring.context)
+
+    api(libs.org.springframework.cloud.spring.cloud.starter.consul.discovery)
 
     api(libs.org.springdoc.springdoc.openapi.starter.webflux.ui)
 
