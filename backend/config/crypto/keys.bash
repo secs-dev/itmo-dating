@@ -7,54 +7,97 @@ ENV="$2"
 
 ALIAS="itmo-dating"
 ALIAS_BACKEND="$ALIAS-backend"
-KEYSTORE="keystore.p12"
+VALIDITY=1
 BACKEND_INSTALL_PATH="foundation/src/main/resources/keystore"
+#CONSUL_INSTALL_PATH="consul/config"
 GATEWAY_INSTALL_PATH="gateway/src/main/resources/keystore"
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
 
+function generate() {
+  echo "Phase: Generate"
+
+  echo "Generating the private key for CA certificate..."
+  openssl genpkey \
+    -algorithm RSA \
+    -out "$ALIAS_BACKEND-ca.key" 2> /dev/null
+
+  echo "Generating the self-signed CA certificate..."
+  openssl req -x509 -new \
+    -nodes \
+    -days "$VALIDITY" \
+    -config ca.cnf \
+    -key "$ALIAS_BACKEND-ca.key" \
+    -out "$ALIAS_BACKEND-ca.crt"
+
+  echo "Generating the private key for services..."
+  openssl genpkey \
+    -algorithm RSA \
+    -out "$ALIAS_BACKEND.key" 2> /dev/null
+
+  echo "Generating the Certificate Signing Request (CSR)..."
+  openssl req -new \
+    -config csr.cnf \
+    -key "$ALIAS_BACKEND.key" \
+    -out "$ALIAS_BACKEND.csr"
+
+  echo "Signing the CSR with self-signed CA to create a certificate..."
+  openssl x509 -req \
+    -sha256 \
+    -days "$VALIDITY" \
+    -extfile csr.cnf -extensions req_ext \
+    -CA "$ALIAS_BACKEND-ca.crt" \
+    -CAkey "$ALIAS_BACKEND-ca.key" \
+    -CAcreateserial \
+    -in "$ALIAS_BACKEND.csr" \
+    -out "$ALIAS_BACKEND.crt"
+
+  echo "Packaging keys and certificates..."
+  openssl pkcs12 -export \
+    -password pass:"$PASSWORD" \
+    -certfile "$ALIAS_BACKEND-ca.crt" \
+    -inkey "$ALIAS_BACKEND.key" \
+    -in "$ALIAS_BACKEND.crt" \
+    -out "$ALIAS_BACKEND.p12"
+}
+
 function copy() {
-  mkdir -p "../../$BACKEND_INSTALL_PATH"
-  mkdir -p "../../$GATEWAY_INSTALL_PATH"
-  cp "$1" "../../$BACKEND_INSTALL_PATH/$1"
-  cp "$1" "../../$GATEWAY_INSTALL_PATH/$1"
+  DIR="$1"
+  FILE="$2"
+
+  mkdir -p "../../$DIR"
+  cp "$FILE" "../../$DIR/$FILE"
+}
+
+function distribute() {
+  echo "Phase: Distribute"
+
+  echo "Copying package to the backend..."
+  copy "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+
+  echo "Copying package to the gateway..."
+  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
 }
 
 function remove() {
-  rm -f "$1" "../../$BACKEND_INSTALL_PATH/$1" "../../$GATEWAY_INSTALL_PATH/$1"
-}
+  DIR="$1"
+  FILE="$2"
 
-function generate() {
-  echo "Generating the backend key pair keystore..."
-  keytool \
-    -genkeypair \
-    -alias      "$ALIAS" \
-    -keyalg     RSA \
-    -keysize    4096 \
-    -validity   1 \
-    -dname      "CN=localhost" \
-    -ext        "san=dns:localhost,dns:authik,dns:matchmaker,dns:people" \
-    -keypass    "$PASSWORD" \
-    -keystore   "$KEYSTORE" \
-    -storeType  PKCS12 \
-    -storepass  "$PASSWORD"
-
-  echo "Exporting the backend private key..."
-  openssl pkcs12 -in "$KEYSTORE" -nocerts -out "$ALIAS_BACKEND-private.pem" \
-    -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
-
-  echo "Exporting the backend public key..."
-  openssl pkcs12 -in "$KEYSTORE" -nokeys  -out "$ALIAS_BACKEND-public.pem"  \
-    -passin pass:"$PASSWORD" -passout pass:"$PASSWORD"
-
-  copy "$KEYSTORE"
-  copy "$ALIAS_BACKEND-private.pem"
-  copy "$ALIAS_BACKEND-public.pem"
+  rm -rf "../../$DIR/$FILE"
+  rm -rf "$FILE"
 }
 
 function clear() {
-  remove "$KEYSTORE"
-  remove "$ALIAS_BACKEND-private.pem"
-  remove "$ALIAS_BACKEND-public.pem"
+  echo "Phase: Clear"
+
+  echo "Removing package from the backend..."
+  remove "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+
+  echo "Removing package from the gateway..."
+  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+
+  rm -rf "$ALIAS_BACKEND-ca.key"
+  rm -rf "$ALIAS_BACKEND-ca.crt"
+  rm -rf "$ALIAS_BACKEND.key"
 }
 
 if [ "$ENV" = "test" ]; then
@@ -63,6 +106,7 @@ fi
 
 if [ "$MODE" = "generate" ]; then
   generate
+  distribute
 elif [ "$MODE" = "clean" ]; then
   clear
 else

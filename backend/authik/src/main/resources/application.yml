@@ -1,6 +1,8 @@
 spring:
   config:
     import: application-foundation.yml
+  application:
+    name: authik
   datasource:
     url: jdbc:postgresql://authik-database:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
