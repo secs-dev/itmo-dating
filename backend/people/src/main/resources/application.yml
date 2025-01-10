@@ -1,6 +1,8 @@
 spring:
   config:
     import: application-foundation.yml
+  application:
+    name: people
   datasource:
     url: jdbc:postgresql://people-database:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}

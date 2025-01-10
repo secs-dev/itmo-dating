@@ -4,7 +4,9 @@ plugins {
 
 dependencies {
     implementation(libs.org.springframework.boot.spring.boot)
+    implementation(libs.org.springframework.boot.spring.boot.starter.actuator)
     implementation(libs.org.springframework.cloud.spring.cloud.starter.gateway)
+    implementation(libs.org.springframework.cloud.spring.cloud.starter.consul.discovery)
 
     implementation(libs.org.springdoc.springdoc.openapi.starter.webflux.ui)
 

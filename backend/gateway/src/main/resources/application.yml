@@ -2,11 +2,13 @@ server:
   ssl:
     enabled: true
     key-store-type: PKCS12
-    key-store: classpath:keystore/keystore.p12
+    key-store: classpath:keystore/itmo-dating-backend.p12
     key-store-password: ${KEY_STORE_PASSWORD}
     protocol: TLSv1.3
     enabled-protocols: TLSv1.3
 spring:
+  application:
+    name: gateway
   cloud:
     gateway:
       routes:
@@ -95,6 +97,32 @@ spring:
             - Method=GET
             - Path=/api/locations
 
+    consul:
+      scheme: https
+      host: server.dc1.consul
+      port: 8501
+      tls:
+        key-store-instance-type: JKS
+        certificate-path: keystore/itmo-dating-backend.jks
+        certificate-password: ${server.ssl.key-store-password}
+        key-store-path: keystore/itmo-dating-backend.jks
+        key-store-password: ${server.ssl.key-store-password}
+      discovery:
+        enabled: true
+        scheme: https
+        instance-id: ${spring.application.name}:${HOSTNAME}
+        heartbeat:
+          enabled: true
+management:
+  health:
+    consul:
+      enabled: true
+    diskspace:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

@@ -31,6 +31,11 @@ build/
 # Secrets
 *.pem
 *.p12
+*.key
+*.crt
+*.csr
+*.srl
+*.jks
 
 # Java
 *.hprof
