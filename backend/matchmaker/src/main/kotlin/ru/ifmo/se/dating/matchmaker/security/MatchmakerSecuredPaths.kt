@@ -14,5 +14,6 @@ class MatchmakerSecuredPaths : SpringSecuredPaths {
         Path("/api/**"),
         Not(Path("/api/people/{person_id}", HttpMethod.PUT)),
         Not(Path("/api/monitoring/healthcheck", HttpMethod.GET)),
+        Not(Path("/api/suggestions", HttpMethod.OPTIONS)),
     )
 }
