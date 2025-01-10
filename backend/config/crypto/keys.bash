@@ -87,6 +87,8 @@ function distribute() {
 
   echo "Copying package to the gateway..."
   copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
+  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.crt"
 
   echo "Copying keys to the consul..."
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
@@ -112,6 +114,8 @@ function clear() {
 
   echo "Removing package from the gateway..."
   remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
+  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.crt"
 
   echo "Removing keys from the consul..."
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
