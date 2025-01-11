@@ -7,12 +7,15 @@ ENV="$2"
 
 ALIAS="itmo-dating"
 ALIAS_BACKEND="$ALIAS-backend"
+
 VALIDITY=1
-FOUNDATION_INSTALL_PATH="foundation/src/main/resources/keystore"
-STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/src/main/resources/keystore"
-CONSUL_INSTALL_PATH="consul/config"
-GATEWAY_INSTALL_PATH="gateway/src/main/resources/keystore"
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
+
+INTERNAL_INSTALL_PATH="src/main/resources/keystore"
+FOUNDATION_INSTALL_PATH="foundation/$INTERNAL_INSTALL_PATH"
+GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
+STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/$INTERNAL_INSTALL_PATH"
+CONSUL_INSTALL_PATH="consul/config"
 
 function generate() {
   echo "Phase: Generate"
