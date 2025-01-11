@@ -2,6 +2,7 @@ package ru.ifmo.se.dating.spring.security.ssl
 
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import ru.ifmo.se.dating.logging.Log
 import ru.ifmo.se.dating.logging.Log.Companion.autoLog
@@ -10,6 +11,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
+@Profile("!test")
 @Component
 class KeyStoreExtractor(
     @Value("\${spring.cloud.consul.tls.certificate-path}")

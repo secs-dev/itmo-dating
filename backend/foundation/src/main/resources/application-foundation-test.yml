@@ -1,3 +1,7 @@
+spring:
+  cloud:
+    consul:
+      enabled: false
 security:
   auth:
     token:
