@@ -8,7 +8,8 @@ ENV="$2"
 ALIAS="itmo-dating"
 ALIAS_BACKEND="$ALIAS-backend"
 VALIDITY=1
-BACKEND_INSTALL_PATH="foundation/src/main/resources/keystore"
+FOUNDATION_INSTALL_PATH="foundation/src/main/resources/keystore"
+STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/src/main/resources/keystore"
 CONSUL_INSTALL_PATH="consul/config"
 GATEWAY_INSTALL_PATH="gateway/src/main/resources/keystore"
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
@@ -81,14 +82,13 @@ function distribute() {
   echo "Phase: Distribute"
 
   echo "Copying package to the backend..."
-  copy "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.p12"
-  copy "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.jks"
-  copy "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.crt"
+  copy "$FOUNDATION_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+
+  echo "Copying package to the starter-service-discovery..."
+  copy "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
   echo "Copying package to the gateway..."
   copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
-  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
-  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.crt"
 
   echo "Copying keys to the consul..."
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
@@ -107,15 +107,14 @@ function remove() {
 function clear() {
   echo "Phase: Clear"
 
-  echo "Removing package from the backend..."
-  remove "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.p12"
-  remove "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.jks"
-  remove "$BACKEND_INSTALL_PATH" "$ALIAS_BACKEND.crt"
+  echo "Removing package from the foundation..."
+  remove "$FOUNDATION_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+
+  echo "Removing package from the starter-service-discovery..."
+  remove "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
   echo "Removing package from the gateway..."
   remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
-  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
-  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.crt"
 
   echo "Removing keys from the consul..."
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"

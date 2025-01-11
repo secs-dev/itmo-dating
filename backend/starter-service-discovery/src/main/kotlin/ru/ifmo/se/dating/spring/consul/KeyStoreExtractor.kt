@@ -1,11 +1,9 @@
-package ru.ifmo.se.dating.spring.security.ssl
+package ru.ifmo.se.dating.spring.consul
 
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
-import ru.ifmo.se.dating.logging.Log
-import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -20,8 +18,6 @@ class KeyStoreExtractor(
     @Value("\${spring.cloud.consul.tls.key-store-path}")
     private val keystorePath: String,
 ) {
-    private val log = Log.autoLog()
-
     @PostConstruct
     fun extractCertificate() {
         extract(certificatePath)
@@ -29,10 +25,8 @@ class KeyStoreExtractor(
     }
 
     private fun extract(path: String) {
-        log.info("Extracting file '$path' from the jar...")
         val inputStream = javaClass.classLoader.getResourceAsStream(path)!!
         File(path).parentFile?.mkdirs()
         Files.copy(inputStream, Paths.get(path), StandardCopyOption.REPLACE_EXISTING)
-        log.info("File '$path' extracted successfully!")
     }
 }

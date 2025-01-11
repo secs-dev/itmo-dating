@@ -1,7 +1,6 @@
 spring:
-  cloud:
-    consul:
-      enabled: false
+  config:
+    import: application-service-discovery-test.yml
 security:
   auth:
     token:
