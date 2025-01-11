@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    api(project(":starter-service-discovery"))
+
     api(libs.org.springframework.boot.spring.boot)
     api(libs.org.springframework.boot.spring.boot.starter.webflux)
     api(libs.org.springframework.boot.spring.boot.starter.data.r2dbc)

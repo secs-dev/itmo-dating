@@ -11,4 +11,5 @@ include(
     ":authik",
     ":matchmaker",
     ":people",
+    ":starter-service-discovery",
 )
