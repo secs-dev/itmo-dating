@@ -3,7 +3,6 @@ default_bits = 4096
 prompt = no
 default_md = sha256
 distinguished_name = dn
-req_extensions = req_ext
 x509_extensions = v3_ca
 
 [dn]
@@ -19,3 +18,4 @@ subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid:always,issuer
 basicConstraints = critical, CA:true
 keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+
