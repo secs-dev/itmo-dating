@@ -8,24 +8,21 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
-
 @Component
 class KeyStoreExtractor(
     @Value("\${spring.cloud.consul.tls.certificate-path}")
     private val certificatePath: String,
-
-    @Value("\${spring.cloud.consul.tls.key-store-path}")
-    private val keystorePath: String,
 ) {
     @PostConstruct
     fun extractCertificate() {
         extract(certificatePath)
-        extract(keystorePath)
     }
 
-    private fun extract(path: String) {
-        val inputStream = javaClass.classLoader.getResourceAsStream(certificatePath)!!
-        File(certificatePath).parentFile?.mkdirs()
-        Files.copy(inputStream, Paths.get(certificatePath), StandardCopyOption.REPLACE_EXISTING)
+    companion object {
+        private fun extract(path: String) {
+            val inputStream = KeyStoreExtractor::class.java.getResourceAsStream(path)!!
+            File(path).parentFile?.mkdirs()
+            Files.copy(inputStream, Paths.get(path), StandardCopyOption.REPLACE_EXISTING)
+        }
     }
 }

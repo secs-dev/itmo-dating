@@ -28,9 +28,9 @@ class KeyStoreExtractor(
 
     private fun extract(path: String) {
         log.info("Extracting file '$path' from the jar...")
-        val inputStream = javaClass.classLoader.getResourceAsStream(certificatePath)!!
-        File(certificatePath).parentFile?.mkdirs()
-        Files.copy(inputStream, Paths.get(certificatePath), StandardCopyOption.REPLACE_EXISTING)
+        val inputStream = javaClass.classLoader.getResourceAsStream(path)!!
+        File(path).parentFile?.mkdirs()
+        Files.copy(inputStream, Paths.get(path), StandardCopyOption.REPLACE_EXISTING)
         log.info("File '$path' extracted successfully!")
     }
 }
