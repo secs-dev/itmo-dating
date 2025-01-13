@@ -11,7 +11,7 @@ ST = Saint-Petersburg
 L = Saint-Petersburg
 O = ITMO Dating
 OU = IT
-CN = ITMO Dating Root CA
+CN = *.dating.se.ifmo.ru
 
 [v3_ca]
 subjectKeyIdentifier = hash

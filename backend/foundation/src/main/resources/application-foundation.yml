@@ -26,5 +26,4 @@ security:
         public: ${TOKEN_SIGN_KEY_PUBLIC}
 logging:
   level:
-    web: DEBUG
-    org.springframework.cloud.consul: DEBUG
+    web: INFO

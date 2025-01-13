@@ -8,7 +8,7 @@ spring:
       routes:
 
         - id: get-authik-openapi-api-yml
-          uri: https://authik:8080
+          uri: lb://authik
           predicates:
             - Method=GET
             - Path=/openapi/authik/api.yml
@@ -16,7 +16,7 @@ spring:
             - RewritePath=/openapi/authik/api.yml, /openapi/api.yml
 
         - id: get-matchmaker-openapi-api-yml
-          uri: https://matchmaker:8080
+          uri: lb://matchmaker
           predicates:
             - Method=GET
             - Path=/openapi/matchmaker/api.yml
@@ -24,7 +24,7 @@ spring:
             - RewritePath=/openapi/matchmaker/api.yml, /openapi/api.yml
 
         - id: get-people-openapi-api-yml
-          uri: https://people:8080
+          uri: lb://people
           predicates:
             - Method=GET
             - Path=/openapi/people/api.yml
@@ -32,61 +32,61 @@ spring:
             - RewritePath=/openapi/people/api.yml, /openapi/api.yml
 
         - id: put-authik-auth-telegram-web-app
-          uri: https://authik:8080
+          uri: lb://authik
           predicates:
             - Method=PUT
             - Path=/api/auth/telegram/web-app
 
         - id: get-matchmaker-suggestions
-          uri: https://matchmaker:8080
+          uri: lb://matchmaker
           predicates:
             - Method=GET
             - Path=/api/suggestions
 
         - id: post-matchmaker-people-attitudes-incoming
-          uri: https://matchmaker:8080
+          uri: lb://matchmaker
           predicates:
             - Method=POST
             - Path=/api/people/*/attitudes/incoming/*
 
         - id: delete-matchmaker-attitudes
-          uri: https://matchmaker:8080
+          uri: lb://matchmaker
           predicates:
             - Method=DELETE
             - Path=/api/attitudes
 
         - id: get-matchmaker-people-matches
-          uri: https://matchmaker:8080
+          uri: lb://matchmaker
           predicates:
             - Method=GET
             - Path=/api/people/{person_id}/matches
 
         - id: get-people-person-id
-          uri: https://people:8080
+          uri: lb://people
           predicates:
             - Method=GET
             - Path=/api/people/*
 
         - id: delete-people-person-id
-          uri: https://people:8080
+          uri: lb://people
           predicates:
             - Method=DELETE
             - Path=/api/people/*
 
         - id: patch-people-person-id
-          uri: https://people:8080
+          uri: lb://people
           predicates:
             - Method=PATCH
             - Path=/api/people/*
 
         - id: get-people-faculties
-          uri: https://people:8080
+          uri: lb://people
           predicates:
             - Method=GET
             - Path=/api/faculties
 
         - id: get-people-locations
-          uri: https://people:8080
+          uri: lb://people
           predicates:
             - Method=GET
             - Path=/api/locations

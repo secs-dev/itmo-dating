@@ -1,5 +1,6 @@
 services:
   authik:
+    image: ghcr.io/secs-dev/itmo-dating-authik:latest
     build:
       context: ./backend/authik
     environment:
@@ -10,11 +11,16 @@ services:
       TOKEN_SIGN_KEY_PRIVATE: ${ITMO_DATING_AUTHIK_TOKEN_SIGN_KEY_PRIVATE?:err}
       TELEGRAM_BOT_TOKEN: ${ITMO_DATING_AUTHIK_TELEGRAM_BOT_TOKEN?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+    hostname: authik-0.dating.se.ifmo.ru
     depends_on:
       authik-database:
         condition: service_healthy
-      "server.dc1.consul":
+      consul:
         condition: service_started
+  authik-1:
+    extends:
+      service: authik
+    hostname: authik-1.dating.se.ifmo.ru
   authik-database:
     image: postgres
     environment:
@@ -26,7 +32,9 @@ services:
       interval: 1s
       timeout: 1s
       retries: 16
+    hostname: authik-database-primary.dating.se.ifmo.ru
   matchmaker:
+    image: ghcr.io/secs-dev/itmo-dating-matchmaker:latest
     build:
       context: ./backend/matchmaker
     environment:
@@ -35,11 +43,16 @@ services:
       POSTGRES_PASSWORD: ${ITMO_DATING_MATCHMAKER_POSTGRES_PASSWORD?:err}
       TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+    hostname: matchmaker-0.dating.se.ifmo.ru
     depends_on:
       matchmaker-database:
         condition: service_healthy
-      "server.dc1.consul":
+      consul:
         condition: service_started
+  matchmaker-1:
+    extends:
+      service: matchmaker
+    hostname: matchmaker-1.dating.se.ifmo.ru
   matchmaker-database:
     image: postgres
     environment:
@@ -51,7 +64,9 @@ services:
       interval: 1s
       timeout: 1s
       retries: 16
+    hostname: matchmaker-database-primary.dating.se.ifmo.ru
   people:
+    image: ghcr.io/secs-dev/itmo-dating-people:latest
     build:
       context: ./backend/people
     environment:
@@ -60,11 +75,16 @@ services:
       POSTGRES_PASSWORD: ${ITMO_DATING_PEOPLE_POSTGRES_PASSWORD?:err}
       TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+    hostname: people-0.dating.se.ifmo.ru
     depends_on:
       people-database:
         condition: service_healthy
-      "server.dc1.consul":
+      consul:
         condition: service_started
+  people-1:
+    extends:
+      service: people
+    hostname: people-1.dating.se.ifmo.ru
   people-database:
     image: postgres
     environment:
@@ -76,21 +96,26 @@ services:
       interval: 1s
       timeout: 1s
       retries: 16
+    hostname: people-database-primary.dating.se.ifmo.ru
   gateway:
+    image: ghcr.io/secs-dev/itmo-dating-gateway:latest
     build:
       context: ./backend/gateway
     environment:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     ports:
       - "444:8080"
-  "server.dc1.consul":
+  consul:
+    image: ghcr.io/secs-dev/itmo-dating-consul:latest
     build:
       context: ./backend/consul
     command: sh ./consul/run.sh
+    hostname: server.dc1.consul
     ports:
       - "127.0.0.1:8500:8500/tcp"
       - "127.0.0.1:8501:8501/tcp"
   tg-miniapp:
+    image: ghcr.io/secs-dev/itmo-dating-tg-miniapp:latest
     build:
       context: frontend
     ports:
