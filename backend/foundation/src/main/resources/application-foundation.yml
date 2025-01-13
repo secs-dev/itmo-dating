@@ -4,6 +4,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
   liquibase:
+    liquibase-schema: ${spring.application.name}
     change-log: database/changelog.sql
 server:
   ssl:

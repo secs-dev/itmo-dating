@@ -8,6 +8,9 @@ import kotlin.io.path.Path
 
 @Component
 class SpringLiquibaseMigration(
+    @Value("\${spring.liquibase.liquibase-schema}")
+    liquibaseSchema: String,
+
     @Value("\${spring.liquibase.change-log}")
     changelog: String,
 
@@ -23,6 +26,12 @@ class SpringLiquibaseMigration(
     init {
         val suppressClose = false
         SingleConnectionDataSource(url, username, password, suppressClose)
-            .use { LiquibaseMigration(Path(changelog), it).run() }
+            .use {
+                LiquibaseMigration(
+                    changelog = Path(changelog),
+                    serviceTablePrefix = liquibaseSchema,
+                    source = it
+                ).run()
+            }
     }
 }

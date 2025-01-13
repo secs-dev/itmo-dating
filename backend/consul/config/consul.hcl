@@ -28,37 +28,13 @@ ca_file = "/consul/config/itmo-dating-backend-ca.crt"
 
 services = [
   {
-    name = "authik-database"
-    address = "authik-database"
+    name = "database"
+    address = "database"
     port = 5432
     check = {
-      id = "authik-database-check"
-      name = "Authik PostgreSQL Health Check"
-      tcp = "authik-database:5432"
-      interval = "10s"
-      timeout = "1s"
-    }
-  },
-  {
-    name = "matchmaker-database"
-    address = "matchmaker-database"
-    port = 5432
-    check = {
-      id = "matchmaker-database-check"
-      name = "Matchmaker PostgreSQL Health Check"
-      tcp = "matchmaker-database:5432"
-      interval = "10s"
-      timeout = "1s"
-    }
-  },
-  {
-    name = "people-database"
-    address = "people-database"
-    port = 5432
-    check = {
-      id = "people-database-check"
-      name = "People PostgreSQL Health Check"
-      tcp = "people-database:5432"
+      id = "database-check"
+      name = "PostgreSQL Health Check"
+      tcp = "database:5432"
       interval = "10s"
       timeout = "1s"
     }

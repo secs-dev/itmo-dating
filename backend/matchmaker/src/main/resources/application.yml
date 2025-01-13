@@ -4,10 +4,10 @@ spring:
   application:
     name: matchmaker
   datasource:
-    url: jdbc:postgresql://matchmaker-database-primary.dating.se.ifmo.ru:5432/${POSTGRES_DB}
+    url: jdbc:postgresql://database-primary.dating.se.ifmo.ru:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
   r2dbc:
-    url: r2dbc:postgresql://matchmaker-database-primary.dating.se.ifmo.ru:5432/${POSTGRES_DB}
+    url: r2dbc:postgresql://database-primary.dating.se.ifmo.ru:5432/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}

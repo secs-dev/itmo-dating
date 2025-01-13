@@ -13,7 +13,7 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     hostname: authik-0.dating.se.ifmo.ru
     depends_on:
-      authik-database:
+      database:
         condition: service_healthy
       consul:
         condition: service_started
@@ -21,18 +21,6 @@ services:
     extends:
       service: authik-0
     hostname: authik-1.dating.se.ifmo.ru
-  authik-database:
-    image: postgres
-    environment:
-      POSTGRES_DB: ${ITMO_DATING_AUTHIK_POSTGRES_DB?:err}
-      POSTGRES_USER: ${ITMO_DATING_AUTHIK_POSTGRES_USER?:err}
-      POSTGRES_PASSWORD: ${ITMO_DATING_AUTHIK_POSTGRES_PASSWORD?:err}
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 1s
-      timeout: 1s
-      retries: 16
-    hostname: authik-database-primary.dating.se.ifmo.ru
   matchmaker-0:
     image: ghcr.io/secs-dev/itmo-dating-matchmaker:latest
     build:
@@ -45,7 +33,7 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     hostname: matchmaker-0.dating.se.ifmo.ru
     depends_on:
-      matchmaker-database:
+      database:
         condition: service_healthy
       consul:
         condition: service_started
@@ -53,18 +41,6 @@ services:
     extends:
       service: matchmaker-0
     hostname: matchmaker-1.dating.se.ifmo.ru
-  matchmaker-database:
-    image: postgres
-    environment:
-      POSTGRES_DB: ${ITMO_DATING_MATCHMAKER_POSTGRES_DB?:err}
-      POSTGRES_USER: ${ITMO_DATING_MATCHMAKER_POSTGRES_USER?:err}
-      POSTGRES_PASSWORD: ${ITMO_DATING_MATCHMAKER_POSTGRES_PASSWORD?:err}
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 1s
-      timeout: 1s
-      retries: 16
-    hostname: matchmaker-database-primary.dating.se.ifmo.ru
   people-0:
     image: ghcr.io/secs-dev/itmo-dating-people:latest
     build:
@@ -77,7 +53,7 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     hostname: people-0.dating.se.ifmo.ru
     depends_on:
-      people-database:
+      database:
         condition: service_healthy
       consul:
         condition: service_started
@@ -85,18 +61,18 @@ services:
     extends:
       service: people-0
     hostname: people-1.dating.se.ifmo.ru
-  people-database:
+  database:
     image: postgres
     environment:
-      POSTGRES_DB: ${ITMO_DATING_PEOPLE_POSTGRES_DB?:err}
-      POSTGRES_USER: ${ITMO_DATING_PEOPLE_POSTGRES_USER?:err}
-      POSTGRES_PASSWORD: ${ITMO_DATING_PEOPLE_POSTGRES_PASSWORD?:err}
+      POSTGRES_DB: ${ITMO_DATING_POSTGRES_DB?:err}
+      POSTGRES_USER: ${ITMO_DATING_POSTGRES_USER?:err}
+      POSTGRES_PASSWORD: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 1s
       timeout: 1s
       retries: 16
-    hostname: people-database-primary.dating.se.ifmo.ru
+    hostname: database-primary.dating.se.ifmo.ru
   gateway:
     image: ghcr.io/secs-dev/itmo-dating-gateway:latest
     build:
