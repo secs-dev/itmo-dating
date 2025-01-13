@@ -14,14 +14,14 @@ kotlin {
 
 dependencies {
     val kotlinVersion = "2.0.10"
-    val jooqVersion = "3.19.15"
+    val jooqVersion = "3.19.17"
 
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
 
     implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.7")
 
-    implementation("org.openapitools:openapi-generator-gradle-plugin:7.9.0")
+    implementation("org.openapitools:openapi-generator-gradle-plugin:7.10.0")
 
     implementation("org.jooq:jooq-codegen:$jooqVersion")
     implementation("org.jooq:jooq-codegen-gradle:$jooqVersion")

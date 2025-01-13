@@ -3,9 +3,9 @@ org-springframework-boot-spring-boot = "3.4.1"
 org-springframework-spring = "6.2.1"
 org-springframework-cloud = "4.2.0"
 
-io-swagger-core-v3-swagger = "2.2.25"
+io-swagger-core-v3-swagger = "2.2.27"
 org-openapitools-jackson-databind-nullable = "0.2.6"
-org-springdoc-springdoc-openapi-starter = "2.6.0"
+org-springdoc-springdoc-openapi-starter = "2.8.2"
 
 io-jsonwebtoken = "0.12.6"
 
@@ -14,7 +14,7 @@ org-liquibase-liquibase-core = "4.29.2"
 org-postgresql-postgresql = "42.7.4"
 org-postgresql-r2dbc-postgresql = "1.0.7.RELEASE"
 
-com-fasterxml-jackson = "2.18.1"
+com-fasterxml-jackson = "2.18.2"
 
 jakarta-validation-jakarta-validation-api = "3.1.0"
 commons-codec-commons-codec = "1.17.1"
@@ -39,6 +39,7 @@ org-springframework-spring-web = { module = "org.springframework:spring-web", ve
 
 org-springframework-cloud-spring-cloud-starter-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway", version.ref = "org-springframework-cloud" }
 org-springframework-cloud-spring-cloud-starter-consul-discovery = { module = "org.springframework.cloud:spring-cloud-starter-consul-discovery", version.ref = "org-springframework-cloud" }
+org-springframework-cloud-spring-cloud-starter-loadbalancer = { module = "org.springframework.cloud:spring-cloud-starter-loadbalancer", version.ref = "org-springframework-cloud" }
 
 org-springdoc-springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "org-springdoc-springdoc-openapi-starter" }
 

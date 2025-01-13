@@ -13,7 +13,7 @@ spring:
       discovery:
         enabled: true
         scheme: https
-        instance-id: ${HOSTNAME}
+        instance-id: instance-${HOSTNAME}
         heartbeat:
           enabled: true
 management:

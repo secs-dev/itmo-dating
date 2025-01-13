@@ -13,4 +13,4 @@ spring:
     password: ${POSTGRES_PASSWORD}
 service:
     matchmaker:
-      url: https://matchmaker:8080/api
+      url: https://matchmaker/api
