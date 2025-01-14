@@ -12,17 +12,17 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.TrustManagerFactory
 
 @Configuration
-class SSLContextConfig(
-    @Value("\${server.ssl.key-store-type}")
+class ClientSSLContextConfig(
+    @Value("\${client.ssl.key-store-type}")
     private val keyStoreType: String,
 
-    @Value("\${server.ssl.key-store}")
+    @Value("\${client.ssl.key-store}")
     private val keyStore: Resource,
 
-    @Value("\${server.ssl.key-store-password}")
+    @Value("\${client.ssl.key-store-password}")
     private val keyStorePassword: String,
 
-    @Value("\${server.ssl.protocol}")
+    @Value("\${client.ssl.protocol}")
     private val sslProtocol: String,
 ) {
     @Bean

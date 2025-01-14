@@ -12,3 +12,5 @@ RUN chmod -R 755 /consul/config && \
     chmod 644 /consul/config/itmo-dating-backend.crt && \
     chmod 644 /consul/config/itmo-dating-backend-ca.crt && \
     chmod 644 /consul/config/consul.hcl
+
+CMD ["sh", "./consul/run.sh"]
