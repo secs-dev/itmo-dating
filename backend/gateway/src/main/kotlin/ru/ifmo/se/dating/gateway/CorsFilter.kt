@@ -31,7 +31,7 @@ class CorsFilter : WebFilter {
             ctx.response.headers.add(
                 "Access-Control-Expose-Headers",
                 "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With," +
-                        "If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+                    "If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
             )
             return chain.filter(ctx) ?: Mono.empty()
         }
