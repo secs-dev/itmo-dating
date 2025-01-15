@@ -1,12 +1,12 @@
 import axios from 'axios'
 import React from 'react'
-import { backendPeopleUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 import { Faculty } from '@/entities/registration-data/model/faculty.ts'
 
 export function getFaculties(
   setFaculties: React.Dispatch<React.SetStateAction<Array<Faculty>>>,
 ) {
-  const url = `${backendPeopleUrl}/api/faculties`
+  const url = `${backendUrl}/api/faculties`
 
   axios
     .get(url)

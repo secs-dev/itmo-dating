@@ -4,7 +4,7 @@ import { AuthRequest } from '../model/AuthRequest.ts'
 import { AuthResponse } from '../model/AuthResponse.ts'
 import axios from 'axios'
 import { AuthState, initialAuthState } from '@/entities'
-import { backendAuthikUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 
 export const $authStore = createStore<AuthState>(initialAuthState)
 export const $userIdStore = createStore<number | null>(null)
@@ -19,7 +19,7 @@ export const authFx = createEffect<AuthRequest, AuthState, Error>({
   handler: async (authReq) => {
     try {
       const response = await axios.put<AuthResponse>(
-        `${backendAuthikUrl}/api/auth/telegram/web-app`,
+        `${backendUrl}/api/auth/telegram/web-app`,
         JSON.stringify(authReq),
         {
           method: 'PUT',

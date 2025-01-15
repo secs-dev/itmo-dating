@@ -1,13 +1,13 @@
 import axios from 'axios'
 import React from 'react'
-import { backendMatchmakerUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 import { $authStore } from '@/features/authentication/api/authFx.ts'
 
 export function getSuggestions(
   setPersonIdArray: React.Dispatch<React.SetStateAction<Array<number>>>,
   limit: number,
 ) {
-  const url = `${backendMatchmakerUrl}/api/suggestions?limit=${limit}`
+  const url = `${backendUrl}/api/suggestions?limit=${limit}`
   const config = {
     method: 'GET',
     headers: {

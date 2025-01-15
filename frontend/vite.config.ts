@@ -10,19 +10,32 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
     //dev certificate
-    //  mkcert(),
+    mkcert({
+      savePath: './.cert',
+      force: true,
+      hosts: ["itmodating.3utilities.com", "127.0.0.1"]
+    })
   ],
   publicDir: './public',
   server: {
     host: true,
+    port: 443,
+    https: {
+      cert: './.cert/cert.pem',
+      key: './.cert/dev.pem'
+    }
   },
   preview: {
     strictPort: true,
     port: 443,
     https: {
-      key: fs.readFileSync('./.cert/privkey.pem'),
-      cert: fs.readFileSync('./.cert/cert.pem'),
-      ca: fs.readFileSync('./.cert/chain.pem'),
-    },
+      cert: './.cert/cert.pem',
+      key: './.cert/dev.pem'
+    }
+    // https: {
+    //   key: fs.readFileSync('./.cert/le-privkey.pem'),
+    //   cert: fs.readFileSync('./.cert/le-cert.pem'),
+    //   ca: fs.readFileSync('./.cert/le-chain.pem'),
+    // },
   },
 })

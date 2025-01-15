@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { backendPeopleUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 import { RegistrationData } from '@/entities'
 import {
   $authStore,
@@ -12,7 +12,7 @@ export function patchPerson(
   registartionData: RegistrationData,
   status: string,
 ): Promise<AxiosResponse<void | IError>> {
-  const url = `${backendPeopleUrl}/api/people/${$userIdStore.getState()}`
+  const url = `${backendUrl}/api/people/${$userIdStore.getState()}`
   const config = {
     method: 'PATCH',
     headers: {

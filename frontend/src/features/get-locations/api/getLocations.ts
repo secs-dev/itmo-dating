@@ -1,12 +1,12 @@
 import axios from 'axios'
 import React from 'react'
-import { backendPeopleUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 import { Location } from '@/entities/registration-data/model/Location.ts'
 
 export function getLocations(
   setLocations: React.Dispatch<React.SetStateAction<Array<Location>>>,
 ) {
-  const url = `${backendPeopleUrl}/api/locations`
+  const url = `${backendUrl}/api/locations`
 
   axios
     .get(url)
