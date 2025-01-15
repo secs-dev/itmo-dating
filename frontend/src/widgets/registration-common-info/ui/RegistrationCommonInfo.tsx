@@ -56,7 +56,7 @@ export const RegistrationCommonInfo = ({
                 <Select header="Faculty"
                         onChange={e => changeRD((previous) => {
                             return {...previous, facultyId: Number(e.target.value)}})}>
-                    {faculties.map(f => (<option value={f.id}>{f.longName}</option>))}
+                    {faculties.map(f => (<option key={f.id} value={f.id}>{f.longName}</option>))}
                 </Select>
                 <Section header="Your birthday">
                     {/*<div style={{display: "grid", gridTemplateColumns: "1fr 6fr 1fr"}}>*/}
@@ -93,7 +93,7 @@ export const RegistrationCommonInfo = ({
                 <Select header="Location"
                         onChange={e => changeRD((previous) => {
                             return {...previous, locationId: Number(e.target.value)}})}>
-                    {locations.map(f => (<option value={f.id}>{f.name}</option>))}
+                    {locations.map(f => (<option key={f.id} value={f.id}>{f.name}</option>))}
                 </Select>
             </List>
         </Section>

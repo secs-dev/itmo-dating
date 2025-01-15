@@ -175,7 +175,7 @@ export const SwiperMenu = () => {
     })
 
     useEffect(() => {
-        for (let personId of personIdArray) {
+        for (const personId of personIdArray) {
             getUser(personId).then(personResponse => {
                 const person = personResponse.data
                 const newUser: Person = {
@@ -302,7 +302,7 @@ export const SwiperMenu = () => {
                     <div style={{textWrap: 'pretty'}}>id: {actualPerson.id}</div>
                     <div style={{textWrap: 'pretty'}}>zodiac sign: {actualPerson.zodiac}</div>
                     <div style={{textWrap: 'pretty'}}>interests: {actualPerson.interests.map(i => (
-                        <div>
+                        <div key={i.topic.id}>
                             <div>
                                 <div>
                                     <Image size={20} src={i.topic.icon.small}/>

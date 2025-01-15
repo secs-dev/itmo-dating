@@ -13,7 +13,7 @@ export const Welcome = () => {
     redirect({clock: userRegisteredFx.doneData, route: routes.main})
     redirect({clock: userRegisteredFx.failData, route: routes.registration})
     useEffect(() => {
-        const userId: string = JSON.parse(atob($authStore.getState().token!!.split(".")[1])).user_id;
+        const userId: string = JSON.parse(atob(($authStore.getState().token || '').split(".")[1])).user_id;
         userIdFx(Number(userId))
         getUser(Number(userId)).then((x) => {
                 if (x.data.status == 'ready')

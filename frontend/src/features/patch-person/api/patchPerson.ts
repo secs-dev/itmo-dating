@@ -3,8 +3,9 @@ import { backendPeopleUrl } from '@/shared/api'
 import { RegistrationData } from '@/entities'
 import { $authStore, $userIdStore } from '@/features/authentication/api/authFx.ts'
 import { PersonPatch } from '@/entities/person-patch/model/PersonPatch.ts'
+import {IError} from "@/shared/model";
 
-export function patchPerson(registartionData: RegistrationData, status: string): Promise<AxiosResponse<any>> {
+export function patchPerson(registartionData: RegistrationData, status: string): Promise<AxiosResponse<void | IError>> {
     const url = `${backendPeopleUrl}/api/people/${$userIdStore.getState()}`;
     const config = {
         method: 'PATCH',

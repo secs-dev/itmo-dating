@@ -30,7 +30,7 @@ export const Registration = () => {
         {
             tgId: tgUser?.id?.toString() || null,
             name: tgUser?.firstName || null,
-            surname: tgUser?.lastName!! || null,
+            surname: tgUser?.lastName || null,
             height: 175,
             facultyId: null,
             birthday: null,
