@@ -14,6 +14,7 @@ security:
 tags:
   - name: Monitoring
   - name: People
+  - name: Photos
   - name: Faculties
   - name: Locations
 paths:
@@ -298,6 +299,98 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
+  /people/{person_id}/photos:
+    post:
+      tags: [ Photos ]
+      summary: Add a profile photo
+      description: Adds a profile photo for a person profile with a given id
+      security:
+        - bearerAuth: [ USER ]
+      parameters:
+        - $ref: "#/components/parameters/PersonIdPath"
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Picture"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
+  /people/{person_id}/photos/{picture_id}:
+    get:
+      tags: [ Photos ]
+      summary: Get a person profile photo
+      description: Returns a person profile photo by id
+      security:
+        - bearerAuth: [ USER ]
+      parameters:
+        - $ref: "#/components/parameters/PersonIdPath"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
+    delete:
+      tags: [ Photos ]
+      summary: Delete a profile photo
+      description: Removes a person profile photo by id
+      security:
+        - bearerAuth: [ USER ]
+      parameters:
+        - $ref: "#/components/parameters/PersonIdPath"
+        - $ref: "#/components/parameters/PictureIdPath"
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /faculties:
     get:
       tags: [ Faculties ]
@@ -346,6 +439,12 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/PersonId"
+    PictureIdPath:
+      name: picture_id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/PictureId"
     IdempotencyKeyHeader:
       name: Idempotency-Key
       in: header
@@ -518,6 +617,13 @@ components:
       minimum: 0
       maximum: 180
       example: 30.308014
+    PictureId:
+      type: integer
+      description: A unique key of a picture
+      format: int64
+      minimum: 1
+      maximum: 10000000
+      example: 1234567
     PictureUrl:
       type: string
       description: An URL of picture for downloading
@@ -528,12 +634,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          description: A unique key of a picture
-          format: int64
-          minimum: 1
-          maximum: 10000000
-          example: 1234567
+          $ref: "#/components/schemas/PictureId"
         small:
           $ref: "#/components/schemas/PictureUrl"
         medium:
