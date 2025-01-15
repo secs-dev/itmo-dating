@@ -2,6 +2,7 @@ package ru.ifmo.se.dating.people.api
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -24,6 +25,8 @@ import java.time.OffsetDateTime
 @Controller
 class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
     private val log = Log.autoLog()
+
+    private var lastPicture: ByteArray = ByteArray(0)
 
     override fun peopleGet(
         offset: Long,
@@ -119,7 +122,15 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
         }
 
         log.info("POST picture with size ${body.contentLength()}")
+        lastPicture = body.contentAsByteArray
 
         return PictureMessage(id = 666).let { ResponseEntity.ok(it) }
+    }
+
+    override suspend fun peoplePersonIdPhotosPictureIdGet(
+        personId: Long,
+        pictureId: Long,
+    ): ResponseEntity<Resource> {
+        return ByteArrayResource(lastPicture).let { ResponseEntity.ok(it) }
     }
 }

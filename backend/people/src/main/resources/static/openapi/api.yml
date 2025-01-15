@@ -345,6 +345,7 @@ paths:
         - bearerAuth: [ USER ]
       parameters:
         - $ref: "#/components/parameters/PersonIdPath"
+        - $ref: "#/components/parameters/PictureIdPath"
       responses:
         "200":
           description: "OK"

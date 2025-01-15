@@ -85,6 +85,12 @@ spring:
             - Method=POST
             - Path=/api/people/*/photos
 
+        - id: get-people-person-id-photos-picture-id
+          uri: lb://people
+          predicates:
+            - Method=GET
+            - Path=/api/people/*/photos/*
+
         - id: get-people-faculties
           uri: lb://people
           predicates:
