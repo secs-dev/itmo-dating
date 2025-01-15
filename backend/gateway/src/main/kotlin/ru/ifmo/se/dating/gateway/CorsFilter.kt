@@ -1,5 +1,6 @@
 package ru.ifmo.se.dating.gateway
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -10,30 +11,46 @@ import reactor.core.publisher.Mono
 
 @Component
 class CorsFilter : WebFilter {
-    // FIXME
+    private val allowMethods = listOf(
+        HttpMethod.GET,
+        HttpMethod.PUT,
+        HttpMethod.POST,
+        HttpMethod.PATCH,
+        HttpMethod.DELETE,
+        HttpMethod.OPTIONS,
+    )
+
+    private val exposeHeaders = listOf(
+        "DNT",
+        "X-CustomHeader",
+        "Keep-Alive",
+        "User-Agent",
+        "X-Requested-With",
+        "If-Modified-Since",
+        "Cache-Control",
+        "Content-Type",
+        "Content-Range",
+        "Range",
+    )
+
     override fun filter(ctx: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        ctx.response.headers.add("Access-Control-Allow-Origin", "*")
+        ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
         ctx.response.headers.add(
-            "Access-Control-Allow-Methods",
-            "GET, PUT, POST, PATCH, DELETE, OPTIONS"
+            HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
+            allowMethods.joinToString(", ") { it.name() },
         )
-        ctx.response.headers.add(
-            "Access-Control-Allow-Headers",
-//        "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With," +
-//        "If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Authorization"
-            "*"
-        )
+        ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*")
+
         if (ctx.request.method == HttpMethod.OPTIONS) {
-            ctx.response.headers.add("Access-Control-Max-Age", "1728000")
+            ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, 1_728_000.toString())
             ctx.response.statusCode = HttpStatus.NO_CONTENT
             return Mono.empty()
-        } else {
-            ctx.response.headers.add(
-                "Access-Control-Expose-Headers",
-                "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With," +
-                    "If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
-            )
-            return chain.filter(ctx) ?: Mono.empty()
         }
+
+        ctx.response.headers.add(
+            HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,
+            exposeHeaders.joinToString(","),
+        )
+        return chain.filter(ctx) ?: Mono.empty()
     }
 }

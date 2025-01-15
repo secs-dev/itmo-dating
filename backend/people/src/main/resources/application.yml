@@ -12,5 +12,13 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
 service:
-    matchmaker:
-      url: https://matchmaker/api
+  matchmaker:
+    url: https://matchmaker/api
+storage:
+  s3:
+    url: object-storage.dating.se.ifmo.ru
+    port: 9000
+    username: ${MINIO_USER}
+    password: ${MINIO_PASSWORD}
+    bucket:
+      profile-photos: profile-photos
