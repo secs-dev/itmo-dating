@@ -11,41 +11,45 @@ import reactor.core.publisher.Mono
 
 @Component
 class CorsFilter : WebFilter {
+    private val allowMethods = listOf(
+        HttpMethod.GET,
+        HttpMethod.PUT,
+        HttpMethod.POST,
+        HttpMethod.PATCH,
+        HttpMethod.DELETE,
+        HttpMethod.OPTIONS,
+    )
+
+    private val exposeHeaders = listOf(
+        "DNT",
+        "X-CustomHeader",
+        "Keep-Alive",
+        "User-Agent",
+        "X-Requested-With",
+        "If-Modified-Since",
+        "Cache-Control",
+        "Content-Type",
+        "Content-Range",
+        "Range",
+    )
+
     override fun filter(ctx: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
         ctx.response.headers.add(
             HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
-            listOf(
-                HttpMethod.GET,
-                HttpMethod.PUT,
-                HttpMethod.POST,
-                HttpMethod.PATCH,
-                HttpMethod.DELETE,
-                HttpMethod.OPTIONS,
-            ).joinToString(", ") { it.name() },
+            allowMethods.joinToString(", ") { it.name() },
         )
         ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*")
 
         if (ctx.request.method == HttpMethod.OPTIONS) {
-            ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, 1728000.toString())
+            ctx.response.headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, 1_728_000.toString())
             ctx.response.statusCode = HttpStatus.NO_CONTENT
             return Mono.empty()
         }
 
         ctx.response.headers.add(
             HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,
-            listOf(
-                "DNT",
-                "X-CustomHeader",
-                "Keep-Alive",
-                "User-Agent",
-                "X-Requested-With",
-                "If-Modified-Since",
-                "Cache-Control",
-                "Content-Type",
-                "Content-Range",
-                "Range",
-            ).joinToString(","),
+            exposeHeaders.joinToString(","),
         )
         return chain.filter(ctx) ?: Mono.empty()
     }

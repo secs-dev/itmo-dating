@@ -14,9 +14,9 @@ data class Picture(val id: Id, val isReferenced: Boolean) {
 
     data class Content(val bytes: ByteArray) {
         override fun equals(other: Any?): Boolean =
-            (this === other) ||
-                    (javaClass == other?.javaClass) &&
-                    bytes.contentEquals((other as Content).bytes)
+            this === other ||
+                javaClass == other?.javaClass &&
+                bytes.contentEquals((other as Content).bytes)
 
         override fun hashCode(): Int =
             bytes.contentHashCode()

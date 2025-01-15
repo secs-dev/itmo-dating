@@ -110,7 +110,8 @@ class HttpPeopleApi(
     }
 
     override suspend fun peoplePersonIdPhotosPost(
-        personId: Long, body: Resource?,
+        personId: Long,
+        body: Resource?,
     ): ResponseEntity<PictureMessage> {
         require(body != null)
 

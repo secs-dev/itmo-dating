@@ -9,9 +9,12 @@ import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 
 @Configuration
 class MinioClientConfiguration {
+    private val isSecure = false
+
     private val log = Log.autoLog()
 
     @Bean
+    @Suppress("LongParameterList")
     fun minioClient(
         @Value("\${storage.s3.url}")
         url: String,
@@ -25,7 +28,7 @@ class MinioClientConfiguration {
         @Value("\${storage.s3.password}")
         password: String,
     ): MinioClient = MinioClient.builder()
-        .endpoint(url, port, /* secure = */ false)
+        .endpoint(url, port, isSecure)
         .credentials(username, password)
         .build()
         .also { client ->

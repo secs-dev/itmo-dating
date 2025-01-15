@@ -33,7 +33,7 @@ class MinioPictureContentStorage(
             .stream(
                 ByteArrayInputStream(content.bytes),
                 content.bytes.size.toLong(),
-                /* partSize = */ -1,
+                -1, // partSize
             )
             .contentType(contentType.mimeType)
             .build()
@@ -64,17 +64,20 @@ class MinioPictureContentStorage(
 
     private fun objectName(id: Picture.Id) = "$id.jpg"
 
+    @Suppress("UseIfInsteadOfWhen")
     private suspend fun <T> wrapped(action: () -> T) = try {
         withContext(Dispatchers.IO) { action() }
     } catch (e: ErrorResponseException) {
         val bucketName: String? = e.errorResponse().bucketName()
         val objectName: String? = e.errorResponse().objectName()
         when (e.errorResponse().code()) {
-            "NoSuchKey" ->
+            "NoSuchKey" -> {
                 throw NoSuchKeyException("Key (bucket: $bucketName, object: $objectName) not found")
+            }
 
-            else ->
+            else -> {
                 throw UnknownException("Unknown error: ${e.errorResponse().message()}", e)
+            }
         }
     }
 }
