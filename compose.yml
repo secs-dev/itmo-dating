@@ -21,6 +21,8 @@ services:
     extends:
       service: authik-0
     hostname: authik-1.dating.se.ifmo.ru
+    profiles:
+      - reliability
   matchmaker-0:
     image: ghcr.io/secs-dev/itmo-dating-matchmaker:latest
     build:
@@ -41,6 +43,8 @@ services:
     extends:
       service: matchmaker-0
     hostname: matchmaker-1.dating.se.ifmo.ru
+    profiles:
+      - reliability
   people-0:
     image: ghcr.io/secs-dev/itmo-dating-people:latest
     build:
@@ -61,6 +65,8 @@ services:
     extends:
       service: people-0
     hostname: people-1.dating.se.ifmo.ru
+    profiles:
+      - reliability
   object-storage:
     image: quay.io/minio/minio
     command: server --console-address ":9001" "/data"
