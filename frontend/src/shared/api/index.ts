@@ -1,10 +1,4 @@
-export {
-  api,
-  type JwtToken,
-  backendPeopleUrl,
-  backendMatchmakerUrl,
-  backendAuthikUrl,
-} from './api.ts'
+export { api, type JwtToken, backendUrl } from './api.ts'
 
 export { $errorStore, throwErrorFx } from './error.ts'
 

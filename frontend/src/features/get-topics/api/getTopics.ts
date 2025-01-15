@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { Topic } from '@/entities/registration-data/model/topic.ts'
 import React from 'react'
-import { backendPeopleUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 
 export function getTopics(
   setTopics: React.Dispatch<React.SetStateAction<Array<Topic>>>,
 ) {
-  const url = `${backendPeopleUrl}/api/topics`
+  const url = `${backendUrl}/api/topics`
 
   axios
     .get(url)

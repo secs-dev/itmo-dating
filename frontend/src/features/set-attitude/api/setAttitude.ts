@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { backendMatchmakerUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 
 export function setAttitude(personId: number, attitude: string) {
-  const url = `${backendMatchmakerUrl}/api/people/${personId}/attitudes/incoming/${attitude}`
+  const url = `${backendUrl}/api/people/${personId}/attitudes/incoming/${attitude}`
 
   // FIXME jwt token
   const basicAuth = 'test basic auth'

@@ -8,6 +8,5 @@ export async function api<T>(url: string): Promise<T> {
 }
 export type JwtToken = string
 
-export const backendMatchmakerUrl = 'https://itmodating.3utilities.com:444'
-export const backendPeopleUrl = 'https://itmodating.3utilities.com:444'
-export const backendAuthikUrl = 'https://itmodating.3utilities.com:444'
+export const backendUrl = 'https://localhost:444'
+//'https://itmodating.3utilities.com:444'

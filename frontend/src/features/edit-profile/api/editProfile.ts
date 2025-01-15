@@ -1,10 +1,10 @@
 import { Person } from '@/entities/person/model/Person.ts'
-import { backendPeopleUrl } from '@/shared/api'
+import { backendUrl } from '@/shared/api'
 import axios from 'axios'
 import { PersonPatch } from '@/entities/person-patch/model/PersonPatch.ts'
 
 export function editProfile(profile: Person) {
-  const url = `${backendPeopleUrl}/api/people/${profile.id}`
+  const url = `${backendUrl}/api/people/${profile.id}`
 
   // FIXME jwt token
   const basicAuth = 'test basic auth'
