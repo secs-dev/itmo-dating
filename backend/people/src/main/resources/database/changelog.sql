@@ -39,7 +39,6 @@ CREATE TABLE people.person (
 );
 
 --changeset vityaman:data
-
 INSERT INTO people.faculty (long_name)
 VALUES
     ('Control Systems and Robotics'),
@@ -56,3 +55,9 @@ VALUES
     ('ITMO, Kronverkskiy', 59.957427, 30.308053),
     ('ITMO, Birzhevaya', 59.943970, 30.295717),
     ('ITMO, Lomonosova', 59.926567, 30.339097);
+
+--changeset vityaman:picture
+CREATE TABLE people.picture (
+    id              serial          PRIMARY KEY,
+    is_referenced   boolean         NOT NULL
+);

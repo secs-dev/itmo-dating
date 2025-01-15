@@ -17,6 +17,8 @@ service:
 storage:
   s3:
     url: object-storage.dating.se.ifmo.ru
-    port: 9001
+    port: 9000
     username: ${MINIO_USER}
     password: ${MINIO_PASSWORD}
+    bucket:
+      profile-photos: profile-photos

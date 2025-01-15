@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.exception.AuthorizationException
 import ru.ifmo.se.dating.exception.orThrowNotFound
-import ru.ifmo.se.dating.logging.Log
-import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.api.mapping.toMessage
 import ru.ifmo.se.dating.people.api.mapping.toModel
 import ru.ifmo.se.dating.people.logic.PersonService
+import ru.ifmo.se.dating.people.logic.PictureService
 import ru.ifmo.se.dating.people.model.Faculty
+import ru.ifmo.se.dating.people.model.Picture
 import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
@@ -23,11 +23,10 @@ import java.time.LocalDate
 import java.time.OffsetDateTime
 
 @Controller
-class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
-    private val log = Log.autoLog()
-
-    private var lastPicture: ByteArray = ByteArray(0)
-
+class HttpPeopleApi(
+    private val personService: PersonService,
+    private val pictureService: PictureService,
+) : PeopleApiDelegate {
     override fun peopleGet(
         offset: Long,
         limit: Long,
@@ -65,7 +64,7 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
             TODO("Unsupported GET /people query parameter was provided")
         }
 
-        return service.getFiltered(
+        return personService.getFiltered(
             Page(offset = offset.toInt(), limit = limit.toInt()),
             PersonService.Filter(
                 firstName = firstName?.let { Regex(it) } ?: Regex(".*"),
@@ -84,13 +83,13 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
             throw AuthorizationException("caller $callerId can't delete $targetId")
         }
 
-        service.delete(targetId)
+        personService.delete(targetId)
 
         return ResponseEntity.ok(Unit)
     }
 
     override suspend fun peoplePersonIdGet(personId: Long): ResponseEntity<PersonVariantMessage> =
-        service.getById(User.Id(personId.toInt()))
+        personService.getById(User.Id(personId.toInt()))
             ?.toMessage()
             .orThrowNotFound("person with id $personId not found")
             .let { ResponseEntity.ok(it) }
@@ -103,8 +102,8 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
         val model = personPatchMessage.toModel(personId.toInt())
 
         when (status) {
-            PersonStatusMessage.draft -> service.edit(model)
-            PersonStatusMessage.ready -> service.save(model)
+            PersonStatusMessage.draft -> personService.edit(model)
+            PersonStatusMessage.ready -> personService.save(model)
         }
 
         return ResponseEntity.ok(Unit)
@@ -121,16 +120,16 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
             throw AuthorizationException("caller $callerId can't post photo to $targetId profile")
         }
 
-        log.info("POST picture with size ${body.contentLength()}")
-        lastPicture = body.contentAsByteArray
+        val pictureId = pictureService.save(Picture.Content(body.contentAsByteArray))
 
-        return PictureMessage(id = 666).let { ResponseEntity.ok(it) }
+        return PictureMessage(id = pictureId.number.toLong()).let { ResponseEntity.ok(it) }
     }
 
     override suspend fun peoplePersonIdPhotosPictureIdGet(
         personId: Long,
         pictureId: Long,
     ): ResponseEntity<Resource> {
-        return ByteArrayResource(lastPicture).let { ResponseEntity.ok(it) }
+        val picture = pictureService.getById(Picture.Id(pictureId.toInt()))
+        return ByteArrayResource(picture.bytes).let { ResponseEntity.ok(it) }
     }
 }
