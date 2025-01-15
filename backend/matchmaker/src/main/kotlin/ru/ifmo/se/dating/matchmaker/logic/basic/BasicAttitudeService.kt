@@ -1,7 +1,6 @@
 package ru.ifmo.se.dating.matchmaker.logic.basic
 
 import kotlinx.coroutines.flow.Flow
-import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.NotFoundException
@@ -12,7 +11,6 @@ import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.exception.LinkViolationException
 import ru.ifmo.se.dating.storage.exception.UniqueViolationException
 
-@Service
 class BasicAttitudeService(
     private val storage: AttitudeStorage,
 ) : AttitudeService {

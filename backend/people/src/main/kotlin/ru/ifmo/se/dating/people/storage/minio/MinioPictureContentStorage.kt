@@ -11,20 +11,20 @@ import org.apache.http.entity.ContentType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
+import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.people.model.Picture
 import ru.ifmo.se.dating.people.storage.PictureContentStorage
 import ru.ifmo.se.dating.people.storage.minio.exception.NoSuchKeyException
 import ru.ifmo.se.dating.people.storage.minio.exception.UnknownException
 import java.io.ByteArrayInputStream
 
-@Repository
 class MinioPictureContentStorage(
     private val minio: MinioClient,
-
-    @Value("\${storage.s3.bucket.profile-photos}")
     private val bucket: String,
 ) : PictureContentStorage {
     private val contentType = ContentType.IMAGE_JPEG
+
+    private val log = autoLog()
 
     override suspend fun upload(id: Picture.Id, content: Picture.Content): Unit = wrapped {
         PutObjectArgs.builder()
@@ -76,7 +76,9 @@ class MinioPictureContentStorage(
             }
 
             else -> {
-                throw UnknownException("Unknown error: ${e.errorResponse().message()}", e)
+                val exception = UnknownException("Unknown error: ${e.errorResponse().message()}", e)
+                log.error("MinIO returned unknown error", exception)
+                throw exception
             }
         }
     }

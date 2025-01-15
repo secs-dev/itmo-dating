@@ -12,20 +12,6 @@ import java.security.PublicKey
 import java.time.Clock
 import java.util.*
 
-@Configuration
-class JwtTokenDecoderConfiguration {
-    @Bean
-    fun jwtTokenDecoder(
-        clock: Clock,
-
-        @Value("\${security.auth.token.sign.public}")
-        publicSignKey: String,
-    ) = JwtTokenDecoder(
-        clock = clock,
-        publicSignKey = Keys.deserializePublic(publicSignKey),
-    )
-}
-
 class JwtTokenDecoder(
     private val clock: Clock,
     private val publicSignKey: PublicKey,

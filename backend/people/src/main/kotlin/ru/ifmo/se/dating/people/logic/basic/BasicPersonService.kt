@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
@@ -22,7 +21,6 @@ import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.TxEnv
 import ru.ifmo.se.dating.storage.exception.LinkViolationException
 
-@Service
 class BasicPersonService(
     private val storage: PersonStorage,
     private val txEnv: TxEnv,

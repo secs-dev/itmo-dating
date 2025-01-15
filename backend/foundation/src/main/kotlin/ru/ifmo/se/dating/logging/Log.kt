@@ -3,6 +3,8 @@ package ru.ifmo.se.dating.logging
 interface Log {
     fun info(message: String)
     fun warn(message: String)
+    fun warn(message: String, e: Throwable)
+    fun error(message: String, e: Throwable)
     fun debug(message: String)
 
     companion object {

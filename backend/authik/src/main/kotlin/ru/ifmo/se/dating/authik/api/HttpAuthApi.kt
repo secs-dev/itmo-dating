@@ -9,6 +9,7 @@ import ru.ifmo.se.dating.authik.model.generated.TelegramInitDataMessage
 import ru.ifmo.se.dating.authik.external.telegram.TelegramInitDataParser
 import ru.ifmo.se.dating.exception.AuthenticationException
 import ru.ifmo.se.dating.exception.GenericException
+import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.text.abbreviated
 
 @Controller
@@ -16,6 +17,8 @@ class HttpAuthApi(
     private val telegramParser: TelegramInitDataParser,
     private val auth: AuthService,
 ) : AuthApiDelegate {
+    private val log = autoLog()
+
     override suspend fun authTelegramWebAppPut(
         telegramInitDataMessage: TelegramInitDataMessage,
     ): ResponseEntity<AuthGrantMessage> {
@@ -29,6 +32,7 @@ class HttpAuthApi(
         try {
             telegramParser.parse(telegramInitDataMessage)
         } catch (error: GenericException) {
+            log.warn("Telegram Init Data parsing failed: ${error.message}")
             throw AuthenticationException(
                 "Corrupted ${telegramInitDataMessage.string.abbreviated()}: ${error.message}",
                 error,
