@@ -79,6 +79,12 @@ spring:
             - Method=PATCH
             - Path=/api/people/*
 
+        - id: post-people-person-id-photos
+          uri: lb://people
+          predicates:
+            - Method=POST
+            - Path=/api/people/*/photos
+
         - id: get-people-faculties
           uri: lb://people
           predicates:

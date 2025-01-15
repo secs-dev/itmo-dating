@@ -624,29 +624,13 @@ components:
       minimum: 1
       maximum: 10000000
       example: 1234567
-    PictureUrl:
-      type: string
-      description: An URL of picture for downloading
-      format: uri
-      maxLength: 256
-      example: https://avatars.githubusercontent.com/u/53015676
     Picture:
       type: object
       properties:
         id:
           $ref: "#/components/schemas/PictureId"
-        small:
-          $ref: "#/components/schemas/PictureUrl"
-        medium:
-          $ref: "#/components/schemas/PictureUrl"
-        large:
-          $ref: "#/components/schemas/PictureUrl"
       required:
         - id
-      anyOf:
-        - required: [ small ]
-        - required: [ medium ]
-        - required: [ large ]
     Interest:
       type: object
       properties:

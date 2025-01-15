@@ -2,10 +2,13 @@ package ru.ifmo.se.dating.people.api
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.exception.AuthorizationException
 import ru.ifmo.se.dating.exception.orThrowNotFound
+import ru.ifmo.se.dating.logging.Log
+import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.api.mapping.toMessage
@@ -20,6 +23,8 @@ import java.time.OffsetDateTime
 
 @Controller
 class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
+    private val log = Log.autoLog()
+
     override fun peopleGet(
         offset: Long,
         limit: Long,
@@ -100,5 +105,21 @@ class HttpPeopleApi(private val service: PersonService) : PeopleApiDelegate {
         }
 
         return ResponseEntity.ok(Unit)
+    }
+
+    override suspend fun peoplePersonIdPhotosPost(
+        personId: Long, body: Resource?,
+    ): ResponseEntity<PictureMessage> {
+        require(body != null)
+
+        val callerId = SpringSecurityContext.principal()
+        val targetId = User.Id(personId.toInt())
+        if (callerId != targetId) {
+            throw AuthorizationException("caller $callerId can't post photo to $targetId profile")
+        }
+
+        log.info("POST picture with size ${body.contentLength()}")
+
+        return PictureMessage(id = 666).let { ResponseEntity.ok(it) }
     }
 }
