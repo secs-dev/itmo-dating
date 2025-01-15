@@ -12,6 +12,7 @@ class SecurityInitializer :
     override fun initialize(ctx: ConfigurableApplicationContext) {
         TestPropertyValues.of(
             "server.ssl.key-store-password=$keyStorePassword",
+            "client.ssl.key-store-password=$keyStorePassword",
         ).applyTo(ctx.environment)
     }
 }

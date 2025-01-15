@@ -99,7 +99,6 @@ services:
     image: ghcr.io/secs-dev/itmo-dating-consul:latest
     build:
       context: ./backend/consul
-    command: sh ./consul/run.sh
     hostname: server.dc1.consul
     ports:
       - "127.0.0.1:8500:8500/tcp"

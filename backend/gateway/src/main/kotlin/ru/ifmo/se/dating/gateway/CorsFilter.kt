@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.spring.api
+package ru.ifmo.se.dating.gateway
 
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -13,11 +13,15 @@ class CorsFilter : WebFilter {
     // FIXME
     override fun filter(ctx: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         ctx.response.headers.add("Access-Control-Allow-Origin", "*")
-        ctx.response.headers.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
+        ctx.response.headers.add(
+            "Access-Control-Allow-Methods",
+            "GET, PUT, POST, PATCH, DELETE, OPTIONS"
+        )
         ctx.response.headers.add(
             "Access-Control-Allow-Headers",
-            "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With," +
-                "If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range"
+//        "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With," +
+//        "If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Authorization"
+            "*"
         )
         if (ctx.request.method == HttpMethod.OPTIONS) {
             ctx.response.headers.add("Access-Control-Max-Age", "1728000")

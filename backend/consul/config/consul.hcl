@@ -14,6 +14,10 @@ acl {
   enable_token_persistence = true
 }
 
+limits {
+  http_max_conns_per_client = 400
+}
+
 data_dir = "/opt/consul/data"
 
 ui = true

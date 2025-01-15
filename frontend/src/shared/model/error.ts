@@ -1,4 +1,5 @@
 export interface IError {
-  code?: number | null
-  message: string
+  code: number | null
+  status: string | null
+  message: string | null
 }

@@ -14,6 +14,7 @@ import { setBackButtonOnClick } from '@/entities/back-button/api/backButtonOnCli
 import { router } from '@/app/routes/api'
 import { RegistrationInterests } from '@/widgets/registration-interests'
 import { useEffectOnce } from '@/shared/api'
+import { patchPerson } from '@/features/patch-person/api/patchPerson.ts'
 
 export const Registration = () => {
   const registrationOrder = [
@@ -26,14 +27,15 @@ export const Registration = () => {
 
   const tgUser = fetchTgUser()
   const [registrationData, changeRD] = useState<RegistrationData>({
-    tgId: tgUser?.id?.toString() || '-1',
-    name: tgUser?.firstName || '',
-    surname: tgUser?.lastName || '',
+    tgId: tgUser?.id?.toString() || null,
+    name: tgUser?.firstName || null,
+    surname: tgUser?.lastName || null,
     height: 175,
-    faculty: 'ПИиКТ',
-    birthday: new Date(),
+    facultyId: null,
+    birthday: null,
     pictures: [],
     interests: [],
+    locationId: null,
   })
 
   const mainButtonFun = () => {
@@ -84,6 +86,16 @@ export const Registration = () => {
 
   useEffect(() => {
     setButtons(key)
+    if (key === registrationOrder.length) {
+      patchPerson(registrationData, 'ready')
+        .then((_) => {
+          router.back()
+        })
+        .catch((e) => console.log(e))
+    } else
+      patchPerson(registrationData, 'draft')
+        .then((x) => console.log(x))
+        .catch((e) => console.log(e))
   }, [key])
 
   function renderSwitchWidget(key: number) {

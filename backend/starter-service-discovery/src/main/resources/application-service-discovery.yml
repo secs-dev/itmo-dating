@@ -16,6 +16,8 @@ spring:
         instance-id: instance-${HOSTNAME}
         heartbeat:
           enabled: true
+          ttl: 30
+        catalog-services-watch-delay: 5000
 management:
   health:
     consul:
