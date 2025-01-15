@@ -13,8 +13,8 @@ export default defineConfig({
     mkcert({
       savePath: './.cert',
       force: true,
-      hosts: ["itmodating.3utilities.com", "127.0.0.1"]
-    })
+      hosts: ['itmodating.3utilities.com', '127.0.0.1'],
+    }),
   ],
   publicDir: './public',
   server: {
@@ -22,16 +22,16 @@ export default defineConfig({
     port: 443,
     https: {
       cert: './.cert/cert.pem',
-      key: './.cert/dev.pem'
-    }
+      key: './.cert/dev.pem',
+    },
   },
   preview: {
     strictPort: true,
     port: 443,
     https: {
       cert: './.cert/cert.pem',
-      key: './.cert/dev.pem'
-    }
+      key: './.cert/dev.pem',
+    },
     // https: {
     //   key: fs.readFileSync('./.cert/le-privkey.pem'),
     //   cert: fs.readFileSync('./.cert/le-cert.pem'),
