@@ -11,6 +11,12 @@ class Slf4jLog(name: String) : Log {
     override fun warn(message: String) =
         origin.warn(message)
 
+    override fun warn(message: String, e: Throwable) =
+        origin.warn("${message}: ${e.message}", e)
+
+    override fun error(message: String, e: Throwable) =
+        origin.error("${message}: ${e.message}", e)
+
     override fun debug(message: String) =
         origin.debug(message)
 }

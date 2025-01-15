@@ -15,24 +15,6 @@ import kotlin.time.toKotlinDuration
 import java.time.Duration as JavaDuration
 import kotlin.time.Duration as KotlinDuration
 
-@Configuration
-class JwtTokenIssuerConfiguration {
-    @Bean
-    fun jwtTokenIssuer(
-        clock: Clock,
-
-        @Value("\${security.auth.token.sign.private}")
-        privateSignKey: String,
-
-        @Value("\${security.auth.token.duration}")
-        duration: JavaDuration,
-    ) = JwtTokenIssuer(
-        clock = clock,
-        privateSignKey = Keys.deserializePrivate(privateSignKey),
-        duration = duration.toKotlinDuration(),
-    )
-}
-
 class JwtTokenIssuer(
     private val clock: Clock,
     private val privateSignKey: PrivateKey,

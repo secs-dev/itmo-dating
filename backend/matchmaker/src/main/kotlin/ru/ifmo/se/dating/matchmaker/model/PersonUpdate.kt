@@ -16,6 +16,8 @@ data class PersonUpdate(
 
         override fun compareTo(other: Version): Int =
             this.number.compareTo(other.number)
+
+        override fun toString(): String = "v$number"
     }
 
     enum class Status {

@@ -3,6 +3,7 @@ package ru.ifmo.se.dating.spring.storage
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jdbc.datasource.SingleConnectionDataSource
 import org.springframework.stereotype.Component
+import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.storage.migration.LiquibaseMigration
 import kotlin.io.path.Path
 
@@ -23,15 +24,20 @@ class SpringLiquibaseMigration(
     @Value("\${spring.datasource.password}")
     password: String,
 ) {
+    private val log = autoLog()
+
     init {
+        log.info("Running a liquibase migration...")
+
         val suppressClose = false
-        SingleConnectionDataSource(url, username, password, suppressClose)
-            .use {
-                LiquibaseMigration(
-                    changelog = Path(changelog),
-                    serviceTablePrefix = liquibaseSchema,
-                    source = it
-                ).run()
-            }
+        SingleConnectionDataSource(url, username, password, suppressClose).use {
+            LiquibaseMigration(
+                changelog = Path(changelog),
+                serviceTablePrefix = liquibaseSchema,
+                source = it
+            ).run()
+        }
+
+        log.info("Liquibase migration was completed successfully")
     }
 }

@@ -3,7 +3,6 @@ package ru.ifmo.se.dating.people.logic.basic
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.matchmaker.client.model.generated.PersonStatusMessage
 import ru.ifmo.se.dating.matchmaker.client.model.generated.PersonUpdateMessage
 import ru.ifmo.se.dating.people.external.MatchmakerApi
@@ -16,7 +15,6 @@ import ru.ifmo.se.dating.storage.FetchPolicy
 import ru.ifmo.se.dating.storage.TxEnv
 import java.util.concurrent.TimeUnit
 
-@Service
 class BasicPersonOutbox(
     private val storage: PersonStorage,
     private val matchmaker: MatchmakerApi,

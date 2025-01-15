@@ -1,12 +1,10 @@
 package ru.ifmo.se.dating.people.logic.basic
 
-import org.springframework.stereotype.Service
 import ru.ifmo.se.dating.people.logic.PictureService
 import ru.ifmo.se.dating.people.model.Picture
 import ru.ifmo.se.dating.people.storage.PictureContentStorage
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
 
-@Service
 class BasicPictureService(
     private val recordStorage: PictureRecordStorage,
     private val contentStorage: PictureContentStorage,
