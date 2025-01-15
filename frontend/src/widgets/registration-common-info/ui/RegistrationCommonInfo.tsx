@@ -6,8 +6,12 @@ import {
   Slider,
 } from '@telegram-apps/telegram-ui'
 import { RegistrationData } from '@/entities'
-import { getAmountOfDays } from '@/shared/api'
+import { getAmountOfDays, useEffectOnce } from '@/shared/api'
 import { useEffect, useState } from 'react'
+import { getFaculties } from '@/features/get-faculties/api/getFaculties.ts'
+import { Faculty } from '@/entities/registration-data/model/faculty.ts'
+import { Location } from '@/entities/registration-data/model/Location.ts'
+import { getLocations } from '@/features/get-locations/api/getLocations.ts'
 
 interface RegistrationCommonInfoProps {
   registrationData: RegistrationData
@@ -22,6 +26,13 @@ export const RegistrationCommonInfo = ({
   const [day, setDay] = useState<number>(actualDate.getDay())
   const [month, setMonth] = useState<number>(actualDate.getMonth())
   const [year, setYear] = useState<number>(actualDate.getFullYear())
+  const [faculties, setFaculties] = useState<Array<Faculty>>([])
+  const [locations, setLocations] = useState<Array<Location>>([])
+
+  useEffectOnce(() => {
+    getFaculties(setFaculties)
+    getLocations(setLocations)
+  })
 
   useEffect(() => {
     changeRD((previous) => ({
@@ -35,14 +46,16 @@ export const RegistrationCommonInfo = ({
       <List>
         <Input
           header="Name"
-          value={registrationData.name}
+          value={registrationData.name || ''}
+          required={true}
           onChange={(e) =>
             changeRD((previous) => ({ ...previous, name: e.target.value }))
           }
         />
         <Input
           header="Surname"
-          value={registrationData.surname}
+          value={registrationData.surname || ''}
+          required={true}
           onChange={(e) =>
             changeRD((previous) => ({ ...previous, surname: e.target.value }))
           }
@@ -61,11 +74,16 @@ export const RegistrationCommonInfo = ({
         <Select
           header="Faculty"
           onChange={(e) =>
-            changeRD((previous) => ({ ...previous, faculty: e.target.value }))
+            changeRD((previous) => {
+              return { ...previous, facultyId: Number(e.target.value) }
+            })
           }
         >
-          <option>ПИиКТ</option>
-          <option>Другое</option>
+          {faculties.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.longName}
+            </option>
+          ))}
         </Select>
         <Section header="Your birthday">
           {/*<div style={{display: "grid", gridTemplateColumns: "1fr 6fr 1fr"}}>*/}
@@ -109,6 +127,20 @@ export const RegistrationCommonInfo = ({
           </Select>
           {/*</div>*/}
         </Section>
+        <Select
+          header="Location"
+          onChange={(e) =>
+            changeRD((previous) => {
+              return { ...previous, locationId: Number(e.target.value) }
+            })
+          }
+        >
+          {locations.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.name}
+            </option>
+          ))}
+        </Select>
       </List>
     </Section>
   )

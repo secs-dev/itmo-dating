@@ -7,8 +7,13 @@ import { AuthState, initialAuthState } from '@/entities'
 import { backendAuthikUrl } from '@/shared/api'
 
 export const $authStore = createStore<AuthState>(initialAuthState)
+export const $userIdStore = createStore<number | null>(null)
+
+export const $userRegisteredStore = createStore<boolean>(false)
 
 persist({ store: $authStore, key: 'authStore' })
+persist({ store: $userIdStore, key: 'userIdStore' })
+persist({ store: $userRegisteredStore, key: 'userRegisteredStore' })
 
 export const authFx = createEffect<AuthRequest, AuthState, Error>({
   handler: async (authReq) => {
@@ -49,3 +54,26 @@ $authStore.on(authFx.failData, (_, error) => ({
   loading: false,
   error: error.message,
 }))
+
+export const userIdFx = createEffect<number | null, number | null, Error>({
+  handler: async (x) => {
+    if (x == null) throw Error('x is null')
+    return x
+  },
+})
+
+export const userRegisteredFx = createEffect<boolean, boolean, Error>({
+  handler: async (x) => {
+    if (!x) throw Error('user not registered')
+    return x
+  },
+})
+
+$userIdStore.on(userIdFx.doneData, (_, result) => result)
+$userIdStore.on(userIdFx.failData, (_, __) => {
+  return null
+})
+$userRegisteredStore.on(userRegisteredFx.doneData, (_, result) => result)
+$userRegisteredStore.on(userRegisteredFx.failData, (_, __) => {
+  return false
+})

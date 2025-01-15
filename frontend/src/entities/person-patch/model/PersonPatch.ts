@@ -1,12 +1,12 @@
 export interface PersonPatch {
-  status: string
-  firstName: string
-  lastName: string
-  interests: Topic[]
-  height: number
-  birthday: string
-  facultyId: number
-  locationId: number
+  status: string | null
+  firstName: string | null
+  lastName: string | null
+  interests: Topic[] | null
+  height: number | null
+  birthday: string | null
+  facultyId: number | null
+  locationId: number | null
 }
 
 export interface Topic {

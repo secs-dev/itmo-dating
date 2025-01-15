@@ -9,6 +9,9 @@ import 'swiper/css/pagination'
 import { Pagination } from 'swiper/modules'
 import { CardChip } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardChip/CardChip'
 import { setAttitude } from '@/features/set-attitude/api/setAttitude.ts'
+import { useEffectOnce } from '@/shared/api'
+import { getSuggestions } from '@/features/get-suggestions/api/getSuggestions.ts'
+import { getUser } from '@/features/get_user/api/getUser.ts'
 
 //src={"https://avatars.githubusercontent.com/u/93886405"}
 
@@ -156,13 +159,75 @@ const actP3: Person = {
   },
 }
 
-const personArray = [actP, actP2, actP3]
-
+const personArrayOld = [actP, actP2, actP3]
+personArrayOld.map(() => {})
 export const SwiperMenu = () => {
-  const [, setSwiperRef] = useState<SwiperClass | undefined>()
+  const [_, setSwiperRef] = useState<SwiperClass | undefined>()
   const [iter, setIter] = useState<number>(0)
   const [actualPerson, setActualPerson] = useState<Person>(actP)
   const [attitudeGotten, setAttitudeGotten] = useState<boolean>(false)
+  const [personArray, setPersonArray] = useState<Array<Person>>([])
+  const [personIdArray, setPersonIdArray] = useState<Array<number>>([])
+
+  useEffectOnce(() => {
+    getSuggestions(setPersonIdArray, 20)
+  })
+
+  useEffect(() => {
+    for (const personId of personIdArray) {
+      getUser(personId).then((personResponse) => {
+        const person = personResponse.data
+        const newUser: Person = {
+          id: person.userId,
+          zodiac: person.zodiac,
+          updateMoment: new Date(),
+          firstName: person.firstName,
+          lastName: person.lastName,
+          pictures: [
+            {
+              id: 1,
+              small: 'https://avatars.githubusercontent.com/u/93886405',
+              medium: 'https://avatars.githubusercontent.com/u/93886405',
+              large: 'https://avatars.githubusercontent.com/u/93886405',
+            },
+            {
+              id: 2,
+              small: 'https://avatars.githubusercontent.com/u/93886405',
+              medium: 'https://avatars.githubusercontent.com/u/93886405',
+              large: 'https://avatars.githubusercontent.com/u/93886405',
+            },
+          ],
+          interests: [
+            {
+              topic: {
+                id: 123,
+                name: 'programming',
+                icon: {
+                  id: 123,
+                  small: 'https://avatars.githubusercontent.com/u/93886405',
+                  medium: 'https://avatars.githubusercontent.com/u/93886405',
+                  large: 'https://avatars.githubusercontent.com/u/93886405',
+                },
+                color: '#dasda',
+              },
+              level: 5,
+            },
+          ],
+          height: person.height,
+          birthday: person.birthday,
+          faculty: 'piict',
+          location: {
+            name: 'nameLoc',
+            coordinates: {
+              latitude: 321,
+              longitude: 321,
+            },
+          },
+        }
+        setPersonArray((prevState) => [...prevState, newUser])
+      })
+    }
+  }, [personIdArray])
 
   useEffect(() => {
     if (attitudeGotten) {
@@ -186,7 +251,7 @@ export const SwiperMenu = () => {
       >
         <CardChip
           readOnly
-          onClick={() => {
+          onClick={(_) => {
             setAttitude(actualPerson.id, 'skip')
             setAttitudeGotten(true)
           }}
@@ -204,7 +269,7 @@ export const SwiperMenu = () => {
         </CardChip>
         <CardChip
           readOnly
-          onClick={() => {
+          onClick={(_) => {
             setAttitude(actualPerson.id, 'like')
             setAttitudeGotten(true)
           }}

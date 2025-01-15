@@ -7,6 +7,7 @@ ENV="$2"
 
 ALIAS="itmo-dating"
 ALIAS_BACKEND="$ALIAS-backend"
+ALIAS_EXTERNAL="$ALIAS-external"
 
 VALIDITY=1
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
@@ -71,6 +72,9 @@ function generate() {
     -deststoretype JKS \
     -destkeystore "$ALIAS_BACKEND.jks" \
     -deststorepass "$PASSWORD"
+
+  echo "Copying PKCS12 as external certificate"
+  cp "$ALIAS_BACKEND.p12" "$ALIAS_EXTERNAL.p12"
 }
 
 function copy() {
@@ -92,6 +96,7 @@ function distribute() {
 
   echo "Copying package to the gateway..."
   copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_EXTERNAL.p12"
 
   echo "Copying keys to the consul..."
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
