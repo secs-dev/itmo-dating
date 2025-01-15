@@ -22,4 +22,9 @@ class JooqPictureRecordStorage(
             .set(PICTURE.IS_REFERENCED, isReferenced)
             .where(PICTURE.ID.eq(id.number))
     }.let { }
+
+    override suspend fun delete(id: Picture.Id) = database.only {
+        delete(PICTURE)
+            .where(PICTURE.ID.eq(id.number))
+    }.let { }
 }

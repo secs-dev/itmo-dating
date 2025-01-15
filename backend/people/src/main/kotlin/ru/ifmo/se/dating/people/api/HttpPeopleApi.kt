@@ -132,4 +132,19 @@ class HttpPeopleApi(
         val picture = pictureService.getById(Picture.Id(pictureId.toInt()))
         return ByteArrayResource(picture.bytes).let { ResponseEntity.ok(it) }
     }
+
+    override suspend fun peoplePersonIdPhotosPictureIdDelete(
+        personId: Long,
+        pictureId: Long,
+    ): ResponseEntity<Unit> {
+        val callerId = SpringSecurityContext.principal()
+        val targetId = User.Id(personId.toInt())
+        if (callerId != targetId) {
+            throw AuthorizationException("caller $callerId can't remove photo of $targetId profile")
+        }
+
+        pictureService.remove(Picture.Id(pictureId.toInt()))
+
+        return ResponseEntity.ok(Unit)
+    }
 }

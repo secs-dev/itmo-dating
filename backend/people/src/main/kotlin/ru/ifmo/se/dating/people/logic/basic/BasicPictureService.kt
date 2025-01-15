@@ -20,4 +20,10 @@ class BasicPictureService(
         recordStorage.setIsReferenced(picture.id, isReferenced = true)
         return picture.id
     }
+
+    override suspend fun remove(id: Picture.Id) {
+        recordStorage.setIsReferenced(id, isReferenced = false)
+        contentStorage.remove(id)
+        recordStorage.delete(id)
+    }
 }

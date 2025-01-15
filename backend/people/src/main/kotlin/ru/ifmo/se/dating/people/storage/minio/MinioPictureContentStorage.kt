@@ -3,6 +3,7 @@ package ru.ifmo.se.dating.people.storage.minio
 import io.minio.GetObjectArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
+import io.minio.RemoveObjectArgs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.http.entity.ContentType
@@ -45,6 +46,15 @@ class MinioPictureContentStorage(
                 .let { minio.getObject(it) }
                 .use { it.readBytes() }
                 .let { Picture.Content(it) }
+        }
+
+    override suspend fun remove(id: Picture.Id) =
+        withContext(Dispatchers.IO) {
+            RemoveObjectArgs.builder()
+                .bucket(bucket)
+                .`object`(objectName(id))
+                .build()
+                .let { minio.removeObject(it) }
         }
 
     private fun objectName(id: Picture.Id) = "$id.jpg"
