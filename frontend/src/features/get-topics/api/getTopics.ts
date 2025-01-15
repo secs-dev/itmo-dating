@@ -4,24 +4,24 @@ import React from 'react'
 import { backendPeopleUrl } from '@/shared/api'
 
 export function getTopics(
-    setTopics:  React.Dispatch<React.SetStateAction<Array<Topic>>>,
-    ) {
-    const url = `${backendPeopleUrl}/api/topics`
+  setTopics: React.Dispatch<React.SetStateAction<Array<Topic>>>,
+) {
+  const url = `${backendPeopleUrl}/api/topics`
 
-    axios
-        .get(url)
-        .then((response) => {
-            console.log(response.data);
-            //FIXME after integration with backend
-             setTopics(response.data)
-        })
-        .catch((error) => {
-            console.error('Error getting topics: ', error);
-            //TODO remove after integration with backend
-            setTopics([
-                {id: 1, name: 'programming', color: undefined, icon: undefined},
-                {id: 2, name: 'eating', color: undefined, icon: undefined},
-                {id: 3, name: 'sleeping', color: undefined, icon: undefined}
-            ])
-        })
+  axios
+    .get(url)
+    .then((response) => {
+      console.log(response.data)
+      //FIXME after integration with backend
+      setTopics(response.data)
+    })
+    .catch((error) => {
+      console.error('Error getting topics: ', error)
+      //TODO remove after integration with backend
+      setTopics([
+        { id: 1, name: 'programming', color: undefined, icon: undefined },
+        { id: 2, name: 'eating', color: undefined, icon: undefined },
+        { id: 3, name: 'sleeping', color: undefined, icon: undefined },
+      ])
+    })
 }

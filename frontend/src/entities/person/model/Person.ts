@@ -17,14 +17,14 @@ export interface Person {
 }
 
 export interface PersonLegacy {
-    status: string,
-    userId: number,
-    firstName: string,
-    zodiac: string,
-    lastName: string,
-    interests: Interest[],
-    height: number,
-    birthday: Date,
-    facultyId: number,
-    locationId: number
+  status: string
+  userId: number
+  firstName: string
+  zodiac: string
+  lastName: string
+  interests: Interest[]
+  height: number
+  birthday: Date
+  facultyId: number
+  locationId: number
 }

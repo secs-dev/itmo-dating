@@ -1,4 +1,4 @@
 export interface Faculty {
-    id: number,
-    longName: string
+  id: number
+  longName: string
 }

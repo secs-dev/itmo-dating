@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { fetchTgUser } from '@/features/fetch-tg-user/api/fetchTgUser.ts'
 import { RegistrationData } from '@/entities'
 import {
-    setMainButtonParams,
-    setMainButtonVisible,
+  setMainButtonParams,
+  setMainButtonVisible,
 } from '@/entities/main-button'
 import { setMainButtonOnClick } from '@/entities/main-button/api/mainButtonOnClick.ts'
 import { RegistrationPictures } from '@/widgets/registration-pictures'
@@ -17,136 +17,130 @@ import { useEffectOnce } from '@/shared/api'
 import { patchPerson } from '@/features/patch-person/api/patchPerson.ts'
 
 export const Registration = () => {
-    const registrationOrder = [
-        'registration-common',
-        'registration-pictures',
-        'registration-interests',
-    ]
+  const registrationOrder = [
+    'registration-common',
+    'registration-pictures',
+    'registration-interests',
+  ]
 
-    const [key, changeKey] = useState(0)
+  const [key, changeKey] = useState(0)
 
-    const tgUser = fetchTgUser()
-    const [registrationData, changeRD] = useState<RegistrationData>(
-        {
-            tgId: tgUser?.id?.toString() || null,
-            name: tgUser?.firstName || null,
-            surname: tgUser?.lastName || null,
-            height: 175,
-            facultyId: null,
-            birthday: null,
-            pictures: [],
-            interests: [],
-            locationId: null
+  const tgUser = fetchTgUser()
+  const [registrationData, changeRD] = useState<RegistrationData>({
+    tgId: tgUser?.id?.toString() || null,
+    name: tgUser?.firstName || null,
+    surname: tgUser?.lastName || null,
+    height: 175,
+    facultyId: null,
+    birthday: null,
+    pictures: [],
+    interests: [],
+    locationId: null,
+  })
+
+  const mainButtonFun = () => {
+    changeKey((prev) => prev + 1)
+  }
+  const backButtonFun = () => {
+    changeKey((prev) => prev - 1)
+  }
+
+  const backButtonHomeFun = () => {
+    changeKey(0)
+    setBackButtonVisible(false)
+    setMainButtonVisible(false)
+    router.back()
+  }
+
+  useEffectOnce(() => {
+    setMainButtonParams('Next', false, true)
+    setMainButtonVisible(true)
+    setBackButtonVisible(true)
+  })
+
+  function setButtons(localKey: number) {
+    if (localKey == 0) {
+      const offBack = setBackButtonOnClick(() => {
+        backButtonHomeFun()
+        offBack()
+        offMain()
+      })
+      const offMain = setMainButtonOnClick(() => {
+        mainButtonFun()
+        offMain()
+        offBack()
+      })
+    } else {
+      const offBack = setBackButtonOnClick(() => {
+        backButtonFun()
+        offBack()
+        offMain()
+      })
+      const offMain = setMainButtonOnClick(() => {
+        mainButtonFun()
+        offMain()
+        offBack()
+      })
+    }
+  }
+
+  useEffect(() => {
+    setButtons(key)
+    if (key === registrationOrder.length) {
+      patchPerson(registrationData, 'ready')
+        .then((_) => {
+          router.back()
         })
+        .catch((e) => console.log(e))
+    } else
+      patchPerson(registrationData, 'draft')
+        .then((x) => console.log(x))
+        .catch((e) => console.log(e))
+  }, [key])
 
-    const mainButtonFun = () => {
-        changeKey((prev) => prev + 1)
+  function renderSwitchWidget(key: number) {
+    switch (registrationOrder[key]) {
+      case 'registration-common': {
+        return (
+          <RegistrationCommonInfo
+            registrationData={registrationData}
+            changeRD={changeRD}
+          />
+        )
+      }
+      case 'registration-pictures': {
+        return (
+          <RegistrationPictures
+            registrationData={registrationData}
+            changeRD={changeRD}
+          />
+        )
+      }
+      case 'registration-interests': {
+        return (
+          <RegistrationInterests
+            registrationData={registrationData}
+            changeRD={changeRD}
+          />
+        )
+      }
+      default:
+        return (
+          <Placeholder description="Bonus level" header="Congratulations">
+            <img
+              alt="Telegram sticker"
+              className="blt0jZBzpxuR4oDhJc8s"
+              src="https://xelene.me/telegram.gif"
+              style={{ display: 'block', width: '50%', height: '50%' }}
+            />
+          </Placeholder>
+        )
     }
-    const backButtonFun = () => {
-        changeKey((prev) => prev - 1)
-    }
+  }
 
-    const backButtonHomeFun = () => {
-        changeKey(0)
-        setBackButtonVisible(false)
-        setMainButtonVisible(false)
-        router.back()
-    }
-
-    useEffectOnce(() => {
-         setMainButtonParams('Next', false, true)
-         setMainButtonVisible(true)
-         setBackButtonVisible(true)
-    })
-
-    function setButtons(localKey: number) {
-        if (localKey == 0) {
-            const offBack = setBackButtonOnClick(() => {
-                backButtonHomeFun()
-                offBack()
-                offMain()
-            })
-            const offMain = setMainButtonOnClick(() => {
-                mainButtonFun()
-                offMain()
-                offBack()
-            })
-        } else {
-            const offBack = setBackButtonOnClick(() => {
-                backButtonFun()
-                offBack()
-                offMain()
-            })
-            const offMain = setMainButtonOnClick(() => {
-                mainButtonFun()
-                offMain()
-                offBack()
-            })
-        }
-    }
-
-    useEffect(() => {
-        setButtons(key)
-        if (key === registrationOrder.length) {
-            patchPerson(registrationData, 'ready')
-                .then((_) =>
-                    {
-                        router.back()
-                    })
-                .catch((e) => console.log(e))
-        }
-        else
-            patchPerson(registrationData, 'draft')
-                .then((x) => console.log(x))
-                .catch((e) => console.log(e))
-    }, [key]);
-
-    function renderSwitchWidget(key: number) {
-        switch (registrationOrder[key]) {
-            case 'registration-common': {
-                return (
-                    <RegistrationCommonInfo
-                        registrationData={registrationData}
-                        changeRD={changeRD}
-                    />
-                )
-            }
-            case 'registration-pictures': {
-                return (
-                    <RegistrationPictures
-                        registrationData={registrationData}
-                        changeRD={changeRD}
-                    />
-                )
-            }
-            case 'registration-interests': {
-                return (
-                    <RegistrationInterests
-                        registrationData={registrationData}
-                        changeRD={changeRD}
-                    />
-                )
-            }
-            default:
-                return (
-                    <Placeholder
-                        description="Bonus level"
-                        header="Congratulations"
-                    >
-                        <img
-                            alt="Telegram sticker"
-                            className="blt0jZBzpxuR4oDhJc8s"
-                            src="https://xelene.me/telegram.gif"
-                            style={{ 'display': 'block', 'width': '50%', 'height': '50%' }}
-                        />
-                    </Placeholder>
-                )
-        }
-    }
-
-    return (
-        <Section header="Registration" style={{ display: 'block', height: '50%' }}>
-            {renderSwitchWidget(key)}
-        </Section>
-    )
+  return (
+    <Section header="Registration" style={{ display: 'block', height: '50%' }}>
+      {renderSwitchWidget(key)}
+    </Section>
+  )
 }

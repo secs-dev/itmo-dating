@@ -1,22 +1,23 @@
-import axios from "axios";
-import React from "react";
-import {backendPeopleUrl} from "@/shared/api";
-import {Faculty} from "@/entities/registration-data/model/faculty.ts";
+import axios from 'axios'
+import React from 'react'
+import { backendPeopleUrl } from '@/shared/api'
+import { Faculty } from '@/entities/registration-data/model/faculty.ts'
 
-export function getFaculties(setFaculties:  React.Dispatch<React.SetStateAction<Array<Faculty>>>) {
-    const url = `${backendPeopleUrl}/api/faculties`;
+export function getFaculties(
+  setFaculties: React.Dispatch<React.SetStateAction<Array<Faculty>>>,
+) {
+  const url = `${backendPeopleUrl}/api/faculties`
 
-    axios.get(url)
-        .then((response) => {
-            console.log(response.data);
-            //FIXME after integration with backend
-            setFaculties(response.data)
-        })
-        .catch((error) => {
-            console.error("Error getting faculties: ", error);
-            //TODO remove after integration with backend
-            setFaculties([
-                {id: 1, longName: "piict"}
-            ])
-        })
+  axios
+    .get(url)
+    .then((response) => {
+      console.log(response.data)
+      //FIXME after integration with backend
+      setFaculties(response.data)
+    })
+    .catch((error) => {
+      console.error('Error getting faculties: ', error)
+      //TODO remove after integration with backend
+      setFaculties([{ id: 1, longName: 'piict' }])
+    })
 }
