@@ -10,7 +10,10 @@ class LoggingTokenIssuer(private val origin: TokenIssuer) : TokenIssuer {
         runCatching { origin.issue(payload) }
             .onSuccess { log.info("Issued access token for user with id ${payload.userId}") }
             .onFailure { e ->
-                log.warn("Failed to issue access token for user with id ${payload.userId}: ${e.message}")
+                buildString {
+                    append("Failed to issue access token for ")
+                    append("user with id ${payload.userId}: ${e.message}")
+                }.let { log.warn(it) }
             }
             .getOrThrow()
 }

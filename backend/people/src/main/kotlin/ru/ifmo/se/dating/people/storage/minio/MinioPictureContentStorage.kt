@@ -8,8 +8,6 @@ import io.minio.errors.ErrorResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.http.entity.ContentType
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.people.model.Picture

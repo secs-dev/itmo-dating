@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toCollection
 import ru.ifmo.se.dating.storage.TxEnv
 
+@Suppress("ComplexInterface")
 interface TransactionalOutbox<E, Id> {
     val tx: TxEnv
     fun publishable(): Flow<Id>

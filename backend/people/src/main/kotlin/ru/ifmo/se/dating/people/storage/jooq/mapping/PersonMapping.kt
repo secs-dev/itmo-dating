@@ -1,13 +1,10 @@
 package ru.ifmo.se.dating.people.storage.jooq.mapping
 
 import org.jooq.generated.tables.records.PersonRecord
-import ru.ifmo.se.dating.people.model.Faculty
-import ru.ifmo.se.dating.people.model.Location
-import ru.ifmo.se.dating.people.model.Person
-import ru.ifmo.se.dating.people.model.PersonVariant
+import ru.ifmo.se.dating.people.model.*
 import ru.ifmo.se.dating.security.auth.User
 
-fun PersonRecord.toModel(): PersonVariant =
+fun PersonRecord.toModel(pictureIds: List<Picture.Id>): PersonVariant =
     if (readyMoment != null) {
         Person(
             id = User.Id(accountId),
@@ -17,6 +14,7 @@ fun PersonRecord.toModel(): PersonVariant =
             birthday = birthday!!,
             facultyId = Faculty.Id(facultyId!!),
             locationId = Location.Id(locationId!!),
+            pictureIds = pictureIds,
             version = Person.Version(version!!),
             isPublished = isPublished!!,
         )
@@ -29,6 +27,7 @@ fun PersonRecord.toModel(): PersonVariant =
             birthday = birthday,
             facultyId = facultyId?.let { Faculty.Id(it) },
             locationId = locationId?.let { Location.Id(it) },
+            pictureIds = pictureIds,
             version = Person.Version(version!!),
         )
     }

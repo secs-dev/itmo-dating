@@ -1,8 +1,13 @@
 package ru.ifmo.se.dating.people
 
+import io.minio.MakeBucketArgs
+import io.minio.MinioClient
+import io.minio.RemoveBucketArgs
+import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
@@ -22,19 +27,38 @@ import ru.ifmo.se.dating.SecurityInitializer
 @ContextConfiguration(
     initializers = [
         PostgresInitializer::class,
+        MinIOInitializer::class,
         SecurityInitializer::class,
     ],
 )
 abstract class PeopleTestSuite {
+    @Value("\${storage.s3.bucket.profile-photos}")
+    private final lateinit var bucket: String
+
     @Autowired
     private final lateinit var webClientBuilder: WebClient.Builder
-
     final lateinit var webClient: WebClient
 
+    @Autowired
+    private final lateinit var minio: MinioClient
+
     @Before
-    fun init() {
+    fun before() {
         webClient = webClientBuilder
             .baseUrl("https://localhost:8080/api/")
             .build()
+
+        MakeBucketArgs.builder()
+            .bucket(bucket)
+            .build()
+            .let { minio.makeBucket(it) }
+    }
+
+    @After
+    fun after() {
+        RemoveBucketArgs.builder()
+            .bucket(bucket)
+            .build()
+            .let { minio.removeBucket(it) }
     }
 }

@@ -31,28 +31,28 @@ class SSLContextConfig(
     fun sslContext(): SslContext {
         log.info("Loading an SSL Context...")
 
-        log.info("Loading a keystore with type $keyStoreType...")
+        log.debug("Loading a keystore with type $keyStoreType...")
         val keystore = KeyStore.getInstance(keyStoreType)
         keyStore.inputStream.use { inputStream ->
             keystore.load(inputStream, keyStorePassword.toCharArray())
         }
 
-        log.info("Creating a Key Manager...")
+        log.debug("Creating a Key Manager...")
         val keyManager = KeyManagerFactory.getDefaultAlgorithm()
             .let { KeyManagerFactory.getInstance(it) }
             .apply { init(keystore, keyStorePassword.toCharArray()) }
 
-        log.info("Creating a Trust Manager...")
+        log.debug("Creating a Trust Manager...")
         val trustManager = TrustManagerFactory.getDefaultAlgorithm()
             .let { TrustManagerFactory.getInstance(it) }
             .apply { init(keystore) }
 
-        log.info("Building an SSL Context...")
+        log.debug("Building an SSL Context...")
         return SslContextBuilder.forClient()
             .keyManager(keyManager)
             .trustManager(trustManager)
             .protocols(sslProtocol)
             .build()
-            .also { log.info("SSL Context was built") }
+            .also { log.debug("SSL Context was built") }
     }
 }

@@ -508,6 +508,13 @@ components:
           $ref: "#/components/schemas/FacultyId"
         locationId:
           $ref: "#/components/schemas/LocationId"
+        pictures:
+          type: array
+          items:
+            $ref: "#/components/schemas/Picture"
+          minItems: 0
+          maxItems: 6
+          uniqueItems: true
     PersonPatch:
       allOf:
         - type: object
@@ -535,6 +542,7 @@ components:
             - birthday
             - faculty
             - location
+            - pictures
         - type: object
           properties:
             zodiac:

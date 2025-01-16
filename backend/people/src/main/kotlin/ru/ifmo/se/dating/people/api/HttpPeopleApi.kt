@@ -121,7 +121,10 @@ class HttpPeopleApi(
             throw AuthorizationException("caller $callerId can't post photo to $targetId profile")
         }
 
-        val pictureId = pictureService.save(Picture.Content(body.contentAsByteArray))
+        val pictureId = Picture.Draft(
+            ownerId = targetId,
+            content = Picture.Content(body.contentAsByteArray),
+        ).let { pictureService.save(it) }
 
         return PictureMessage(id = pictureId.number.toLong()).let { ResponseEntity.ok(it) }
     }

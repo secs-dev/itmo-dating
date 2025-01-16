@@ -7,6 +7,7 @@ plugins {
 dependencies {
     implementation(libs.io.minio.minio)
     implementation(project(":foundation"))
+    testImplementation(libs.org.testcontainers.minio)
     testImplementation(project(":foundation-test"))
 }
 
