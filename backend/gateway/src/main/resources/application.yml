@@ -61,6 +61,12 @@ spring:
             - Method=GET
             - Path=/api/people/{person_id}/matches
 
+        - id: get-people
+          uri: lb://people
+          predicates:
+            - Method=GET
+            - Path=/api/people
+
         - id: get-people-person-id
           uri: lb://people
           predicates:
