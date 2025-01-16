@@ -14,6 +14,7 @@ import org.jooq.kotlin.ge
 import org.jooq.kotlin.le
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
+import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
@@ -30,6 +31,8 @@ import ru.ifmo.se.dating.storage.FetchPolicy
 import ru.ifmo.se.dating.storage.TxEnv
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
 import ru.ifmo.se.dating.storage.jooq.withPolicy
+import java.time.LocalDate
+import java.time.OffsetDateTime
 
 @Suppress("TooManyFunctions")
 @Repository
@@ -40,6 +43,8 @@ class JooqPersonStorage(
     private val interests: InterestStorage,
     private val locations: LocationStorage,
 ) : PersonStorage {
+    private val log = autoLog()
+
     @Suppress("CyclomaticComplexMethod")
     override suspend fun upsert(draft: Person.Draft): PersonVariant = txEnv.transactional {
         database.only {
@@ -108,7 +113,7 @@ class JooqPersonStorage(
         }
     }.let { }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "CognitiveComplexMethod")
     override fun selectFilteredReady(
         page: Page,
         filter: PersonService.Filter,
@@ -119,19 +124,31 @@ class JooqPersonStorage(
 
         filter.lastName?.let { cond = cond.and(PERSON.LAST_NAME.likeRegex(it.pattern)) }
 
-        cond = cond.and(PERSON.HEIGHT.ge(filter.height.first))
-        cond = cond.and(PERSON.HEIGHT.le(filter.height.last))
+        if (filter.height.first != Int.MIN_VALUE) {
+            cond = cond.and(PERSON.HEIGHT.ge(filter.height.first))
+        }
+        if (filter.height.last != Int.MAX_VALUE) {
+            cond = cond.and(PERSON.HEIGHT.le(filter.height.last))
+        }
 
-        cond = cond.and(PERSON.BIRTHDAY.ge(filter.birthday.start))
-        cond = cond.and(PERSON.BIRTHDAY.le(filter.birthday.endInclusive))
+        if (filter.birthday.start != LocalDate.MIN) {
+            cond = cond.and(PERSON.BIRTHDAY.ge(filter.birthday.start))
+        }
+        if (filter.birthday.endInclusive != LocalDate.MAX) {
+            cond = cond.and(PERSON.BIRTHDAY.le(filter.birthday.endInclusive))
+        }
 
         filter.facultyId?.let { cond = cond.and(PERSON.FACULTY_ID.eq(it.number)) }
 
-        cond = cond.and(PERSON.UPDATE_MOMENT.ge(filter.updated.start))
-        cond = cond.and(PERSON.UPDATE_MOMENT.le(filter.updated.endInclusive))
+        if (filter.updated.start != OffsetDateTime.MIN) {
+            cond = cond.and(PERSON.UPDATE_MOMENT.ge(filter.updated.start))
+        }
+        if (filter.updated.endInclusive != OffsetDateTime.MAX) {
+            cond = cond.and(PERSON.UPDATE_MOMENT.le(filter.updated.endInclusive))
+        }
 
         val picturesCountQuery =
-            select(DSL.count())
+            selectCount()
                 .from(PICTURE)
                 .where(
                     PICTURE.IS_REFERENCED.eq(true)
@@ -158,6 +175,8 @@ class JooqPersonStorage(
             .where(cond)
             .offset(page.offset)
             .limit(page.limit)
+            .also { log.warn("Executed SQL: ${it.sql}") }
+            .also { log.warn("BindValues: ${it.bindValues}") }
     }
         .map { it.enrichToModel() as Person }
         .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
