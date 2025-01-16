@@ -14,6 +14,7 @@ import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.api.mapping.toMessage
 import ru.ifmo.se.dating.people.api.mapping.toModel
 import ru.ifmo.se.dating.people.logic.InterestService
+import ru.ifmo.se.dating.people.logic.PersonFilter
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.logic.PictureService
 import ru.ifmo.se.dating.people.model.*
@@ -81,7 +82,7 @@ class HttpPeopleApi(
 
         return personService.getFiltered(
             Page(offset = offset.toInt(), limit = limit.toInt()),
-            PersonService.Filter(
+            PersonFilter(
                 firstName = firstName?.let { Regex(it) },
                 lastName = lastName?.let { Regex(it) },
                 height = (heightMin ?: Int.MIN_VALUE)..(heightMax ?: Int.MAX_VALUE),

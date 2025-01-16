@@ -9,6 +9,7 @@ import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.exception.IncompletePersonException
+import ru.ifmo.se.dating.people.logic.PersonFilter
 import ru.ifmo.se.dating.people.logic.PersonOutbox
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.model.Person
@@ -68,7 +69,7 @@ class BasicPersonService(
         storage.setIsPublished(id, false)
     }.let { background.launch { outbox.process(id) } }.let { }
 
-    override fun getFiltered(page: Page, filter: PersonService.Filter): Flow<Person> =
+    override fun getFiltered(page: Page, filter: PersonFilter): Flow<Person> =
         storage.selectFilteredReady(page, filter)
 
     @Suppress("ThrowsCount")

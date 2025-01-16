@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.pagging.Page
+import ru.ifmo.se.dating.people.logic.PersonFilter
 import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
@@ -24,7 +25,6 @@ import ru.ifmo.se.dating.people.storage.LocationStorage
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
 import ru.ifmo.se.dating.people.storage.jooq.mapping.isReady
-import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.FetchPolicy
@@ -114,73 +114,71 @@ class JooqPersonStorage(
     }.let { }
 
     @Suppress("LongMethod", "CyclomaticComplexMethod", "CognitiveComplexMethod")
-    override fun selectFilteredReady(
-        page: Page,
-        filter: PersonService.Filter,
-    ): Flow<Person> = database.flow {
-        var cond = PERSON.READY_MOMENT.isNotNull
+    override fun selectFilteredReady(page: Page, filter: PersonFilter): Flow<Person> =
+        database.flow {
+            var cond = PERSON.READY_MOMENT.isNotNull
 
-        filter.firstName?.let { cond = cond.and(PERSON.FIRST_NAME.likeRegex(it.pattern)) }
+            filter.firstName?.let { cond = cond.and(PERSON.FIRST_NAME.likeRegex(it.pattern)) }
 
-        filter.lastName?.let { cond = cond.and(PERSON.LAST_NAME.likeRegex(it.pattern)) }
+            filter.lastName?.let { cond = cond.and(PERSON.LAST_NAME.likeRegex(it.pattern)) }
 
-        if (filter.height.first != Int.MIN_VALUE) {
-            cond = cond.and(PERSON.HEIGHT.ge(filter.height.first))
+            if (filter.height.first != Int.MIN_VALUE) {
+                cond = cond.and(PERSON.HEIGHT.ge(filter.height.first))
+            }
+            if (filter.height.last != Int.MAX_VALUE) {
+                cond = cond.and(PERSON.HEIGHT.le(filter.height.last))
+            }
+
+            if (filter.birthday.start != LocalDate.MIN) {
+                cond = cond.and(PERSON.BIRTHDAY.ge(filter.birthday.start))
+            }
+            if (filter.birthday.endInclusive != LocalDate.MAX) {
+                cond = cond.and(PERSON.BIRTHDAY.le(filter.birthday.endInclusive))
+            }
+
+            filter.facultyId?.let { cond = cond.and(PERSON.FACULTY_ID.eq(it.number)) }
+
+            if (filter.updated.start != OffsetDateTime.MIN) {
+                cond = cond.and(PERSON.UPDATE_MOMENT.ge(filter.updated.start))
+            }
+            if (filter.updated.endInclusive != OffsetDateTime.MAX) {
+                cond = cond.and(PERSON.UPDATE_MOMENT.le(filter.updated.endInclusive))
+            }
+
+            val picturesCountQuery =
+                selectCount()
+                    .from(PICTURE)
+                    .where(
+                        PICTURE.IS_REFERENCED.eq(true)
+                            .and(PICTURE.OWNER_ID.eq(PERSON.ACCOUNT_ID))
+                    )
+
+            if (filter.picturesCount.start != Int.MIN_VALUE) {
+                cond = cond.and(picturesCountQuery.ge(filter.picturesCount.start))
+            }
+            if (filter.picturesCount.endInclusive != Int.MAX_VALUE) {
+                cond = cond.and(picturesCountQuery.le(filter.picturesCount.endInclusive))
+            }
+
+            val interestIds =
+                select(PERSON_INTEREST.TOPIC_ID)
+                    .from(PERSON_INTEREST)
+                    .where(PERSON_INTEREST.PERSON_ID.eq(PERSON.ACCOUNT_ID))
+
+            for (topicId in filter.topicIds) {
+                cond = cond.and(DSL.value(topicId.number).`in`(interestIds))
+            }
+
+            selectFrom(PERSON)
+                .where(cond)
+                .offset(page.offset)
+                .limit(page.limit)
+                .also { log.warn("Executed SQL: ${it.sql}") }
+                .also { log.warn("BindValues: ${it.bindValues}") }
         }
-        if (filter.height.last != Int.MAX_VALUE) {
-            cond = cond.and(PERSON.HEIGHT.le(filter.height.last))
-        }
-
-        if (filter.birthday.start != LocalDate.MIN) {
-            cond = cond.and(PERSON.BIRTHDAY.ge(filter.birthday.start))
-        }
-        if (filter.birthday.endInclusive != LocalDate.MAX) {
-            cond = cond.and(PERSON.BIRTHDAY.le(filter.birthday.endInclusive))
-        }
-
-        filter.facultyId?.let { cond = cond.and(PERSON.FACULTY_ID.eq(it.number)) }
-
-        if (filter.updated.start != OffsetDateTime.MIN) {
-            cond = cond.and(PERSON.UPDATE_MOMENT.ge(filter.updated.start))
-        }
-        if (filter.updated.endInclusive != OffsetDateTime.MAX) {
-            cond = cond.and(PERSON.UPDATE_MOMENT.le(filter.updated.endInclusive))
-        }
-
-        val picturesCountQuery =
-            selectCount()
-                .from(PICTURE)
-                .where(
-                    PICTURE.IS_REFERENCED.eq(true)
-                        .and(PICTURE.OWNER_ID.eq(PERSON.ACCOUNT_ID))
-                )
-
-        if (filter.picturesCount.start != Int.MIN_VALUE) {
-            cond = cond.and(picturesCountQuery.ge(filter.picturesCount.start))
-        }
-        if (filter.picturesCount.endInclusive != Int.MAX_VALUE) {
-            cond = cond.and(picturesCountQuery.le(filter.picturesCount.endInclusive))
-        }
-
-        val interestIds =
-            select(PERSON_INTEREST.TOPIC_ID)
-                .from(PERSON_INTEREST)
-                .where(PERSON_INTEREST.PERSON_ID.eq(PERSON.ACCOUNT_ID))
-
-        for (topicId in filter.topicIds) {
-            cond = cond.and(DSL.value(topicId.number).`in`(interestIds))
-        }
-
-        selectFrom(PERSON)
-            .where(cond)
-            .offset(page.offset)
-            .limit(page.limit)
-            .also { log.warn("Executed SQL: ${it.sql}") }
-            .also { log.warn("BindValues: ${it.bindValues}") }
-    }
-        .map { it.enrichToModel() as Person }
-        .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
-        .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
+            .map { it.enrichToModel() as Person }
+            .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
+            .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
 
     private suspend fun PersonRecord.enrichToModel(): PersonVariant = coroutineScope {
         val userId = User.Id(accountId)
