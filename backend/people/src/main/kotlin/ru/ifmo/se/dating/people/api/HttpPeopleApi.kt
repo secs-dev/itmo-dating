@@ -30,7 +30,7 @@ class HttpPeopleApi(
     private val interestService: InterestService,
     private val pictureService: PictureService,
 ) : PeopleApiDelegate {
-    @Suppress("LongMethod", "CyclomaticComplexMethod", "MagicNumber")
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "MagicNumber", "CognitiveComplexMethod")
     override fun peopleGet(
         offset: Long,
         limit: Long,
@@ -89,7 +89,8 @@ class HttpPeopleApi(
                 facultyId = facultyId?.let { Faculty.Id(it.toInt()) },
                 updated = (updatedMin ?: OffsetDateTime.MIN)..(updatedMax ?: OffsetDateTime.MAX),
                 area = area,
-                picturesCount = (picturesCountMin ?: 0)..(picturesCountMax ?: Int.MAX_VALUE),
+                picturesCount =
+                (picturesCountMin ?: Int.MIN_VALUE)..(picturesCountMax ?: Int.MAX_VALUE),
                 zodiac = zodiac?.toModel(),
                 topicIds = topicId?.map { Topic.Id(it.toInt()) }?.toSet() ?: emptySet(),
             ),

@@ -29,7 +29,8 @@ logging:
   level:
     web: INFO
     liquibase: WARN
-    r2dbc: DEBUG
+    r2dbc: WARN
+    sql: WARN
   group:
     r2dbc: org.springframework.r2dbc,org.springframework.data.r2dbc,org.jooq.tools.LoggerListener
   pattern:

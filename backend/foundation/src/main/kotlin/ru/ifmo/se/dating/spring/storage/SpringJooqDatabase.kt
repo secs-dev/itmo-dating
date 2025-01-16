@@ -10,6 +10,7 @@ import org.jooq.SQLDialect
 import org.jooq.conf.Settings
 import org.jooq.exception.IntegrityConstraintViolationException
 import org.jooq.impl.DSL
+import org.jooq.tools.r2dbc.LoggingConnection
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
@@ -24,6 +25,7 @@ class SpringJooqDatabase(private val database: DatabaseClient) : JooqDatabase {
     private val settings = Settings()
         .withBindOffsetDateTimeType(true)
         .withBindOffsetTimeType(true)
+        .withExecuteLogging(true)
 
     override fun <T : Any> flow(block: DSLBlock<T>): Flow<T> =
         flux(block).asFlow()
@@ -35,7 +37,7 @@ class SpringJooqDatabase(private val database: DatabaseClient) : JooqDatabase {
         mono(block).awaitSingleOrNull()
 
     private fun Connection.dsl() =
-        DSL.using(this, SQLDialect.POSTGRES, settings)
+        DSL.using(LoggingConnection(this), SQLDialect.POSTGRES, settings)
 
     private fun <T : Any> flux(block: DSLBlock<T>) = database
         .inConnectionMany { block(it.dsl()).toFlux() }
