@@ -2,8 +2,8 @@ import { backendUrl } from '@/shared/api'
 import { $authStore } from '@/features/authentication/api/authFx.ts'
 import axios, { type AxiosRequestConfig } from 'axios'
 
-export async function getPicture(pictureId: number): Promise<string> {
-  const url = `${backendUrl}/api/people/${$authStore.getState().userId}/photos/${pictureId}`
+export async function getPicture(userId: number, pictureId: number): Promise<string> {
+  const url = `${backendUrl}/api/people/${userId}/photos/${pictureId}`
   const basicAuth = `Bearer ${$authStore.getState().token}`
   const config: AxiosRequestConfig = {
     method: 'GET',

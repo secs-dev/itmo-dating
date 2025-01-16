@@ -28,3 +28,17 @@ export interface PersonLegacy {
   facultyId: number
   locationId: number
 }
+
+export interface SearchPerson {
+  userId: number
+  zodiac: string
+  updateMoment: Date
+  firstName: string
+  lastName: string
+  pictures: Picture[]
+  interests: Interest[]
+  height: number
+  birthday: Date
+  faculty: string
+  location: Location
+}

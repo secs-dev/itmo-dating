@@ -30,7 +30,7 @@ export function handleUploadingPhotos(
     .post<PictureMessage>(url, file, config)
     .then(async (response) => {
       const resp = response.data as PictureMessage
-      const pictureBase = await getPicture(resp.id)
+      const pictureBase = await getPicture(Number($authStore.getState().userId), resp.id)
 
       setUploadedFiles((prevState) => [
         ...prevState,

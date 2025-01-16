@@ -75,14 +75,14 @@ export const Registration = () => {
         setMainButtonVisible(true)
         break
       }
-      case registrationOrder.length: {
-        const offBack = setBackButtonOnClick(() => {
-          backButtonFun()
-          offBack()
-        })
-        setMainButtonVisible(false)
-        break
-      }
+      // case registrationOrder.length: {
+      //   const offBack = setBackButtonOnClick(() => {
+      //     backButtonFun()
+      //     offBack()
+      //   })
+      //   setMainButtonVisible(false)
+      //   break
+      // }
       default: {
         const offBack = setBackButtonOnClick(() => {
           backButtonFun()
@@ -101,7 +101,6 @@ export const Registration = () => {
   }
 
   useEffect(() => {
-    setButtons(key)
     if (key === registrationOrder.length) {
       patchPerson(registrationData, 'ready')
         .then((_) => {
@@ -116,6 +115,7 @@ export const Registration = () => {
         .then((x) => console.log(x))
         .catch((e) => console.log(e))
     }
+    setButtons(key)
   }, [key])
 
   function renderSwitchWidget(key: number) {

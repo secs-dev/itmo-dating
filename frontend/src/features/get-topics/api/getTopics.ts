@@ -2,14 +2,22 @@ import axios from 'axios'
 import { Topic } from '@/entities/registration-data/model/topic.ts'
 import React from 'react'
 import { backendUrl } from '@/shared/api'
+import {$authStore} from "@/features/authentication/api/authFx.ts";
 
 export function getTopics(
   setTopics: React.Dispatch<React.SetStateAction<Array<Topic>>>,
 ) {
   const url = `${backendUrl}/api/topics`
+  const config = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${$authStore.getState().token}`,
+    },
+  }
 
   axios
-    .get(url)
+    .get(url, config)
     .then((response) => {
       console.log(response.data)
       //FIXME after integration with backend
