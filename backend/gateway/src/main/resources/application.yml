@@ -133,3 +133,6 @@ springdoc:
         url: openapi/matchmaker/api.yml
       - name: people
         url: openapi/people/api.yml
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSS} [%level] %logger{36}: %msg%n"
