@@ -29,5 +29,8 @@ logging:
   level:
     web: INFO
     liquibase: WARN
+    r2dbc: DEBUG
+  group:
+    r2dbc: org.springframework.r2dbc
   pattern:
     console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSS}){faint} %clr([%level]) %clr(%logger{36}){blue}: %msg%n"

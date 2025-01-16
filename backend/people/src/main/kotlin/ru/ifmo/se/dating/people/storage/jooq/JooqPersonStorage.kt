@@ -5,8 +5,13 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
+import org.jooq.generated.tables.references.PERSON_INTEREST
+import org.jooq.generated.tables.references.PICTURE
+import org.jooq.impl.DSL
 import org.jooq.impl.DSL.currentOffsetDateTime
 import org.jooq.impl.DSL.not
+import org.jooq.kotlin.ge
+import org.jooq.kotlin.le
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.pagging.Page
@@ -103,6 +108,7 @@ class JooqPersonStorage(
         }
     }.let { }
 
+    @Suppress("LongMethod")
     override fun selectFilteredReady(
         page: Page,
         filter: PersonService.Filter,
@@ -110,24 +116,52 @@ class JooqPersonStorage(
         var cond = PERSON.READY_MOMENT.isNotNull
 
         filter.firstName?.let { cond = cond.and(PERSON.FIRST_NAME.likeRegex(it.pattern)) }
+
         filter.lastName?.let { cond = cond.and(PERSON.LAST_NAME.likeRegex(it.pattern)) }
+
         cond = cond.and(PERSON.HEIGHT.ge(filter.height.first))
         cond = cond.and(PERSON.HEIGHT.le(filter.height.last))
+
         cond = cond.and(PERSON.BIRTHDAY.ge(filter.birthday.start))
         cond = cond.and(PERSON.BIRTHDAY.le(filter.birthday.endInclusive))
+
+        filter.facultyId?.let { cond = cond.and(PERSON.FACULTY_ID.eq(it.number)) }
+
         cond = cond.and(PERSON.UPDATE_MOMENT.ge(filter.updated.start))
         cond = cond.and(PERSON.UPDATE_MOMENT.le(filter.updated.endInclusive))
+
+        val picturesCountQuery =
+            select(DSL.count())
+                .from(PICTURE)
+                .where(
+                    PICTURE.IS_REFERENCED.eq(true)
+                        .and(PICTURE.OWNER_ID.eq(PERSON.ACCOUNT_ID))
+                )
+
+        if (filter.picturesCount.start != Int.MIN_VALUE) {
+            cond = cond.and(picturesCountQuery.ge(filter.picturesCount.start))
+        }
+        if (filter.picturesCount.endInclusive != Int.MAX_VALUE) {
+            cond = cond.and(picturesCountQuery.le(filter.picturesCount.endInclusive))
+        }
+
+        val interestIds =
+            select(PERSON_INTEREST.TOPIC_ID)
+                .from(PERSON_INTEREST)
+                .where(PERSON_INTEREST.PERSON_ID.eq(PERSON.ACCOUNT_ID))
+
+        for (topicId in filter.topicIds) {
+            cond = cond.and(DSL.value(topicId.number).`in`(interestIds))
+        }
 
         selectFrom(PERSON)
             .where(cond)
             .offset(page.offset)
             .limit(page.limit)
-    }.map { it.enrichToModel() as Person }
-        .filter { filter.facultyId == null || filter.facultyId == it.facultyId }
+    }
+        .map { it.enrichToModel() as Person }
         .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
-        .filter { filter.picturesCount.contains(it.pictureIds.size) }
         .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
-        .filter { it.interests.map { i -> i.topicId }.toSet().containsAll(filter.topicIds) }
 
     private suspend fun PersonRecord.enrichToModel(): PersonVariant = coroutineScope {
         val userId = User.Id(accountId)
