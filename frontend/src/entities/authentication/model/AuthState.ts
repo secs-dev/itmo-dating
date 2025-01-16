@@ -3,7 +3,7 @@ import { JwtToken } from '@/shared/api'
 export interface AuthState {
   token: JwtToken | null
   isAuthenticated: boolean
-  tgId: string | null
+  userId: string | null
   loading: boolean
   error: string | null
 }
@@ -11,7 +11,7 @@ export interface AuthState {
 export const initialAuthState: AuthState = {
   token: null,
   isAuthenticated: false,
-  tgId: null,
+  userId: null,
   loading: false,
   error: null,
 }

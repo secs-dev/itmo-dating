@@ -214,7 +214,7 @@ export const SwiperMenu = () => {
             },
           ],
           height: person.height,
-          birthday: person.birthday,
+          birthday: new Date(person.birthday),
           faculty: 'piict',
           location: {
             name: 'nameLoc',
@@ -230,11 +230,12 @@ export const SwiperMenu = () => {
   }, [personIdArray])
 
   useEffect(() => {
-    if (attitudeGotten) {
+    if (attitudeGotten && personArray.length > 0) {
       setActualPerson(personArray[(iter + 1) % personArray.length])
       setIter((prevState) => (prevState + 1) % personArray.length)
       setAttitudeGotten(false)
     }
+    getSuggestions(setPersonIdArray, 5)
   }, [attitudeGotten])
 
   return (

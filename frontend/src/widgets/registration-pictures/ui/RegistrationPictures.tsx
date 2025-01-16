@@ -50,7 +50,9 @@ export const RegistrationPictures = (
         ))}
         <AddPictureButton
           handleUploadingPhotos={(e) => {
-            handleUploadingPhotos({ setUploadedFiles }, [...e.target.files])
+            ;[...e.target.files].map((file) => {
+              handleUploadingPhotos({ setUploadedFiles }, file)
+            })
             e.target.value = null
           }}
         />

@@ -1,16 +1,16 @@
 import axios from 'axios'
 import { backendUrl } from '@/shared/api'
+import { $authStore } from '@/features/authentication/api/authFx.ts'
 
 export function setAttitude(personId: number, attitude: string) {
   const url = `${backendUrl}/api/people/${personId}/attitudes/incoming/${attitude}`
 
-  // FIXME jwt token
-  const basicAuth = 'test basic auth'
+  const basicAuth = `Bearer ${$authStore.getState().token}`
   const config = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: +basicAuth,
+      Authorization: basicAuth,
     },
   }
   axios

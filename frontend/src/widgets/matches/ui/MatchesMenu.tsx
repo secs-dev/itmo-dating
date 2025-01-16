@@ -1,165 +1,225 @@
 import { Card, Image, Section } from '@telegram-apps/telegram-ui'
 import { Person } from '@/entities/person/model/Person.ts'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
 import { setBackButtonVisible } from '@/entities/back-button'
 import { setBackButtonOnClick } from '@/entities/back-button/api/backButtonOnClick.ts'
 import { useEffectOnce } from '@/shared/api'
+import { getMatches } from '@/features/get-matches/api/getMatches.ts'
+import { getUser } from '@/features/get_user/api/getUser.ts'
 
-const actP: Person = {
-  id: 1234567,
-  zodiac: 'aries',
-  updateMoment: new Date(),
-  firstName: 'Ivan',
-  lastName: 'Ivan',
-  pictures: [
-    {
-      id: 1,
-      small: 'https://avatars.githubusercontent.com/u/93886405',
-      medium: 'https://avatars.githubusercontent.com/u/93886405',
-      large: 'https://avatars.githubusercontent.com/u/93886405',
-    },
-    {
-      id: 2,
-      small: 'https://avatars.githubusercontent.com/u/93886405',
-      medium: 'https://avatars.githubusercontent.com/u/93886405',
-      large: 'https://avatars.githubusercontent.com/u/93886405',
-    },
-  ],
-  interests: [
-    {
-      topic: {
-        id: 123,
-        name: 'programming',
-        icon: {
-          id: 123,
-          small: 'https://avatars.githubusercontent.com/u/93886405',
-          medium: 'https://avatars.githubusercontent.com/u/93886405',
-          large: 'https://avatars.githubusercontent.com/u/93886405',
-        },
-        color: '#dasda',
-      },
-      level: 5,
-    },
-  ],
-  height: 111,
-  birthday: new Date(),
-  faculty: 'piict',
-  location: {
-    name: 'nameLoc',
-    coordinates: {
-      latitude: 321,
-      longitude: 321,
-    },
-  },
-}
+// const actP: Person = {
+//   id: 1234567,
+//   zodiac: 'aries',
+//   updateMoment: new Date(),
+//   firstName: 'Ivan',
+//   lastName: 'Ivan',
+//   pictures: [
+//     {
+//       id: 1,
+//       small: 'https://avatars.githubusercontent.com/u/93886405',
+//       medium: 'https://avatars.githubusercontent.com/u/93886405',
+//       large: 'https://avatars.githubusercontent.com/u/93886405',
+//     },
+//     {
+//       id: 2,
+//       small: 'https://avatars.githubusercontent.com/u/93886405',
+//       medium: 'https://avatars.githubusercontent.com/u/93886405',
+//       large: 'https://avatars.githubusercontent.com/u/93886405',
+//     },
+//   ],
+//   interests: [
+//     {
+//       topic: {
+//         id: 123,
+//         name: 'programming',
+//         icon: {
+//           id: 123,
+//           small: 'https://avatars.githubusercontent.com/u/93886405',
+//           medium: 'https://avatars.githubusercontent.com/u/93886405',
+//           large: 'https://avatars.githubusercontent.com/u/93886405',
+//         },
+//         color: '#dasda',
+//       },
+//       level: 5,
+//     },
+//   ],
+//   height: 111,
+//   birthday: new Date(),
+//   faculty: 'piict',
+//   location: {
+//     name: 'nameLoc',
+//     coordinates: {
+//       latitude: 321,
+//       longitude: 321,
+//     },
+//   },
+// }
+//
+// const actP2: Person = {
+//   id: 1234567,
+//   zodiac: 'aries',
+//   updateMoment: new Date(),
+//   firstName: 'Vitya',
+//   lastName: 'Vitya',
+//   pictures: [
+//     {
+//       id: 1,
+//       small: 'https://avatars.githubusercontent.com/u/93886405',
+//       medium: 'https://avatars.githubusercontent.com/u/93886405',
+//       large: 'https://avatars.githubusercontent.com/u/93886405',
+//     },
+//     {
+//       id: 2,
+//       small: 'https://avatars.githubusercontent.com/u/93886405',
+//       medium: 'https://avatars.githubusercontent.com/u/93886405',
+//       large: 'https://avatars.githubusercontent.com/u/93886405',
+//     },
+//   ],
+//   interests: [
+//     {
+//       topic: {
+//         id: 123,
+//         name: 'programming',
+//         icon: {
+//           id: 123,
+//           small: 'https://avatars.githubusercontent.com/u/93886405',
+//           medium: 'https://avatars.githubusercontent.com/u/93886405',
+//           large: 'https://avatars.githubusercontent.com/u/93886405',
+//         },
+//         color: '#dasda',
+//       },
+//       level: 5,
+//     },
+//   ],
+//   height: 111,
+//   birthday: new Date(),
+//   faculty: 'piict',
+//   location: {
+//     name: 'nameLoc',
+//     coordinates: {
+//       latitude: 321,
+//       longitude: 321,
+//     },
+//   },
+// }
+//
+// const actP3: Person = {
+//   id: 1234567,
+//   zodiac: 'aries',
+//   updateMoment: new Date(),
+//   firstName: 'Dima',
+//   lastName: 'Dima',
+//   pictures: [
+//     {
+//       id: 1,
+//       small: 'https://avatars.githubusercontent.com/u/93886405',
+//       medium: 'https://avatars.githubusercontent.com/u/93886405',
+//       large: 'https://avatars.githubusercontent.com/u/93886405',
+//     },
+//     {
+//       id: 2,
+//       small: 'https://avatars.githubusercontent.com/u/93886405',
+//       medium: 'https://avatars.githubusercontent.com/u/93886405',
+//       large: 'https://avatars.githubusercontent.com/u/93886405',
+//     },
+//   ],
+//   interests: [
+//     {
+//       topic: {
+//         id: 123,
+//         name: 'programming',
+//         icon: {
+//           id: 123,
+//           small: 'https://avatars.githubusercontent.com/u/93886405',
+//           medium: 'https://avatars.githubusercontent.com/u/93886405',
+//           large: 'https://avatars.githubusercontent.com/u/93886405',
+//         },
+//         color: '#dasda',
+//       },
+//       level: 5,
+//     },
+//   ],
+//   height: 111,
+//   birthday: new Date(),
+//   faculty: 'piict',
+//   location: {
+//     name: 'nameLoc',
+//     coordinates: {
+//       latitude: 321,
+//       longitude: 321,
+//     },
+//   },
+// }
 
-const actP2: Person = {
-  id: 1234567,
-  zodiac: 'aries',
-  updateMoment: new Date(),
-  firstName: 'Vitya',
-  lastName: 'Vitya',
-  pictures: [
-    {
-      id: 1,
-      small: 'https://avatars.githubusercontent.com/u/93886405',
-      medium: 'https://avatars.githubusercontent.com/u/93886405',
-      large: 'https://avatars.githubusercontent.com/u/93886405',
-    },
-    {
-      id: 2,
-      small: 'https://avatars.githubusercontent.com/u/93886405',
-      medium: 'https://avatars.githubusercontent.com/u/93886405',
-      large: 'https://avatars.githubusercontent.com/u/93886405',
-    },
-  ],
-  interests: [
-    {
-      topic: {
-        id: 123,
-        name: 'programming',
-        icon: {
-          id: 123,
-          small: 'https://avatars.githubusercontent.com/u/93886405',
-          medium: 'https://avatars.githubusercontent.com/u/93886405',
-          large: 'https://avatars.githubusercontent.com/u/93886405',
-        },
-        color: '#dasda',
-      },
-      level: 5,
-    },
-  ],
-  height: 111,
-  birthday: new Date(),
-  faculty: 'piict',
-  location: {
-    name: 'nameLoc',
-    coordinates: {
-      latitude: 321,
-      longitude: 321,
-    },
-  },
-}
-
-const actP3: Person = {
-  id: 1234567,
-  zodiac: 'aries',
-  updateMoment: new Date(),
-  firstName: 'Dima',
-  lastName: 'Dima',
-  pictures: [
-    {
-      id: 1,
-      small: 'https://avatars.githubusercontent.com/u/93886405',
-      medium: 'https://avatars.githubusercontent.com/u/93886405',
-      large: 'https://avatars.githubusercontent.com/u/93886405',
-    },
-    {
-      id: 2,
-      small: 'https://avatars.githubusercontent.com/u/93886405',
-      medium: 'https://avatars.githubusercontent.com/u/93886405',
-      large: 'https://avatars.githubusercontent.com/u/93886405',
-    },
-  ],
-  interests: [
-    {
-      topic: {
-        id: 123,
-        name: 'programming',
-        icon: {
-          id: 123,
-          small: 'https://avatars.githubusercontent.com/u/93886405',
-          medium: 'https://avatars.githubusercontent.com/u/93886405',
-          large: 'https://avatars.githubusercontent.com/u/93886405',
-        },
-        color: '#dasda',
-      },
-      level: 5,
-    },
-  ],
-  height: 111,
-  birthday: new Date(),
-  faculty: 'piict',
-  location: {
-    name: 'nameLoc',
-    coordinates: {
-      latitude: 321,
-      longitude: 321,
-    },
-  },
-}
-
-const personArray = [actP, actP2, actP3, actP, actP2, actP3, actP]
+// const _personArray = [actP, actP2, actP3, actP, actP2, actP3, actP]
 export const MatchesMenu = () => {
-  const [matches, setMatches] = useState<Array<Person>>(personArray)
+  const [matches, setMatches] = useState<Array<Person>>([])
+  const [matchesId, setMatchesId] = useState<Array<number>>([])
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
 
   useEffectOnce(() => {
-    setMatches(personArray)
+    getMatches(setMatchesId)
   })
+
+  useEffect(() => {
+    for (const personId of matchesId) {
+      getUser(personId).then((personResponse) => {
+        const person = personResponse.data
+        const newUser: Person = {
+          id: person.userId,
+          zodiac: person.zodiac,
+          updateMoment: new Date(),
+          firstName: person.firstName,
+          lastName: person.lastName,
+          pictures: [
+            {
+              id: 1,
+              small: 'https://avatars.githubusercontent.com/u/93886405',
+              medium: 'https://avatars.githubusercontent.com/u/93886405',
+              large: 'https://avatars.githubusercontent.com/u/93886405',
+            },
+            {
+              id: 2,
+              small: 'https://avatars.githubusercontent.com/u/93886405',
+              medium: 'https://avatars.githubusercontent.com/u/93886405',
+              large: 'https://avatars.githubusercontent.com/u/93886405',
+            },
+          ],
+          interests: [
+            {
+              topic: {
+                id: 123,
+                name: 'programming',
+                icon: {
+                  id: 123,
+                  small: 'https://avatars.githubusercontent.com/u/93886405',
+                  medium: 'https://avatars.githubusercontent.com/u/93886405',
+                  large: 'https://avatars.githubusercontent.com/u/93886405',
+                },
+                color: '#dasda',
+              },
+              level: 5,
+            },
+          ],
+          height: person.height,
+          birthday: new Date(person.birthday),
+          faculty: 'piict',
+          location: {
+            name: 'nameLoc',
+            coordinates: {
+              latitude: 321,
+              longitude: 321,
+            },
+          },
+        }
+        setMatches((prevState) => [...prevState, newUser])
+      })
+    }
+  }, [matchesId])
+
   function setBackButton() {
     setBackButtonVisible(true)
     const offBack = setBackButtonOnClick(() => {

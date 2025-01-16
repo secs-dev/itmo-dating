@@ -35,6 +35,20 @@ export const RegistrationCommonInfo = ({
   })
 
   useEffect(() => {
+    if (!registrationData.facultyId && faculties.length > 0)
+      changeRD((prevState) => {
+        return { ...prevState, facultyId: faculties[0].id }
+      })
+  }, [faculties])
+
+  useEffect(() => {
+    if (!registrationData.locationId && locations.length > 0)
+      changeRD((prevState) => {
+        return { ...prevState, locationId: locations[0].id }
+      })
+  }, [locations])
+
+  useEffect(() => {
     changeRD((previous) => ({
       ...previous,
       birthday: new Date(year, month, day),

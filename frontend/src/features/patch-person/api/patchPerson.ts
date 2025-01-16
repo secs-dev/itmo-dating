@@ -1,10 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { backendUrl } from '@/shared/api'
 import { RegistrationData } from '@/entities'
-import {
-  $authStore,
-  $userIdStore,
-} from '@/features/authentication/api/authFx.ts'
+import { $authStore } from '@/features/authentication/api/authFx.ts'
 import { PersonPatch } from '@/entities/person-patch/model/PersonPatch.ts'
 import { IError } from '@/shared/model'
 
@@ -12,7 +9,7 @@ export function patchPerson(
   registartionData: RegistrationData,
   status: string,
 ): Promise<AxiosResponse<void | IError>> {
-  const url = `${backendUrl}/api/people/${$userIdStore.getState()}`
+  const url = `${backendUrl}/api/people/${$authStore.getState().userId}`
   const config = {
     method: 'PATCH',
     headers: {

@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { useEffectOnce } from '@/shared/api'
 import { Icon28Edit } from '@telegram-apps/telegram-ui/dist/icons/28/edit'
 import { EditProfileMenu } from '@/widgets/editting-profile/ui/EditProfileMenu.tsx'
+import { getUser } from '@/features/get_user/api/getUser.ts'
+import { $authStore } from '@/features/authentication/api/authFx.ts'
 
 const actP: Person = {
   id: 1234567,
@@ -57,10 +59,35 @@ const actP: Person = {
 }
 
 export const ProfileMenu = () => {
-  const [actualPerson, setActualPerson] = useState<Person>()
+  const [actualPerson, setActualPerson] = useState<Person>(actP)
   const [editButtonClicked, setEditButtonClicked] = useState<boolean>(false)
   useEffectOnce(() => {
-    setActualPerson(actP)
+    getUser(Number($authStore.getState().userId)).then((userResp) => {
+      const user = userResp.data
+      setActualPerson({
+        id: user.userId,
+        zodiac: user.zodiac,
+        updateMoment: new Date(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        pictures: [
+          {
+            id: 1,
+            small: 'https://avatars.githubusercontent.com/u/93886405',
+            medium: 'https://avatars.githubusercontent.com/u/93886405',
+            large: 'https://avatars.githubusercontent.com/u/93886405',
+          },
+        ],
+        interests: user.interests,
+        height: user.height,
+        birthday: new Date(user.birthday),
+        faculty: `${user.facultyId}`,
+        location: {
+          name: 'unknown',
+          coordinates: { latitude: 1, longitude: 2 },
+        },
+      })
+    })
   })
 
   return (

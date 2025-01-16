@@ -59,28 +59,44 @@ export const Registration = () => {
   })
 
   function setButtons(localKey: number) {
-    if (localKey == 0) {
-      const offBack = setBackButtonOnClick(() => {
-        backButtonHomeFun()
-        offBack()
-        offMain()
-      })
-      const offMain = setMainButtonOnClick(() => {
-        mainButtonFun()
-        offMain()
-        offBack()
-      })
-    } else {
-      const offBack = setBackButtonOnClick(() => {
-        backButtonFun()
-        offBack()
-        offMain()
-      })
-      const offMain = setMainButtonOnClick(() => {
-        mainButtonFun()
-        offMain()
-        offBack()
-      })
+    console.log(localKey)
+    switch (localKey) {
+      case 0: {
+        const offBack = setBackButtonOnClick(() => {
+          backButtonHomeFun()
+          offBack()
+          offMain()
+        })
+        const offMain = setMainButtonOnClick(() => {
+          mainButtonFun()
+          offMain()
+          offBack()
+        })
+        setMainButtonVisible(true)
+        break
+      }
+      case registrationOrder.length: {
+        const offBack = setBackButtonOnClick(() => {
+          backButtonFun()
+          offBack()
+        })
+        setMainButtonVisible(false)
+        break
+      }
+      default: {
+        const offBack = setBackButtonOnClick(() => {
+          backButtonFun()
+          offBack()
+          offMain()
+        })
+        const offMain = setMainButtonOnClick(() => {
+          mainButtonFun()
+          offMain()
+          offBack()
+        })
+        setMainButtonVisible(true)
+        break
+      }
     }
   }
 
@@ -91,11 +107,15 @@ export const Registration = () => {
         .then((_) => {
           router.back()
         })
-        .catch((e) => console.log(e))
-    } else
+        .catch((e) => {
+          console.log(e)
+          changeKey(0)
+        })
+    } else {
       patchPerson(registrationData, 'draft')
         .then((x) => console.log(x))
         .catch((e) => console.log(e))
+    }
   }, [key])
 
   function renderSwitchWidget(key: number) {
