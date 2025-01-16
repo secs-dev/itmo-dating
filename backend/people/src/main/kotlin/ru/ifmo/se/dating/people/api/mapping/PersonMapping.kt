@@ -1,9 +1,6 @@
 package ru.ifmo.se.dating.people.api.mapping
 
-import ru.ifmo.se.dating.people.model.Faculty
-import ru.ifmo.se.dating.people.model.Location
-import ru.ifmo.se.dating.people.model.Person
-import ru.ifmo.se.dating.people.model.PersonVariant
+import ru.ifmo.se.dating.people.model.*
 import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
 
@@ -13,6 +10,7 @@ fun PersonPatchMessage.toModel(id: Int) = Person.Draft(
     lastName = lastName?.let { Person.Name(it) },
     height = height,
     birthday = birthday,
+    interests = emptySet(),
     facultyId = facultyId?.let { Faculty.Id(it.toInt()) },
     locationId = locationId?.let { Location.Id(it.toInt()) },
 )
@@ -31,7 +29,7 @@ fun Person.toMessage() = PersonMessage(
     birthday = birthday,
     facultyId = facultyId.number.toLong(),
     locationId = locationId.number.toLong(),
-    interests = emptySet(),
+    interests = interests.map { it.toMessage() }.toSet(),
     zodiac = ZodiacSignMessage.leo,
     pictures = pictureIds.map { PictureMessage(id = it.number.toLong()) }.toSet()
 )
@@ -45,6 +43,18 @@ fun Person.Draft.toMessage() = PersonDraftMessage(
     birthday = birthday,
     facultyId = facultyId?.number?.toLong(),
     locationId = locationId?.number?.toLong(),
-    interests = emptySet(),
+    interests = interests.map { it.toMessage() }.toSet(),
     pictures = pictureIds.map { PictureMessage(id = it.number.toLong()) }.toSet()
 )
+
+fun InterestMessage.toModel(): Person.Interest =
+    Person.Interest(
+        topicId = Topic.Id(topicId.toInt()),
+        degree = level.value.toInt(),
+    )
+
+fun Person.Interest.toMessage(): InterestMessage =
+    InterestMessage(
+        topicId = topicId.number.toLong(),
+        level = InterestLevelMessage.forValue(degree.toString()),
+    )

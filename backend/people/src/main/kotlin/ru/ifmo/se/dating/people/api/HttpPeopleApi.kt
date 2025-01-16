@@ -12,19 +12,24 @@ import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
 import ru.ifmo.se.dating.people.api.mapping.toMessage
 import ru.ifmo.se.dating.people.api.mapping.toModel
+import ru.ifmo.se.dating.people.logic.InterestService
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.logic.PictureService
 import ru.ifmo.se.dating.people.model.Faculty
+import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.Picture
+import ru.ifmo.se.dating.people.model.Topic
 import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
 import java.time.LocalDate
 import java.time.OffsetDateTime
 
+@Suppress("TooManyFunctions")
 @Controller
 class HttpPeopleApi(
     private val personService: PersonService,
+    private val interestService: InterestService,
     private val pictureService: PictureService,
 ) : PeopleApiDelegate {
     override fun peopleGet(
@@ -106,6 +111,29 @@ class HttpPeopleApi(
             PersonStatusMessage.ready -> personService.save(model)
         }
 
+        return ResponseEntity.ok(Unit)
+    }
+
+    override suspend fun peoplePersonIdInterestsTopicIdDelete(
+        personId: Long,
+        topicId: Long,
+    ): ResponseEntity<Unit> {
+        interestService.remove(User.Id(personId.toInt()), Topic.Id(topicId.toInt()))
+        return ResponseEntity.ok(Unit)
+    }
+
+    override suspend fun peoplePersonIdInterestsTopicIdPut(
+        personId: Long,
+        topicId: Long,
+        interestPatchMessage: InterestPatchMessage,
+    ): ResponseEntity<Unit> {
+        interestService.insert(
+            id = User.Id(personId.toInt()),
+            interest = Person.Interest(
+                topicId = Topic.Id(topicId.toInt()),
+                degree = interestPatchMessage.level.value.toInt(),
+            )
+        )
         return ResponseEntity.ok(Unit)
     }
 

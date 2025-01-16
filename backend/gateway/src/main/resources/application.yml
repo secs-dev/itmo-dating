@@ -97,6 +97,24 @@ spring:
             - Method=DELETE
             - Path=/api/people/*/photos/*
 
+        - id: put-people-person-id-interests-topic-id
+          uri: lb://people
+          predicates:
+            - Method=PUT
+            - Path=/api/people/*/interests/*
+
+        - id: delete-people-person-id-interests-topic-id
+          uri: lb://people
+          predicates:
+            - Method=DELETE
+            - Path=/api/people/*/interests/*
+
+        - id: get-people-topics
+          uri: lb://people
+          predicates:
+            - Method=GET
+            - Path=/api/topics
+
         - id: get-people-faculties
           uri: lb://people
           predicates:

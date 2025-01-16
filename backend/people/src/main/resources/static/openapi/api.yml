@@ -15,6 +15,7 @@ tags:
   - name: Monitoring
   - name: People
   - name: Photos
+  - name: Interests
   - name: Faculties
   - name: Locations
 paths:
@@ -299,6 +300,61 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
+  /people/{person_id}/interests/{topic_id}:
+    put:
+      tags: [ Interests ]
+      security:
+        - bearerAuth: [ USER ]
+      parameters:
+        - $ref: "#/components/parameters/PersonIdPath"
+        - $ref: "#/components/parameters/TopicIdPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InterestPatch"
+      responses:
+        "204":
+          description: OK
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
+    delete:
+      tags: [ Interests ]
+      security:
+        - bearerAuth: [ USER ]
+      parameters:
+        - $ref: "#/components/parameters/PersonIdPath"
+        - $ref: "#/components/parameters/TopicIdPath"
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /people/{person_id}/photos:
     post:
       tags: [ Photos ]
@@ -392,6 +448,33 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
+  /topics:
+    get:
+      tags: [ Interests ]
+      summary: Get all topics
+      description: Returns all topics list
+      security:
+        - bearerAuth: [ USER ]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Topic"
+                maxItems: 512
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /faculties:
     get:
       tags: [ Faculties ]
@@ -409,6 +492,16 @@ paths:
                 items:
                   $ref: "#/components/schemas/Faculty"
                 maxItems: 512
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /locations:
     get:
       tags: [ Locations ]
@@ -426,6 +519,16 @@ paths:
                 items:
                   $ref: "#/components/schemas/Location"
                 maxItems: 512
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
 components:
   securitySchemes:
     bearerAuth:
@@ -440,6 +543,12 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/PersonId"
+    TopicIdPath:
+      name: topic_id
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/TopicId"
     PictureIdPath:
       name: picture_id
       in: path
@@ -640,17 +749,30 @@ components:
           $ref: "#/components/schemas/PictureId"
       required:
         - id
+    InterestLevel:
+      type: string
+      description: A level of interest
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+      example: 3
+    InterestPatch:
+      type: object
+      properties:
+        level:
+          $ref: "#/components/schemas/InterestLevel"
+      required:
+        - level
     Interest:
       type: object
       properties:
         topicId:
           $ref: "#/components/schemas/TopicId"
         level:
-          type: integer
-          description: A level of interest
-          format: int32
-          minimum: 1
-          maximum: 5
+          $ref: "#/components/schemas/InterestLevel"
       required:
         - topicId
         - level
@@ -672,8 +794,6 @@ components:
           pattern: ^[A-Z][a-z]{3,32}$
           maxLength: 32
           example: Programming
-        icon:
-          $ref: "#/components/schemas/Picture"
         color:
           type: string
           description: An RGB color in the hex format
@@ -683,7 +803,6 @@ components:
       required:
         - id
         - name
-        - icon
         - color
     LocationId:
       type: integer

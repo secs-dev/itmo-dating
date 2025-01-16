@@ -1,5 +1,6 @@
 package ru.ifmo.se.dating.people.model
 
+import ru.ifmo.se.dating.people.model.Person.Interest
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.validation.expect
 import ru.ifmo.se.dating.validation.expectInRange
@@ -8,6 +9,7 @@ import java.time.LocalDate
 
 sealed class PersonVariant {
     abstract val id: User.Id
+    abstract val interests: Set<Interest>
     abstract val pictureIds: List<Picture.Id>
     abstract val version: Person.Version
 }
@@ -20,6 +22,7 @@ data class Person(
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
     val locationId: Location.Id,
+    override val interests: Set<Interest>,
     override val pictureIds: List<Picture.Id>,
     override val version: Version,
     val isPublished: Boolean,
@@ -32,6 +35,19 @@ data class Person(
 
         companion object {
             private val regex = Regex("[A-Za-z,.'-]{2,32}")
+        }
+    }
+
+    data class Interest(
+        val topicId: Topic.Id,
+        val degree: Int,
+    ) {
+        init {
+            expectInRange("Level", degree, degreeRange)
+        }
+
+        companion object {
+            private val degreeRange = 1..5
         }
     }
 
@@ -48,6 +64,7 @@ data class Person(
         val lastName: Name? = null,
         val height: Int? = null,
         val birthday: LocalDate? = null,
+        override val interests: Set<Interest> = emptySet(),
         val facultyId: Faculty.Id? = null,
         val locationId: Location.Id? = null,
         override val pictureIds: List<Picture.Id> = emptyList(),
