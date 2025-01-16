@@ -4,7 +4,9 @@ import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.people.model.Picture
 import ru.ifmo.se.dating.people.storage.PictureContentStorage
 
-class LoggingPictureContentStorage(private val origin: PictureContentStorage) : PictureContentStorage {
+class LoggingPictureContentStorage(
+    private val origin: PictureContentStorage,
+) : PictureContentStorage {
     private val log = autoLog()
 
     override suspend fun upload(id: Picture.Id, content: Picture.Content) =

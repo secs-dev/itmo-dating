@@ -12,7 +12,10 @@ class LoggingAuthService(val origin: AuthService) : AuthService {
         runCatching { origin.authenticate(telegram) }
             .onSuccess { log.debug("Authenticated telegram user with id ${telegram.user.id}") }
             .onFailure { e ->
-                log.warn("Failed to authenticate telegram with id ${telegram.user.id}: ${e.message}")
+                buildString {
+                    append("Failed to authenticate telegram ")
+                    append("with id ${telegram.user.id}: ${e.message}")
+                }.let { log.warn(it) }
             }
             .getOrThrow()
 }

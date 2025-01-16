@@ -3,11 +3,7 @@ package ru.ifmo.se.dating.security.auth
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.MalformedJwtException
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import ru.ifmo.se.dating.exception.AuthenticationException
-import ru.ifmo.se.dating.security.key.Keys
 import java.security.PublicKey
 import java.time.Clock
 import java.util.*

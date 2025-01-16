@@ -59,5 +59,6 @@ VALUES
 --changeset vityaman:picture
 CREATE TABLE people.picture (
     id              serial          PRIMARY KEY,
-    is_referenced   boolean         NOT NULL
+    is_referenced   boolean         NOT NULL,
+    creation_moment timestamptz     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

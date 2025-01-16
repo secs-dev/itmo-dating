@@ -42,7 +42,9 @@ class LoggingAttitudeService(private val origin: AttitudeService) : AttitudeServ
 
     override fun suggestions(client: User.Id, limit: Int): Flow<User.Id> =
         runCatching { origin.suggestions(client, limit) }
-            .onSuccess { log.debug("Got no more than $limit suggestions for client with id $client") }
+            .onSuccess {
+                log.debug("Got no more than $limit suggestions for client with id $client")
+            }
             .onFailure { e ->
                 log.warn("Failed to retrieve suggestions for client with id $client: ${e.message}")
             }

@@ -24,4 +24,11 @@ class BasicPictureService(
         contentStorage.remove(id)
         recordStorage.delete(id)
     }
+
+    override suspend fun recover() {
+        recordStorage.selectAbandoned().collect {
+            contentStorage.remove(it.id)
+            recordStorage.delete(it.id)
+        }
+    }
 }

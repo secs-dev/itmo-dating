@@ -6,4 +6,5 @@ interface PictureService {
     suspend fun getById(id: Picture.Id): Picture.Content
     suspend fun save(content: Picture.Content): Picture.Id
     suspend fun remove(id: Picture.Id)
+    suspend fun recover()
 }
