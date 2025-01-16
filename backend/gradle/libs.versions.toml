@@ -75,5 +75,6 @@ org-postgresql-r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", 
 junit-junit = { module = "junit:junit", version.ref = "junit-junit" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "org-testcontainers" }
 org-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "org-testcontainers" }
+org-testcontainers-minio = { module = "org.testcontainers:minio", version.ref = "org-testcontainers" }
 org-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "org-testcontainers" }
 io-projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "io-projectreactor-reactor-test" }
