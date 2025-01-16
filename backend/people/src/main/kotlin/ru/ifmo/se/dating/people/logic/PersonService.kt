@@ -18,7 +18,7 @@ interface PersonService {
     data class Filter(
         val firstName: Regex?,
         val lastName: Regex?,
-        val height: IntRange?,
+        val height: IntRange,
         val birthday: ClosedRange<LocalDate>,
         val facultyId: Faculty.Id?,
         val updated: ClosedRange<OffsetDateTime>,

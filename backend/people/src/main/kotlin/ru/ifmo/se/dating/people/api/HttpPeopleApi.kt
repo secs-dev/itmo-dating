@@ -52,10 +52,7 @@ class HttpPeopleApi(
         updatedMax: OffsetDateTime?,
         sortBy: List<PersonSortingKeyMessage>?,
     ): ResponseEntity<Flow<PersonMessage>> {
-        if (listOfNotNull(
-                sortBy
-            ).isNotEmpty()
-        ) {
+        if (!sortBy.isNullOrEmpty()) {
             TODO("Unsupported GET /people query parameter was provided")
         }
 

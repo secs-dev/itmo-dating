@@ -18,7 +18,6 @@ import ru.ifmo.se.dating.people.storage.LocationStorage
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
 import ru.ifmo.se.dating.people.storage.jooq.mapping.isReady
-import ru.ifmo.se.dating.people.api.mapping.toModel
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
@@ -108,17 +107,23 @@ class JooqPersonStorage(
         page: Page,
         filter: PersonService.Filter,
     ): Flow<Person> = database.flow {
+        var cond = PERSON.READY_MOMENT.isNotNull
+
+        filter.firstName?.let { cond = cond.and(PERSON.FIRST_NAME.likeRegex(it.pattern)) }
+        filter.lastName?.let { cond = cond.and(PERSON.LAST_NAME.likeRegex(it.pattern)) }
+        cond = cond.and(PERSON.HEIGHT.ge(filter.height.first))
+        cond = cond.and(PERSON.HEIGHT.le(filter.height.last))
+        cond = cond.and(PERSON.BIRTHDAY.ge(filter.birthday.start))
+        cond = cond.and(PERSON.BIRTHDAY.le(filter.birthday.endInclusive))
+        cond = cond.and(PERSON.UPDATE_MOMENT.ge(filter.updated.start))
+        cond = cond.and(PERSON.UPDATE_MOMENT.le(filter.updated.endInclusive))
+
         selectFrom(PERSON)
-            .where(PERSON.READY_MOMENT.isNotNull)
+            .where(cond)
+            .offset(page.offset)
+            .limit(page.limit)
     }.map { it.enrichToModel() as Person }
-        .drop(page.offset)
-        .take(page.limit)
-        .filter { filter.firstName?.matches(it.firstName.text) ?: true }
-        .filter { filter.lastName?.matches(it.lastName.text) ?: true }
-        .filter { filter.height?.contains(it.height) ?: true }
-        .filter { filter.birthday.contains(it.birthday) }
         .filter { filter.facultyId == null || filter.facultyId == it.facultyId }
-        .filter { filter.updated.contains(it.updateMoment) }
         .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
         .filter { filter.picturesCount.contains(it.pictureIds.size) }
         .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
