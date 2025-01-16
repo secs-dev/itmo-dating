@@ -1,12 +1,12 @@
 package ru.ifmo.se.dating.people.model
 
 import ru.ifmo.se.dating.people.model.Person.Interest
-import ru.ifmo.se.dating.people.model.generated.ZodiacSignMessage
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.validation.expect
 import ru.ifmo.se.dating.validation.expectInRange
 import ru.ifmo.se.dating.validation.expectMatches
 import java.time.LocalDate
+import java.time.OffsetDateTime
 
 sealed class PersonVariant {
     abstract val id: User.Id
@@ -22,9 +22,10 @@ data class Person(
     val height: Int,
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
-    val locationId: Location.Id,
+    val location: Location,
     override val interests: Set<Interest>,
     override val pictureIds: List<Picture.Id>,
+    val updateMoment: OffsetDateTime,
     override val version: Version,
     val isPublished: Boolean,
 ) : PersonVariant() {
@@ -103,18 +104,18 @@ data class Person(
             val month = birthday.monthValue
             val day = birthday.dayOfMonth
             return when {
-                (month == 3 && day >= 21) || (month == 4 && day <= 19) -> Zodiac.ARIES
-                (month == 4) || (month == 5 && day <= 20) -> Zodiac.TAURUS
-                (month == 5) || (month == 6 && day <= 20) -> Zodiac.GEMINI
-                (month == 6) || (month == 7 && day <= 22) -> Zodiac.CANCER
-                (month == 7) || (month == 8 && day <= 22) -> Zodiac.LEO
-                (month == 8) || (month == 9 && day <= 22) -> Zodiac.VIRGO
-                (month == 9) || (month == 10 && day <= 22) -> Zodiac.LIBRA
-                (month == 10) || (month == 11 && day <= 21) -> Zodiac.SCORPIO
-                (month == 11) || (month == 12 && day <= 21) -> Zodiac.SAGITTARIUS
-                (month == 12) || (month == 1 && day <= 19) -> Zodiac.CAPRICORN
-                (month == 1) || (month == 2 && day <= 18) -> Zodiac.AQUARIUS
-                (month == 2) || (month == 3) -> Zodiac.PISCES
+                month == 3 && day >= 21 || month == 4 && day <= 19 -> Zodiac.ARIES
+                month == 4 || month == 5 && day <= 20 -> Zodiac.TAURUS
+                month == 5 || month == 6 && day <= 20 -> Zodiac.GEMINI
+                month == 6 || month == 7 && day <= 22 -> Zodiac.CANCER
+                month == 7 || month == 8 && day <= 22 -> Zodiac.LEO
+                month == 8 || month == 9 && day <= 22 -> Zodiac.VIRGO
+                month == 9 || month == 10 && day <= 22 -> Zodiac.LIBRA
+                month == 10 || month == 11 && day <= 21 -> Zodiac.SCORPIO
+                month == 11 || month == 12 && day <= 21 -> Zodiac.SAGITTARIUS
+                month == 12 || month == 1 && day <= 19 -> Zodiac.CAPRICORN
+                month == 1 || month == 2 && day <= 18 -> Zodiac.AQUARIUS
+                month == 2 || month == 3 -> Zodiac.PISCES
                 else -> throw AssertionError("Can't happen")
             }
         }
@@ -127,7 +128,7 @@ data class Person(
             height = height,
             birthday = birthday,
             facultyId = facultyId,
-            locationId = locationId,
+            locationId = location.id,
         )
     }
 }

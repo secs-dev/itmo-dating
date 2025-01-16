@@ -3,9 +3,6 @@ package ru.ifmo.se.dating.people.logic.basic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
@@ -72,14 +69,7 @@ class BasicPersonService(
     }.let { background.launch { outbox.process(id) } }.let { }
 
     override fun getFiltered(page: Page, filter: PersonService.Filter): Flow<Person> =
-        storage.selectAllReady()
-            .drop(page.offset)
-            .take(page.limit)
-            .filter { filter.firstName.matches(it.firstName.text) }
-            .filter { filter.lastName.matches(it.lastName.text) }
-            .filter { filter.height.contains(it.height) }
-            .filter { filter.birthday.contains(it.birthday) }
-            .filter { filter.faculty.isEmpty() || filter.faculty.contains(it.facultyId) }
+        storage.selectFilteredReady(page, filter)
 
     @Suppress("ThrowsCount")
     private fun validate(draft: Person.Draft) {
