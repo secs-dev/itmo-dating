@@ -30,7 +30,7 @@ fun Person.toMessage() = PersonMessage(
     facultyId = facultyId.number.toLong(),
     locationId = locationId.number.toLong(),
     interests = interests.map { it.toMessage() }.toSet(),
-    zodiac = ZodiacSignMessage.leo,
+    zodiac = zodiac.toMessage(),
     pictures = pictureIds.map { PictureMessage(id = it.number.toLong()) }.toSet()
 )
 
@@ -58,3 +58,18 @@ fun Person.Interest.toMessage(): InterestMessage =
         topicId = topicId.number.toLong(),
         level = InterestLevelMessage.forValue(degree.toString()),
     )
+
+fun Person.Zodiac.toMessage(): ZodiacSignMessage = when (this) {
+    Person.Zodiac.ARIES -> ZodiacSignMessage.aries
+    Person.Zodiac.TAURUS -> ZodiacSignMessage.taurus
+    Person.Zodiac.GEMINI -> ZodiacSignMessage.gemini
+    Person.Zodiac.CANCER -> ZodiacSignMessage.cancer
+    Person.Zodiac.LEO -> ZodiacSignMessage.leo
+    Person.Zodiac.VIRGO -> ZodiacSignMessage.virgo
+    Person.Zodiac.LIBRA -> ZodiacSignMessage.libra
+    Person.Zodiac.SCORPIO -> ZodiacSignMessage.scorpio
+    Person.Zodiac.SAGITTARIUS -> ZodiacSignMessage.sagittarius
+    Person.Zodiac.CAPRICORN -> ZodiacSignMessage.capricorn
+    Person.Zodiac.AQUARIUS -> ZodiacSignMessage.aquarius
+    Person.Zodiac.PISCES -> ZodiacSignMessage.pisces
+}
