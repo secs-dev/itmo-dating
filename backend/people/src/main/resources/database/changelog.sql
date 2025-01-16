@@ -77,4 +77,4 @@ VALUES
     ('Coding', '#A4C5EA'),
     ('Debugging', '#BCA9E1'),
     ('Compilers', '#E7ECA3'),
-    ('DBMS', '#98A7F2');
+    ('Databases', '#98A7F2');

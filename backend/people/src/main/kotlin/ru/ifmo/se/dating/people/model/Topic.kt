@@ -31,7 +31,7 @@ data class Topic(
     }
 
     init {
-        expectMatches("Hex", name, nameRegex)
+        expectMatches("Name", name, nameRegex)
     }
 
     companion object {
