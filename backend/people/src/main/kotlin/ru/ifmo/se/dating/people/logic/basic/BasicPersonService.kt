@@ -75,11 +75,16 @@ class BasicPersonService(
         storage.selectAllReady()
             .drop(page.offset)
             .take(page.limit)
-            .filter { filter.firstName.matches(it.firstName.text) }
-            .filter { filter.lastName.matches(it.lastName.text) }
-            .filter { filter.height.contains(it.height) }
+            .filter { filter.firstName?.matches(it.firstName.text) ?: true }
+            .filter { filter.lastName?.matches(it.lastName.text) ?: true }
+            .filter { filter.height?.contains(it.height) ?: true }
             .filter { filter.birthday.contains(it.birthday) }
-            .filter { filter.faculty.isEmpty() || filter.faculty.contains(it.facultyId) }
+            .filter { filter.facultyId == null || filter.facultyId == it.facultyId }
+            .filter { filter.updated.contains(it.updateMoment) }
+            .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
+            .filter { filter.picturesCount.contains(it.pictureIds.size) }
+            .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
+            .filter { it.interests.map { i -> i.topicId }.toSet().containsAll(filter.topicIds) }
 
     @Suppress("ThrowsCount")
     private fun validate(draft: Person.Draft) {

@@ -5,11 +5,14 @@ import org.jooq.generated.tables.records.PersonRecord
 import ru.ifmo.se.dating.people.model.*
 import ru.ifmo.se.dating.security.auth.User
 
+val PersonRecord.isReady get() = readyMoment != null
+
 fun PersonRecord.toModel(
+    location: Location?,
     interests: Set<Person.Interest>,
     pictureIds: List<Picture.Id>,
 ): PersonVariant =
-    if (readyMoment != null) {
+    if (isReady) {
         Person(
             id = User.Id(accountId),
             firstName = Person.Name(firstName!!),
@@ -18,8 +21,9 @@ fun PersonRecord.toModel(
             birthday = birthday!!,
             interests = interests,
             facultyId = Faculty.Id(facultyId!!),
-            locationId = Location.Id(locationId!!),
+            location = location!!,
             pictureIds = pictureIds,
+            updateMoment = updateMoment,
             version = Person.Version(version!!),
             isPublished = isPublished!!,
         )

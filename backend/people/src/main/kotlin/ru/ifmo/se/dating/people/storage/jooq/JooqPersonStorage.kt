@@ -12,11 +12,15 @@ import org.jooq.impl.DSL.currentOffsetDateTime
 import org.jooq.impl.DSL.not
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
+import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.InterestStorage
+import ru.ifmo.se.dating.people.storage.LocationStorage
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
+import ru.ifmo.se.dating.people.storage.jooq.mapping.isReady
+import ru.ifmo.se.dating.people.api.mapping.toModel
 import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.FetchPolicy
@@ -31,6 +35,7 @@ class JooqPersonStorage(
     private val txEnv: TxEnv,
     private val pictureRecords: PictureRecordStorage,
     private val interests: InterestStorage,
+    private val locations: LocationStorage,
 ) : PersonStorage {
     @Suppress("CyclomaticComplexMethod")
     override suspend fun upsert(draft: Person.Draft): PersonVariant = txEnv.transactional {
@@ -105,29 +110,32 @@ class JooqPersonStorage(
             .where(PERSON.READY_MOMENT.isNotNull)
     }.map { it.enrichToModel() as Person }
 
-    private suspend fun PersonRecord.enrichToModel(): PersonVariant {
+    private suspend fun PersonRecord.enrichToModel(): PersonVariant = coroutineScope {
         val userId = User.Id(accountId)
 
-        val (interests, pictureIds) = coroutineScope {
-            val interests = async {
-                interests
-                    .selectInterestsByPersonId(userId)
-                    .toSet(mutableSetOf())
-            }
-
-            val pictureIds = async {
-                pictureRecords
-                    .selectByOwner(userId)
-                    .toList(mutableListOf())
-                    .map { it.id }
-            }
-
-            Pair(interests.await(), pictureIds.await())
+        val interests = async {
+            interests
+                .selectInterestsByPersonId(userId)
+                .toSet(mutableSetOf())
         }
 
-        return toModel(
-            interests = interests,
-            pictureIds = pictureIds,
+        val pictureIds = async {
+            pictureRecords
+                .selectByOwner(userId)
+                .toList(mutableListOf())
+                .map { it.id }
+        }
+
+        val location = if (isReady) {
+            async { locations.selectById(Location.Id(locationId!!.toInt())) }
+        } else {
+            null
+        }
+
+        toModel(
+            location = location?.await(),
+            interests = interests.await(),
+            pictureIds = pictureIds.await(),
         )
     }
 }

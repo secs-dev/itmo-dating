@@ -7,6 +7,7 @@ import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.exception.AuthorizationException
+import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
 import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.api.generated.PeopleApiDelegate
@@ -15,10 +16,7 @@ import ru.ifmo.se.dating.people.api.mapping.toModel
 import ru.ifmo.se.dating.people.logic.InterestService
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.logic.PictureService
-import ru.ifmo.se.dating.people.model.Faculty
-import ru.ifmo.se.dating.people.model.Person
-import ru.ifmo.se.dating.people.model.Picture
-import ru.ifmo.se.dating.people.model.Topic
+import ru.ifmo.se.dating.people.model.*
 import ru.ifmo.se.dating.people.model.generated.*
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.spring.security.auth.SpringSecurityContext
@@ -32,6 +30,7 @@ class HttpPeopleApi(
     private val interestService: InterestService,
     private val pictureService: PictureService,
 ) : PeopleApiDelegate {
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "MagicNumber")
     override fun peopleGet(
         offset: Long,
         limit: Long,
@@ -44,8 +43,8 @@ class HttpPeopleApi(
         heightMax: Int?,
         birthdayMin: LocalDate?,
         birthdayMax: LocalDate?,
-        zodiac: List<ZodiacSignMessage>?,
-        faculty: List<Long>?,
+        zodiac: ZodiacSignMessage?,
+        facultyId: Long?,
         latitude: Double?,
         longitude: Double?,
         radius: Int?,
@@ -54,29 +53,48 @@ class HttpPeopleApi(
         sortBy: List<PersonSortingKeyMessage>?,
     ): ResponseEntity<Flow<PersonMessage>> {
         if (listOfNotNull(
-                picturesCountMin,
-                picturesCountMax,
-                topicId,
-                zodiac,
-                latitude,
-                longitude,
-                radius,
-                updatedMin,
-                updatedMax,
                 sortBy
             ).isNotEmpty()
         ) {
             TODO("Unsupported GET /people query parameter was provided")
         }
 
+        val area = when (listOfNotNull(latitude, longitude, radius).size) {
+            0 -> {
+                null
+            }
+
+            3 -> {
+                Area(
+                    center = Coordinates(
+                        latitude = latitude!!,
+                        longitude = longitude!!
+                    ),
+                    radius = radius!!.toDouble(),
+                )
+            }
+
+            else -> {
+                buildString {
+                    append("Expected a complete area, but got ")
+                    append("(latitude: $latitude, longitude: $longitude, radius: $radius)")
+                }.let { throw InvalidValueException(it) }
+            }
+        }
+
         return personService.getFiltered(
             Page(offset = offset.toInt(), limit = limit.toInt()),
             PersonService.Filter(
-                firstName = firstName?.let { Regex(it) } ?: Regex(".*"),
-                lastName = lastName?.let { Regex(it) } ?: Regex(".*"),
+                firstName = firstName?.let { Regex(it) },
+                lastName = lastName?.let { Regex(it) },
                 height = (heightMin ?: Int.MIN_VALUE)..(heightMax ?: Int.MAX_VALUE),
                 birthday = (birthdayMin ?: LocalDate.MIN)..(birthdayMax ?: LocalDate.MAX),
-                faculty = (faculty ?: listOf()).map { Faculty.Id(it.toInt()) }.toSet(),
+                facultyId = facultyId?.let { Faculty.Id(it.toInt()) },
+                updated = (updatedMin ?: OffsetDateTime.MIN)..(updatedMax ?: OffsetDateTime.MAX),
+                area = area,
+                picturesCount = (picturesCountMin ?: 0)..(picturesCountMax ?: Int.MAX_VALUE),
+                zodiac = zodiac?.toModel(),
+                topicIds = topicId?.map { Topic.Id(it.toInt()) }?.toSet() ?: emptySet(),
             ),
         ).map { it.toMessage() }.let { ResponseEntity.ok(it) }
     }
