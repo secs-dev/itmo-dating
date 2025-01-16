@@ -63,3 +63,18 @@ CREATE TABLE people.picture (
     is_referenced   boolean         NOT NULL,
     creation_moment timestamptz     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+--changeset vityaman:topic
+CREATE TABLE people.topic (
+    id              serial          PRIMARY KEY,
+    name            varchar(32)     NOT NULL UNIQUE,
+    color           varchar(8)      NOT NULL UNIQUE
+);
+
+INSERT INTO people.topic (name, color)
+VALUES
+    ('Programming', '#9DE19A'),
+    ('Coding', '#A4C5EA'),
+    ('Debugging', '#BCA9E1'),
+    ('Compilers', '#E7ECA3'),
+    ('DBMS', '#98A7F2');
