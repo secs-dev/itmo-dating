@@ -49,6 +49,7 @@ class BasicPersonService(
 
         if (
             variant is Person.Draft && expected.copy(
+                interests = variant.interests,
                 pictureIds = variant.pictureIds,
                 version = variant.version,
             ) != variant

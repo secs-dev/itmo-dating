@@ -10,7 +10,7 @@ fun PersonPatchMessage.toModel(id: Int) = Person.Draft(
     lastName = lastName?.let { Person.Name(it) },
     height = height,
     birthday = birthday,
-    interests = interests?.map { it.toModel() }?.toSet() ?: emptySet(),
+    interests = emptySet(),
     facultyId = facultyId?.let { Faculty.Id(it.toInt()) },
     locationId = locationId?.let { Location.Id(it.toInt()) },
 )
