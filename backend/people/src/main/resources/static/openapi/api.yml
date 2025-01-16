@@ -669,11 +669,11 @@ components:
         - height
         - birthday
         - updated
-        - -first_name
-        - -last_name
-        - -height
-        - -birthday
-        - -updated
+        - first_name_desc
+        - last_name_desc
+        - height_desc
+        - birthday_desc
+        - updated_desc
     ZodiacSign:
       type: string
       description: Astrological sign, caclulated based on a birthday

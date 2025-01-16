@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.pagging.Page
+import ru.ifmo.se.dating.pagging.SortingKey
+import ru.ifmo.se.dating.people.logic.PersonField
 import ru.ifmo.se.dating.people.logic.PersonFilter
 import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
@@ -114,7 +116,11 @@ class JooqPersonStorage(
     }.let { }
 
     @Suppress("LongMethod", "CyclomaticComplexMethod", "CognitiveComplexMethod")
-    override fun selectFilteredReady(page: Page, filter: PersonFilter): Flow<Person> =
+    override fun selectFilteredReady(
+        page: Page,
+        filter: PersonFilter,
+        sortedBy: List<SortingKey<PersonField>>,
+    ): Flow<Person> =
         database.flow {
             var cond = PERSON.READY_MOMENT.isNotNull
 
@@ -169,8 +175,25 @@ class JooqPersonStorage(
                 cond = cond.and(DSL.value(topicId.number).`in`(interestIds))
             }
 
+            val orderByClause = sortedBy.map { sortingKey ->
+                val field = when (sortingKey.key) {
+                    PersonField.FIRST_NAME -> PERSON.FIRST_NAME
+                    PersonField.LAST_NAME -> PERSON.LAST_NAME
+                    PersonField.HEIGHT -> PERSON.HEIGHT
+                    PersonField.BIRTHDAY -> PERSON.BIRTHDAY
+                    PersonField.UPDATED -> PERSON.UPDATE_MOMENT
+                }
+
+                if (sortingKey.isReversed) {
+                    field.desc()
+                } else {
+                    field.asc()
+                }
+            }
+
             selectFrom(PERSON)
                 .where(cond)
+                .orderBy(orderByClause)
                 .offset(page.offset)
                 .limit(page.limit)
                 .also { log.warn("Executed SQL: ${it.sql}") }

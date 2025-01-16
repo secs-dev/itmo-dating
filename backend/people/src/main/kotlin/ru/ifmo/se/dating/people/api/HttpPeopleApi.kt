@@ -53,10 +53,6 @@ class HttpPeopleApi(
         updatedMax: OffsetDateTime?,
         sortBy: List<PersonSortingKeyMessage>?,
     ): ResponseEntity<Flow<PersonMessage>> {
-        if (!sortBy.isNullOrEmpty()) {
-            TODO("Unsupported GET /people query parameter was provided")
-        }
-
         val area = when (listOfNotNull(latitude, longitude, radius).size) {
             0 -> {
                 null
@@ -81,8 +77,8 @@ class HttpPeopleApi(
         }
 
         return personService.getFiltered(
-            Page(offset = offset.toInt(), limit = limit.toInt()),
-            PersonFilter(
+            page = Page(offset = offset.toInt(), limit = limit.toInt()),
+            filter = PersonFilter(
                 firstName = firstName?.let { Regex(it) },
                 lastName = lastName?.let { Regex(it) },
                 height = (heightMin ?: Int.MIN_VALUE)..(heightMax ?: Int.MAX_VALUE),
@@ -95,6 +91,7 @@ class HttpPeopleApi(
                 zodiac = zodiac?.toModel(),
                 topicIds = topicId?.map { Topic.Id(it.toInt()) }?.toSet() ?: emptySet(),
             ),
+            sortedBy = sortBy?.map { it.toModel() } ?: emptyList(),
         ).map { it.toMessage() }.let { ResponseEntity.ok(it) }
     }
 

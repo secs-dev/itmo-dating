@@ -8,7 +8,9 @@ import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
 import ru.ifmo.se.dating.exception.orThrowNotFound
 import ru.ifmo.se.dating.pagging.Page
+import ru.ifmo.se.dating.pagging.SortingKey
 import ru.ifmo.se.dating.people.exception.IncompletePersonException
+import ru.ifmo.se.dating.people.logic.PersonField
 import ru.ifmo.se.dating.people.logic.PersonFilter
 import ru.ifmo.se.dating.people.logic.PersonOutbox
 import ru.ifmo.se.dating.people.logic.PersonService
@@ -69,8 +71,12 @@ class BasicPersonService(
         storage.setIsPublished(id, false)
     }.let { background.launch { outbox.process(id) } }.let { }
 
-    override fun getFiltered(page: Page, filter: PersonFilter): Flow<Person> =
-        storage.selectFilteredReady(page, filter)
+    override fun getFiltered(
+        page: Page,
+        filter: PersonFilter,
+        sortedBy: List<SortingKey<PersonField>>,
+    ): Flow<Person> =
+        storage.selectFilteredReady(page, filter, sortedBy)
 
     @Suppress("ThrowsCount")
     private fun validate(draft: Person.Draft) {

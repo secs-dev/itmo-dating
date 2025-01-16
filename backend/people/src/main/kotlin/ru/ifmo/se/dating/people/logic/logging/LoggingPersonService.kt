@@ -3,6 +3,8 @@ package ru.ifmo.se.dating.people.logic.logging
 import kotlinx.coroutines.flow.Flow
 import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.pagging.Page
+import ru.ifmo.se.dating.pagging.SortingKey
+import ru.ifmo.se.dating.people.logic.PersonField
 import ru.ifmo.se.dating.people.logic.PersonFilter
 import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.model.Person
@@ -36,8 +38,12 @@ class LoggingPersonService(private val origin: PersonService) : PersonService {
             .onFailure { e -> log.warn("Failed to delete a person with id $id", e) }
             .getOrThrow()
 
-    override fun getFiltered(page: Page, filter: PersonFilter): Flow<Person> =
-        runCatching { origin.getFiltered(page, filter) }
+    override fun getFiltered(
+        page: Page,
+        filter: PersonFilter,
+        sortedBy: List<SortingKey<PersonField>>,
+    ): Flow<Person> =
+        runCatching { origin.getFiltered(page, filter, sortedBy) }
             .onSuccess {
                 log.debug("Retrieved people at offset ${page.offset} and limit ${page.limit}")
             }
