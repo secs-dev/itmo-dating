@@ -15,6 +15,7 @@ tags:
   - name: Monitoring
   - name: People
   - name: Photos
+  - name: Topics
   - name: Faculties
   - name: Locations
 paths:
@@ -392,6 +393,33 @@ paths:
           $ref: "#/components/responses/503"
         default:
           $ref: "#/components/responses/Unexpected"
+  /topics:
+    get:
+      tags: [ Topics ]
+      summary: Get all topics
+      description: Returns all topics list
+      security:
+        - bearerAuth: [ USER ]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Topic"
+                maxItems: 512
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /faculties:
     get:
       tags: [ Faculties ]
@@ -409,6 +437,16 @@ paths:
                 items:
                   $ref: "#/components/schemas/Faculty"
                 maxItems: 512
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
   /locations:
     get:
       tags: [ Locations ]
@@ -426,6 +464,16 @@ paths:
                 items:
                   $ref: "#/components/schemas/Location"
                 maxItems: 512
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        default:
+          $ref: "#/components/responses/Unexpected"
 components:
   securitySchemes:
     bearerAuth:
@@ -672,8 +720,6 @@ components:
           pattern: ^[A-Z][a-z]{3,32}$
           maxLength: 32
           example: Programming
-        icon:
-          $ref: "#/components/schemas/Picture"
         color:
           type: string
           description: An RGB color in the hex format
@@ -683,7 +729,6 @@ components:
       required:
         - id
         - name
-        - icon
         - color
     LocationId:
       type: integer
