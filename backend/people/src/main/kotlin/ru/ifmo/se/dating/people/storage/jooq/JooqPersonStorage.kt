@@ -2,16 +2,14 @@ package ru.ifmo.se.dating.people.storage.jooq
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.flow.toSet
+import kotlinx.coroutines.flow.*
 import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.jooq.impl.DSL.currentOffsetDateTime
 import org.jooq.impl.DSL.not
 import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
+import ru.ifmo.se.dating.pagging.Page
 import ru.ifmo.se.dating.people.model.Location
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
@@ -21,6 +19,7 @@ import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
 import ru.ifmo.se.dating.people.storage.jooq.mapping.isReady
 import ru.ifmo.se.dating.people.api.mapping.toModel
+import ru.ifmo.se.dating.people.logic.PersonService
 import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.FetchPolicy
@@ -105,10 +104,25 @@ class JooqPersonStorage(
         }
     }.let { }
 
-    override fun selectAllReady(): Flow<Person> = database.flow {
+    override fun selectFilteredReady(
+        page: Page,
+        filter: PersonService.Filter,
+    ): Flow<Person> = database.flow {
         selectFrom(PERSON)
             .where(PERSON.READY_MOMENT.isNotNull)
     }.map { it.enrichToModel() as Person }
+        .drop(page.offset)
+        .take(page.limit)
+        .filter { filter.firstName?.matches(it.firstName.text) ?: true }
+        .filter { filter.lastName?.matches(it.lastName.text) ?: true }
+        .filter { filter.height?.contains(it.height) ?: true }
+        .filter { filter.birthday.contains(it.birthday) }
+        .filter { filter.facultyId == null || filter.facultyId == it.facultyId }
+        .filter { filter.updated.contains(it.updateMoment) }
+        .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
+        .filter { filter.picturesCount.contains(it.pictureIds.size) }
+        .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
+        .filter { it.interests.map { i -> i.topicId }.toSet().containsAll(filter.topicIds) }
 
     private suspend fun PersonRecord.enrichToModel(): PersonVariant = coroutineScope {
         val userId = User.Id(accountId)

@@ -3,9 +3,6 @@ package ru.ifmo.se.dating.people.logic.basic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import ru.ifmo.se.dating.exception.ConflictException
 import ru.ifmo.se.dating.exception.InvalidValueException
@@ -72,19 +69,7 @@ class BasicPersonService(
     }.let { background.launch { outbox.process(id) } }.let { }
 
     override fun getFiltered(page: Page, filter: PersonService.Filter): Flow<Person> =
-        storage.selectAllReady()
-            .drop(page.offset)
-            .take(page.limit)
-            .filter { filter.firstName?.matches(it.firstName.text) ?: true }
-            .filter { filter.lastName?.matches(it.lastName.text) ?: true }
-            .filter { filter.height?.contains(it.height) ?: true }
-            .filter { filter.birthday.contains(it.birthday) }
-            .filter { filter.facultyId == null || filter.facultyId == it.facultyId }
-            .filter { filter.updated.contains(it.updateMoment) }
-            .filter { filter.area == null || filter.area.contains(it.location.coordinates) }
-            .filter { filter.picturesCount.contains(it.pictureIds.size) }
-            .filter { filter.zodiac == null || filter.zodiac == it.zodiac }
-            .filter { it.interests.map { i -> i.topicId }.toSet().containsAll(filter.topicIds) }
+        storage.selectFilteredReady(page, filter)
 
     @Suppress("ThrowsCount")
     private fun validate(draft: Person.Draft) {
