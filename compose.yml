@@ -13,6 +13,8 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     tty: true
     hostname: authik-0.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:18000:8080/tcp"
     depends_on:
       database:
         condition: service_healthy
@@ -22,6 +24,8 @@ services:
     extends:
       service: authik-0
     hostname: authik-1.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:18001:8080/tcp"
     profiles:
       - reliability
   matchmaker-0:
@@ -36,6 +40,8 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     tty: true
     hostname: matchmaker-0.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:18010:8080/tcp"
     depends_on:
       database:
         condition: service_healthy
@@ -45,6 +51,8 @@ services:
     extends:
       service: matchmaker-0
     hostname: matchmaker-1.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:18011:8080/tcp"
     profiles:
       - reliability
   people-0:
@@ -61,6 +69,8 @@ services:
       KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
     tty: true
     hostname: people-0.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:18020:8080/tcp"
     depends_on:
       database:
         condition: service_healthy
@@ -72,6 +82,8 @@ services:
     extends:
       service: people-0
     hostname: people-1.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:18021:8080/tcp"
     profiles:
       - reliability
   object-storage:
