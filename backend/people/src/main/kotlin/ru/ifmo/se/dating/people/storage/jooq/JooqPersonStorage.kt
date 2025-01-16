@@ -1,8 +1,11 @@
 package ru.ifmo.se.dating.people.storage.jooq
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.toSet
 import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.jooq.impl.DSL.currentOffsetDateTime
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Repository
 import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
+import ru.ifmo.se.dating.people.storage.InterestStorage
 import ru.ifmo.se.dating.people.storage.PersonStorage
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
 import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
@@ -26,6 +30,7 @@ class JooqPersonStorage(
     private val database: JooqDatabase,
     private val txEnv: TxEnv,
     private val pictureRecords: PictureRecordStorage,
+    private val interests: InterestStorage,
 ) : PersonStorage {
     @Suppress("CyclomaticComplexMethod")
     override suspend fun upsert(draft: Person.Draft): PersonVariant = txEnv.transactional {
@@ -100,10 +105,29 @@ class JooqPersonStorage(
             .where(PERSON.READY_MOMENT.isNotNull)
     }.map { it.enrichToModel() as Person }
 
-    private suspend fun PersonRecord.enrichToModel() =
-        pictureRecords
-            .selectByOwner(User.Id(accountId))
-            .toList(mutableListOf())
-            .map { it.id }
-            .let { ids -> toModel(pictureIds = ids) }
+    private suspend fun PersonRecord.enrichToModel(): PersonVariant {
+        val userId = User.Id(accountId)
+
+        val (interests, pictureIds) = coroutineScope {
+            val interests = async {
+                interests
+                    .selectInterestsByPersonId(userId)
+                    .toSet(mutableSetOf())
+            }
+
+            val pictureIds = async {
+                pictureRecords
+                    .selectByOwner(userId)
+                    .toList(mutableListOf())
+                    .map { it.id }
+            }
+
+            Pair(interests.await(), pictureIds.await())
+        }
+
+        return toModel(
+            interests = interests,
+            pictureIds = pictureIds,
+        )
+    }
 }

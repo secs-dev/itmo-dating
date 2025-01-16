@@ -78,3 +78,11 @@ VALUES
     ('Debugging', '#BCA9E1'),
     ('Compilers', '#E7ECA3'),
     ('Databases', '#98A7F2');
+
+--changeset vityaman:interest
+CREATE TABLE people.person_interest (
+    person_id       integer         NOT NULL REFERENCES people.person(account_id),
+    topic_id        integer         NOT NULL REFERENCES people.topic(id),
+    degree          integer         NOT NULL,
+    PRIMARY KEY (person_id, topic_id)
+);
