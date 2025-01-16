@@ -12,9 +12,9 @@ class BasicPictureService(
     override suspend fun getById(id: Picture.Id): Picture.Content =
         contentStorage.download(id)
 
-    override suspend fun save(content: Picture.Content): Picture.Id {
-        val picture = recordStorage.insert()
-        contentStorage.upload(picture.id, content)
+    override suspend fun save(draft: Picture.Draft): Picture.Id {
+        val picture = recordStorage.insert(draft.ownerId)
+        contentStorage.upload(picture.id, draft.content)
         recordStorage.setIsReferenced(picture.id, isReferenced = true)
         return picture.id
     }

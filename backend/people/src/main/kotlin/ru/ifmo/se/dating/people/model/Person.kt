@@ -8,6 +8,7 @@ import java.time.LocalDate
 
 sealed class PersonVariant {
     abstract val id: User.Id
+    abstract val pictureIds: List<Picture.Id>
     abstract val version: Person.Version
 }
 
@@ -19,6 +20,7 @@ data class Person(
     val birthday: LocalDate,
     val facultyId: Faculty.Id,
     val locationId: Location.Id,
+    override val pictureIds: List<Picture.Id>,
     override val version: Version,
     val isPublished: Boolean,
 ) : PersonVariant() {
@@ -48,6 +50,7 @@ data class Person(
         val birthday: LocalDate? = null,
         val facultyId: Faculty.Id? = null,
         val locationId: Location.Id? = null,
+        override val pictureIds: List<Picture.Id> = emptyList(),
         override val version: Version = Version(0),
     ) : PersonVariant() {
         init {

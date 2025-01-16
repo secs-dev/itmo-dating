@@ -5,12 +5,15 @@ import kotlinx.coroutines.flow.onEach
 import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.people.model.Picture
 import ru.ifmo.se.dating.people.storage.PictureRecordStorage
+import ru.ifmo.se.dating.security.auth.User
 
-class LoggingPictureRecordStorage(private val origin: PictureRecordStorage) : PictureRecordStorage {
+class LoggingPictureRecordStorage(
+    private val origin: PictureRecordStorage,
+) : PictureRecordStorage by origin {
     private val log = autoLog()
 
-    override suspend fun insert(): Picture =
-        runCatching { origin.insert() }
+    override suspend fun insert(ownerId: User.Id): Picture =
+        runCatching { origin.insert(ownerId) }
             .onSuccess { log.info("Inserted a picture record with id ${it.id}") }
             .onFailure { e -> log.warn("Failed to insert a picture record", e) }
             .getOrThrow()
@@ -40,6 +43,10 @@ class LoggingPictureRecordStorage(private val origin: PictureRecordStorage) : Pi
             .onFailure { log.warn("Failed to select abandoned pictures") }
             .getOrThrow()
             .onEach {
-                log.info("Considering an abandoned picture with id ${it.id}...")
+                buildString {
+                    append("Considering an abandoned picture ")
+                    append("with id ${it.id} and ")
+                    append("owner id ${it.ownerId}...")
+                }.let { log.info(it) }
             }
 }

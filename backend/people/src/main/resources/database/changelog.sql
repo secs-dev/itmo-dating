@@ -59,6 +59,7 @@ VALUES
 --changeset vityaman:picture
 CREATE TABLE people.picture (
     id              serial          PRIMARY KEY,
+    owner_id        integer         NOT NULL REFERENCES people.person(account_id),
     is_referenced   boolean         NOT NULL,
     creation_moment timestamptz     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

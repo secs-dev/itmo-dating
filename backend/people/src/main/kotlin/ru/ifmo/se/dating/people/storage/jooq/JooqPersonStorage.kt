@@ -2,6 +2,8 @@ package ru.ifmo.se.dating.people.storage.jooq
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import org.jooq.generated.tables.records.PersonRecord
 import org.jooq.generated.tables.references.PERSON
 import org.jooq.impl.DSL.currentOffsetDateTime
 import org.jooq.impl.DSL.not
@@ -10,6 +12,7 @@ import ru.ifmo.se.dating.exception.NotFoundException
 import ru.ifmo.se.dating.people.model.Person
 import ru.ifmo.se.dating.people.model.PersonVariant
 import ru.ifmo.se.dating.people.storage.PersonStorage
+import ru.ifmo.se.dating.people.storage.PictureRecordStorage
 import ru.ifmo.se.dating.people.storage.jooq.mapping.toModel
 import ru.ifmo.se.dating.security.auth.User
 import ru.ifmo.se.dating.storage.FetchPolicy
@@ -17,10 +20,12 @@ import ru.ifmo.se.dating.storage.TxEnv
 import ru.ifmo.se.dating.storage.jooq.JooqDatabase
 import ru.ifmo.se.dating.storage.jooq.withPolicy
 
+@Suppress("TooManyFunctions")
 @Repository
 class JooqPersonStorage(
     private val database: JooqDatabase,
     private val txEnv: TxEnv,
+    private val pictureRecords: PictureRecordStorage,
 ) : PersonStorage {
     @Suppress("CyclomaticComplexMethod")
     override suspend fun upsert(draft: Person.Draft): PersonVariant = txEnv.transactional {
@@ -48,7 +53,7 @@ class JooqPersonStorage(
                 .also { q -> draft.locationId?.number?.let { q.set(PERSON.LOCATION_ID, it) } }
                 .returning()
         }
-    }.toModel()
+    }.enrichToModel()
 
     override suspend fun setReadyMoment(id: User.Id) {
         database.maybe {
@@ -74,7 +79,7 @@ class JooqPersonStorage(
             selectFrom(PERSON)
                 .where(PERSON.ACCOUNT_ID.eq(id.number))
                 .withPolicy(policy)
-        }?.toModel()
+        }?.enrichToModel()
 
     override fun selectNotSentIds(limit: Int): Flow<User.Id> = database.flow {
         select(PERSON.ACCOUNT_ID)
@@ -93,5 +98,12 @@ class JooqPersonStorage(
     override fun selectAllReady(): Flow<Person> = database.flow {
         selectFrom(PERSON)
             .where(PERSON.READY_MOMENT.isNotNull)
-    }.map { it.toModel() as Person }
+    }.map { it.enrichToModel() as Person }
+
+    private suspend fun PersonRecord.enrichToModel() =
+        pictureRecords
+            .selectByOwner(User.Id(accountId))
+            .toList(mutableListOf())
+            .map { it.id }
+            .let { ids -> toModel(pictureIds = ids) }
 }

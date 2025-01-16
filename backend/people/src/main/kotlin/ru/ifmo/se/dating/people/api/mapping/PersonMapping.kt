@@ -33,6 +33,7 @@ fun Person.toMessage() = PersonMessage(
     locationId = locationId.number.toLong(),
     interests = emptySet(),
     zodiac = ZodiacSignMessage.leo,
+    pictures = pictureIds.map { PictureMessage(id = it.number.toLong()) }.toSet()
 )
 
 fun Person.Draft.toMessage() = PersonDraftMessage(
@@ -45,4 +46,5 @@ fun Person.Draft.toMessage() = PersonDraftMessage(
     facultyId = facultyId?.number?.toLong(),
     locationId = locationId?.number?.toLong(),
     interests = emptySet(),
+    pictures = pictureIds.map { PictureMessage(id = it.number.toLong()) }.toSet()
 )

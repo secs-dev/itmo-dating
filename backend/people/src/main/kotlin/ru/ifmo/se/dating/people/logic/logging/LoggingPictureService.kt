@@ -13,10 +13,17 @@ class LoggingPictureService(private val origin: PictureService) : PictureService
             .onFailure { e -> log.warn("Failed to retrieve picture with id $id: ${e.message}") }
             .getOrThrow()
 
-    override suspend fun save(content: Picture.Content): Picture.Id =
-        runCatching { origin.save(content) }
-            .onSuccess { pictureId -> log.info("Saved picture with id $pictureId") }
-            .onFailure { e -> log.warn("Failed to save picture: ${e.message}") }
+    override suspend fun save(draft: Picture.Draft): Picture.Id =
+        runCatching { origin.save(draft) }
+            .onSuccess { pictureId ->
+                log.info("Saved picture with id $pictureId for an owner with id ${draft.ownerId}")
+            }
+            .onFailure { e ->
+                buildString {
+                    append("Failed to save picture for an ")
+                    append("owner with id ${draft.ownerId}: ${e.message}")
+                }.let { log.warn(it) }
+            }
             .getOrThrow()
 
     override suspend fun remove(id: Picture.Id) =
