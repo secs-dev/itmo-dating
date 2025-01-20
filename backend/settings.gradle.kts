@@ -12,4 +12,5 @@ include(
     ":matchmaker",
     ":people",
     ":starter-service-discovery",
+    ":starter-tls",
 )

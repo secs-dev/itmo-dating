@@ -13,9 +13,9 @@ VALIDITY=1
 PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
 
 INTERNAL_INSTALL_PATH="src/main/resources/keystore"
-FOUNDATION_INSTALL_PATH="foundation/$INTERNAL_INSTALL_PATH"
-GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
+STARTER_TLS_INSTALL_PATH="starter-tls/$INTERNAL_INSTALL_PATH"
 STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/$INTERNAL_INSTALL_PATH"
+GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
 CONSUL_INSTALL_PATH="consul/config"
 
 function generate() {
@@ -88,14 +88,13 @@ function copy() {
 function distribute() {
   echo "Phase: Distribute"
 
-  echo "Copying package to the backend..."
-  copy "$FOUNDATION_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  echo "Copying package to the starter-tls..."
+  copy "$STARTER_TLS_INSTALL_PATH" "$ALIAS_BACKEND.p12"
 
   echo "Copying package to the starter-service-discovery..."
   copy "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
   echo "Copying package to the gateway..."
-  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
   copy "$GATEWAY_INSTALL_PATH" "$ALIAS_EXTERNAL.p12"
 
   echo "Copying keys to the consul..."
@@ -115,14 +114,14 @@ function remove() {
 function clear() {
   echo "Phase: Clear"
 
-  echo "Removing package from the foundation..."
-  remove "$FOUNDATION_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  echo "Removing package from the starter-tls..."
+  remove "$STARTER_TLS_INSTALL_PATH" "$ALIAS_BACKEND.p12"
 
   echo "Removing package from the starter-service-discovery..."
   remove "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
   echo "Removing package from the gateway..."
-  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_EXTERNAL.p12"
 
   echo "Removing keys from the consul..."
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"

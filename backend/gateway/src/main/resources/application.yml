@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-service-discovery.yml
+    import: application-service-discovery.yml,application-tls.yml
   application:
     name: gateway
   cloud:
@@ -141,12 +141,6 @@ server:
     key-store-password: ${KEY_STORE_PASSWORD}
     protocol: TLSv1.3
     enabled-protocols: TLSv1.3
-client:
-  ssl:
-    key-store-type: PKCS12
-    key-store: classpath:keystore/itmo-dating-backend.p12
-    key-store-password: ${KEY_STORE_PASSWORD}
-    protocol: TLSv1.3
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
