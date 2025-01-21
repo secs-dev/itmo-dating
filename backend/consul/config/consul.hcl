@@ -22,9 +22,10 @@ data_dir = "/opt/consul/data"
 
 ui = true
 
-verify_incoming = true
-verify_outgoing = true
-verify_server_hostname = true
+verify_incoming = false
+verify_outgoing = false
+verify_server_hostname = false
+
 tls_min_version = "TLSv1_3"
 key_file = "/consul/config/itmo-dating-backend.key"
 cert_file = "/consul/config/itmo-dating-backend.crt"

@@ -10,5 +10,5 @@ dependencies {
 detekt {
     buildUponDefaultConfig = true
     allRules = false
-    config.setFrom(file("$rootDir/config/detekt.yml"))
+    config.setFrom(file("$rootDir/script/detekt.yml"))
 }

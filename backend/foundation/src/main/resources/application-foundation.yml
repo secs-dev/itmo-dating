@@ -1,8 +1,23 @@
 spring:
   config:
-    import: application-service-discovery.yml,application-tls.yml
+    import: application-service-discovery.yml,application-tls.yml,configserver:https://config.dating.se.ifmo.ru:8080
+  cloud:
+    config:
+      uri: https://config.dating.se.ifmo.ru:8080
+      token: ${ITMO_DATING_VAULT_TOKEN}
+      tls:
+        enabled: true
+        trust-store: classpath:keystore/itmo-dating-backend.p12
+        trust-store-password: ${ITMO_DATING_KEY_STORE_PASSWORD}
   datasource:
+    url: jdbc:postgresql://${itmo-dating.postgres.host}:5432/${itmo-dating.postgres.db}
+    username: ${itmo-dating.postgres.username}
+    password: ${itmo-dating.postgres.password}
     driver-class-name: org.postgresql.Driver
+  r2dbc:
+    url: r2dbc:postgresql://${itmo-dating.postgres.host}:5432/${itmo-dating.postgres.db}
+    username: ${itmo-dating.postgres.username}
+    password: ${itmo-dating.postgres.password}
   liquibase:
     liquibase-schema: ${spring.application.name}
     change-log: database/changelog.sql
@@ -12,11 +27,6 @@ springdoc:
   swagger-ui:
     url: /openapi/api.yml
     path: /swagger-ui.html
-security:
-  auth:
-    token:
-      sign:
-        public: ${TOKEN_SIGN_KEY_PUBLIC}
 logging:
   level:
     web: INFO

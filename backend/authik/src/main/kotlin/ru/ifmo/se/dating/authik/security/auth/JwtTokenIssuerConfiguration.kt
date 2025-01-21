@@ -14,10 +14,10 @@ class JwtTokenIssuerConfiguration {
     fun jwtTokenIssuer(
         clock: Clock,
 
-        @Value("\${security.auth.token.sign.private}")
+        @Value("\${itmo-dating.auth.jwt.private-key}")
         privateSignKey: String,
 
-        @Value("\${security.auth.token.duration}")
+        @Value("\${itmo-dating.auth.jwt.duration}")
         duration: Duration,
     ) = LoggingTokenIssuer(
         JwtTokenIssuer(

@@ -10,13 +10,14 @@ ALIAS_BACKEND="$ALIAS-backend"
 ALIAS_EXTERNAL="$ALIAS-external"
 
 VALIDITY=1
-PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
+PASSWORD="$ITMO_DATING_KEYSTORE_PASSWORD"
 
 INTERNAL_INSTALL_PATH="src/main/resources/keystore"
 STARTER_TLS_INSTALL_PATH="starter-tls/$INTERNAL_INSTALL_PATH"
 STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/$INTERNAL_INSTALL_PATH"
 GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
 CONSUL_INSTALL_PATH="consul/config"
+VAULT_INSTALL_PATH="vault/config"
 
 function generate() {
   echo "Phase: Generate"
@@ -101,6 +102,11 @@ function distribute() {
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
+
+  echo "Copying keys to the vault..."
+  copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.key"
+  copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.crt"
+  copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 }
 
 function remove() {
@@ -127,6 +133,11 @@ function clear() {
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
+
+  echo "Removing keys from the vault..."
+  remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.key"
+  remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.crt"
+  remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 
   echo "Removing local outputs..."
   rm -rf "$ALIAS_BACKEND.crt"

@@ -28,3 +28,5 @@ DNS.8 = people-0.dating.se.ifmo.ru
 DNS.9 = people-1.dating.se.ifmo.ru
 DNS.10 = people-2.dating.se.ifmo.ru
 DNS.11 = server.dc1.consul
+DNS.12 = vault.dating.se.ifmo.ru
+DNS.13 = config.dating.se.ifmo.ru
