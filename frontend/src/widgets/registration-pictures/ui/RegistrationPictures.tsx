@@ -1,30 +1,45 @@
 import { Section } from '@telegram-apps/telegram-ui'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AddPictureButton } from '@/entities/add-picture-button'
 import { RegistrationPictureElement } from '@/entities/registration-picture-element'
 import { UploadedFile } from '../model/UploadedFile.ts'
 import { handleUploadingPhotos } from '@/features/upload-pictures/api/uploadPictures.ts'
-import { deletePicture } from '@/features/upload-pictures/api/deletePicture.ts'
-import { RegistrationData } from '@/entities'
+import { deletePictureInUpload } from '@/features/upload-pictures/api/deletePictureInUpload.ts'
+import {
+  $registrationDataStore,
+  registrationDataFx,
+} from '@/entities/registration-data/api/registrationDataStore.ts'
+import { useEffectOnce } from '@/shared/api'
+import { getPicture } from '@/features/get-picture/api/getPicture.ts'
+import { $authStore } from '@/features/authentication/api/authFx.ts'
+import { deletePicture } from '@/features/delete-picture/api/deletePicture.ts'
 
-interface RegistrationPicturesProps {
-  registrationData: RegistrationData
-  changeRD: React.Dispatch<React.SetStateAction<RegistrationData>>
-}
-
-export const RegistrationPictures = (
-  registrationPicturesProps: RegistrationPicturesProps,
-) => {
+export const RegistrationPictures = () => {
   // TODO spinner of loading pictures const [files, setFiles] = useState<Array<File>>([]);
   const [uploadedFiles, setUploadedFiles] = useState<Array<UploadedFile>>([])
 
+  useEffectOnce(() => {
+    $registrationDataStore.getState().pictures?.forEach(async (p) => {
+      const pictureBase = await getPicture(
+        Number($authStore.getState().userId),
+        p.id,
+      )
+      setUploadedFiles((prevState) => [
+        ...prevState,
+        { id: p.id, src: pictureBase },
+      ])
+    })
+  })
+
   useEffect(() => {
-    registrationPicturesProps.changeRD((previous) => ({
-      ...previous,
+    console.log('picture changed state', $registrationDataStore.getState())
+
+    registrationDataFx({
+      ...$registrationDataStore.getState(),
       pictures: uploadedFiles.map((f) => {
-        return { id: f.id, small: f.src, medium: f.src, large: f.src }
+        return { id: f.id }
       }),
-    }))
+    })
   }, [uploadedFiles])
 
   return (
@@ -43,9 +58,10 @@ export const RegistrationPictures = (
             key={uploadedFile.id}
             id={uploadedFile.id}
             src={uploadedFile.src}
-            onDeleteButtonClick={(id: number) =>
-              deletePicture({ uploadedFiles, setUploadedFiles }, id)
-            }
+            onDeleteButtonClick={(id: number) => {
+              deletePicture(id)
+              deletePictureInUpload({ uploadedFiles, setUploadedFiles }, id)
+            }}
           />
         ))}
         <AddPictureButton

@@ -2,7 +2,7 @@ import { Button, Card, Image, Section } from '@telegram-apps/telegram-ui'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell'
-import { Person } from '@/entities/person/model/Person.ts'
+import { Person, PersonV2 } from '@/entities/person/model/Person.ts'
 import { useState } from 'react'
 import { useEffectOnce } from '@/shared/api'
 import { Icon28Edit } from '@telegram-apps/telegram-ui/dist/icons/28/edit'
@@ -63,7 +63,7 @@ export const ProfileMenu = () => {
   const [editButtonClicked, setEditButtonClicked] = useState<boolean>(false)
   useEffectOnce(() => {
     getUser(Number($authStore.getState().userId)).then((userResp) => {
-      const user = userResp.data
+      const user = userResp.data as PersonV2
       setActualPerson({
         id: user.userId,
         zodiac: user.zodiac,
@@ -78,7 +78,7 @@ export const ProfileMenu = () => {
             large: 'https://avatars.githubusercontent.com/u/93886405',
           },
         ],
-        interests: user.interests,
+        interests: [], //user.interests,
         height: user.height,
         birthday: new Date(user.birthday),
         faculty: `${user.facultyId}`,

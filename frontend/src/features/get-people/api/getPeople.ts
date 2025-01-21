@@ -2,7 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import { backendUrl } from '@/shared/api'
 import { $authStore } from '@/features/authentication/api/authFx.ts'
-import {SearchPerson} from "@/entities/person/model/Person.ts";
+import { SearchPerson } from '@/entities/person/model/Person.ts'
 
 export function getPeople(
   setFoundPeople: React.Dispatch<React.SetStateAction<Array<SearchPerson>>>,
@@ -34,7 +34,7 @@ export function getPeople(
       // updated_min: "2024-04-14T13:32:42Z",
       // updated_max: "2024-04-14T13:32:42Z",
       // sort_by: []
-    }
+    },
   }
   axios
     .get(url, config)

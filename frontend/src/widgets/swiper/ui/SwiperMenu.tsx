@@ -1,5 +1,5 @@
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react'
-import { Person } from '@/entities/person/model/Person.ts'
+import { Person, PersonV2 } from '@/entities/person/model/Person.ts'
 import { useEffect, useState } from 'react'
 import { Card, Image, Section } from '@telegram-apps/telegram-ui'
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell'
@@ -176,7 +176,7 @@ export const SwiperMenu = () => {
   useEffect(() => {
     for (const personId of personIdArray) {
       getUser(personId).then((personResponse) => {
-        const person = personResponse.data
+        const person = personResponse.data as PersonV2
         const newUser: Person = {
           id: person.userId,
           zodiac: person.zodiac,

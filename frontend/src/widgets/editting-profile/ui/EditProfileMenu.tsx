@@ -1,4 +1,4 @@
-import { Person } from '@/entities/person/model/Person.ts'
+import { Person, PersonV2 } from '@/entities/person/model/Person.ts'
 import { useState } from 'react'
 import { useEffectOnce } from '@/shared/api'
 import {
@@ -75,7 +75,7 @@ export const EditProfileMenu = ({
 
   useEffectOnce(() => {
     getUser(Number($authStore.getState().userId)).then((userResp) => {
-      const user = userResp.data
+      const user = userResp.data as PersonV2
       setActualPerson({
         id: user.userId,
         zodiac: user.zodiac,
@@ -83,7 +83,7 @@ export const EditProfileMenu = ({
         firstName: user.firstName,
         lastName: user.lastName,
         pictures: [],
-        interests: user.interests,
+        interests: [], //user.interests,
         height: user.height,
         birthday: new Date(user.birthday),
         faculty: `${user.facultyId}`,

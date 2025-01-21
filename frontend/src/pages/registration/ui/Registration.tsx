@@ -1,8 +1,7 @@
 import { RegistrationCommonInfo } from '@/widgets'
 import { Placeholder, Section } from '@telegram-apps/telegram-ui'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { fetchTgUser } from '@/features/fetch-tg-user/api/fetchTgUser.ts'
-import { RegistrationData } from '@/entities'
 import {
   setMainButtonParams,
   setMainButtonVisible,
@@ -15,6 +14,16 @@ import { router } from '@/app/routes/api'
 import { RegistrationInterests } from '@/widgets/registration-interests'
 import { useEffectOnce } from '@/shared/api'
 import { patchPerson } from '@/features/patch-person/api/patchPerson.ts'
+import { PersonStatusMessage } from '@/entities/person/model/Status.ts'
+import { getUser } from '@/features/get_user/api/getUser.ts'
+import { $authStore } from '@/features/authentication/api/authFx.ts'
+import { PersonDraftV2 } from '@/entities/person/model/Person.ts'
+import {
+  $registrationDataStore,
+  registrationDataFx,
+} from '@/entities/registration-data/api/registrationDataStore.ts'
+import { deleteTopic } from '@/features/delete-topic/api/deleteTopic.ts'
+import { putTopic } from '@/features/put-topic/api/putTopic.ts'
 
 export const Registration = () => {
   const registrationOrder = [
@@ -26,121 +35,170 @@ export const Registration = () => {
   const [key, changeKey] = useState(0)
 
   const tgUser = fetchTgUser()
-  const [registrationData, changeRD] = useState<RegistrationData>({
-    tgId: tgUser?.id?.toString() || null,
-    name: tgUser?.firstName || null,
-    surname: tgUser?.lastName || null,
-    height: 175,
-    facultyId: null,
-    birthday: null,
-    pictures: [],
-    interests: [],
-    locationId: null,
+
+  useEffectOnce(() => {
+    registrationDataFx({
+      ...$registrationDataStore.getState(),
+      firstName: tgUser?.firstName || '',
+      lastName: tgUser?.lastName || '',
+    })
+      .then()
+      .catch()
   })
-
-  const mainButtonFun = () => {
-    changeKey((prev) => prev + 1)
-  }
-  const backButtonFun = () => {
-    changeKey((prev) => prev - 1)
-  }
-
-  const backButtonHomeFun = () => {
-    changeKey(0)
-    setBackButtonVisible(false)
-    setMainButtonVisible(false)
-    router.back()
-  }
 
   useEffectOnce(() => {
     setMainButtonParams('Next', false, true)
-    setMainButtonVisible(true)
-    setBackButtonVisible(true)
+    setButtons(0)
+
+    getUser(Number($authStore.getState().userId)).then((userResponse) => {
+      const user = userResponse.data as PersonDraftV2
+      console.log('User gotten')
+      console.log(user)
+      const prevState = $registrationDataStore.getState()
+
+      registrationDataFx({
+        ...prevState,
+        firstName: user.firstName || prevState.firstName,
+        lastName: user.lastName || prevState.lastName,
+        height: user.height || prevState.height,
+        facultyId: user.facultyId || prevState.facultyId,
+        birthday: user.birthday ? new Date(user.birthday) : prevState.birthday,
+        pictures:
+          user.pictures?.map((p) => {
+            return { id: p.id }
+          }) || [],
+        interests:
+          user.interests?.map((i) => {
+            return { topicId: i.topicId, level: Number(i.level.toString()) }
+          }) || [],
+        locationId: user.locationId || prevState.locationId,
+      })
+        .then()
+        .catch()
+    })
   })
 
-  function setButtons(localKey: number) {
-    console.log(localKey)
-    switch (localKey) {
-      case 0: {
-        const offBack = setBackButtonOnClick(() => {
-          backButtonHomeFun()
-          offBack()
-          offMain()
-        })
-        const offMain = setMainButtonOnClick(() => {
-          mainButtonFun()
-          offMain()
-          offBack()
-        })
-        setMainButtonVisible(true)
-        break
+  function patch(status: PersonStatusMessage): Promise<void> {
+    switch (status) {
+      case PersonStatusMessage.draft: {
+        //FIXME after fixing topic putting
+        ;[1, 2, 3, 4, 5].forEach((t) => deleteTopic(t))
+
+        $registrationDataStore
+          .getState()
+          .interests?.forEach((i) => putTopic(i.topicId, i.level))
+        return patchPerson($registrationDataStore.getState(), status)
+          .then((_) => console.log('Patch person draft status'))
+          .catch((e) =>
+            console.log(`Patch person draft error\n${e.toString()}`),
+          )
       }
-      // case registrationOrder.length: {
-      //   const offBack = setBackButtonOnClick(() => {
-      //     backButtonFun()
-      //     offBack()
-      //   })
-      //   setMainButtonVisible(false)
-      //   break
-      // }
+      case PersonStatusMessage.ready: {
+        return patchPerson($registrationDataStore.getState(), status)
+          .then((_) => {
+            console.log('Patch person ready status')
+          })
+          .catch((e) => {
+            console.log(`Patch person ready error\n${e.toString()}`)
+          })
+      }
       default: {
-        const offBack = setBackButtonOnClick(() => {
-          backButtonFun()
-          offBack()
-          offMain()
-        })
-        const offMain = setMainButtonOnClick(() => {
-          mainButtonFun()
-          offMain()
-          offBack()
-        })
-        setMainButtonVisible(true)
-        break
+        throw Error('Unknown status of person status')
       }
     }
   }
 
-  useEffect(() => {
-    if (key === registrationOrder.length) {
-      patchPerson(registrationData, 'ready')
-        .then((_) => {
+  function setButtons(localKey: number) {
+    switch (localKey) {
+      case 0: {
+        const offBack = setBackButtonOnClick(() => {
+          setBackButtonVisible(false)
+          setMainButtonVisible(false)
+          patch(PersonStatusMessage.draft).then().catch()
           router.back()
+          offBack()
+          offMain()
         })
-        .catch((e) => {
-          console.log(e)
-          changeKey(0)
+        const offMain = setMainButtonOnClick(() => {
+          changeKey(1)
+          setButtons(1)
+          patch(PersonStatusMessage.draft).then().catch()
+          offMain()
+          offBack()
         })
-    } else {
-      patchPerson(registrationData, 'draft')
-        .then((x) => console.log(x))
-        .catch((e) => console.log(e))
+        setBackButtonVisible(true)
+        setMainButtonVisible(true)
+        break
+      }
+      case registrationOrder.length - 1: {
+        const offBack = setBackButtonOnClick(() => {
+          changeKey(localKey - 1)
+          setButtons(localKey - 1)
+          patch(PersonStatusMessage.draft).then().catch()
+          offBack()
+          offMain()
+        })
+        const offMain = setMainButtonOnClick(() => {
+          patch(PersonStatusMessage.draft).then(() =>
+            patch(PersonStatusMessage.ready)
+              .then(() => router.back())
+              .catch(() => {
+                changeKey(0)
+                setButtons(0)
+              }),
+          )
+          offMain()
+          offBack()
+        })
+        setMainButtonVisible(true)
+        setBackButtonVisible(true)
+        break
+      }
+      default: {
+        const offBack = setBackButtonOnClick(() => {
+          changeKey(localKey - 1)
+          setButtons(localKey - 1)
+          patch(PersonStatusMessage.draft).then().catch()
+          offBack()
+          offMain()
+        })
+        const offMain = setMainButtonOnClick(() => {
+          changeKey(localKey + 1)
+          setButtons(localKey + 1)
+          patch(PersonStatusMessage.draft).then().catch()
+          offMain()
+          offBack()
+        })
+        setMainButtonVisible(true)
+        setBackButtonVisible(true)
+        break
+      }
     }
-    setButtons(key)
-  }, [key])
+  }
 
   function renderSwitchWidget(key: number) {
     switch (registrationOrder[key]) {
       case 'registration-common': {
         return (
           <RegistrationCommonInfo
-            registrationData={registrationData}
-            changeRD={changeRD}
+          // registrationData={registrationData}
+          // changeRD={changeRD}
           />
         )
       }
       case 'registration-pictures': {
         return (
           <RegistrationPictures
-            registrationData={registrationData}
-            changeRD={changeRD}
+          // registrationData={registrationData}
+          // changeRD={changeRD}
           />
         )
       }
       case 'registration-interests': {
         return (
           <RegistrationInterests
-            registrationData={registrationData}
-            changeRD={changeRD}
+          // registrationData={registrationData}
+          // changeRD={changeRD}
           />
         )
       }

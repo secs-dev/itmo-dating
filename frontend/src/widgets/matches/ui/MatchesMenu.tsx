@@ -1,5 +1,5 @@
 import { Card, Image, Section } from '@telegram-apps/telegram-ui'
-import { Person } from '@/entities/person/model/Person.ts'
+import { Person, PersonV2 } from '@/entities/person/model/Person.ts'
 import { useEffect, useState } from 'react'
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -167,7 +167,7 @@ export const MatchesMenu = () => {
   useEffect(() => {
     for (const personId of matchesId) {
       getUser(personId).then((personResponse) => {
-        const person = personResponse.data
+        const person = personResponse.data as PersonV2
         const newUser: Person = {
           id: person.userId,
           zodiac: person.zodiac,

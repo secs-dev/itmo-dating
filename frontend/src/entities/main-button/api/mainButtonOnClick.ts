@@ -15,11 +15,3 @@ export function removeMainButtonOnClick(fn: VoidFunction) {
     offMainButtonClick(fn)
   }
 }
-
-export function setMainButtonOnAndOffClick(fn: VoidFunction) {
-  const fun = () => {
-    fn()
-    removeMainButtonOnClick(fun)
-  }
-  setMainButtonOnClick(fun)
-}

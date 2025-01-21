@@ -10,8 +10,6 @@ interface SendPictureProps {
   setUploadedFiles: React.Dispatch<React.SetStateAction<Array<UploadedFile>>>
 }
 
-let globalPhotoIterator = 0
-
 export function handleUploadingPhotos(
   { setUploadedFiles }: SendPictureProps,
   file: File,
@@ -30,7 +28,10 @@ export function handleUploadingPhotos(
     .post<PictureMessage>(url, file, config)
     .then(async (response) => {
       const resp = response.data as PictureMessage
-      const pictureBase = await getPicture(Number($authStore.getState().userId), resp.id)
+      const pictureBase = await getPicture(
+        Number($authStore.getState().userId),
+        resp.id,
+      )
 
       setUploadedFiles((prevState) => [
         ...prevState,
@@ -39,15 +40,7 @@ export function handleUploadingPhotos(
     })
     .catch((error) => {
       console.error('Error uploading files: ', error)
-      //TODO remove after integration with backend
-      setUploadedFiles((prevState) => [
-        ...prevState,
-        {
-          id: globalPhotoIterator,
-          src: 'https://avatars.githubusercontent.com/u/93886405',
-        },
-      ])
-      globalPhotoIterator++
+      throw Error(error)
     })
 
   // const formData = new FormData()
