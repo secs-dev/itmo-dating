@@ -105,7 +105,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     tty: true
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${ITMO_DATING_POSTGRES_USER?:err}" ]
       interval: 1s
       timeout: 1s
       retries: 16
@@ -115,6 +115,7 @@ services:
     build:
       context: ./backend/gateway
     environment:
+      ITMO_DATING_EXT_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     ports:
