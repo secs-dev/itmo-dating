@@ -11,10 +11,10 @@ class MinIOInitializer :
 
     override fun initialize(ctx: ConfigurableApplicationContext) {
         TestPropertyValues.of(
-            "storage.s3.url=${minio.endpoint}",
-            "storage.s3.port=${minio.port}",
-            "storage.s3.username=${minio.username}",
-            "storage.s3.password=${minio.password}",
+            "itmo-dating.s3.url=${minio.endpoint}",
+            "itmo-dating.s3.port=${minio.port}",
+            "itmo-dating.s3.username=${minio.username}",
+            "itmo-dating.s3.password=${minio.password}",
         ).applyTo(ctx.environment)
     }
 }

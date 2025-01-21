@@ -10,7 +10,7 @@ import ru.ifmo.se.dating.matchmaker.client.model.generated.PersonUpdateMessage
 
 @Component
 class MatchmakerApi(
-    @Value("\${service.matchmaker.url}")
+    @Value("\${itmo-dating.matchmaker.url}")
     private val url: String,
 
     @LoadBalanced

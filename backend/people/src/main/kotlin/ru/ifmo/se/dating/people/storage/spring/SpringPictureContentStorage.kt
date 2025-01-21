@@ -11,7 +11,7 @@ import ru.ifmo.se.dating.people.storage.minio.MinioPictureContentStorage
 class SpringPictureContentStorage(
     minio: MinioClient,
 
-    @Value("\${storage.s3.bucket.profile-photos}")
+    @Value("\${itmo-dating.s3.bucket.profile-photos}")
     bucket: String,
 ) : PictureContentStorage by
 LoggingPictureContentStorage(

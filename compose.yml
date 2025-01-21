@@ -53,6 +53,7 @@ services:
     build:
       context: ./backend/people
     environment:
+      ITMO_DATING_VAULT_TOKEN: ${ITMO_DATING_VAULT_TOKEN?:err}
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: people-0.dating.se.ifmo.ru

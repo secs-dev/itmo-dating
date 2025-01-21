@@ -16,16 +16,16 @@ class MinioClientConfiguration {
     @Bean
     @Suppress("LongParameterList")
     fun minioClient(
-        @Value("\${storage.s3.url}")
+        @Value("\${itmo-dating.s3.host}")
         url: String,
 
-        @Value("\${storage.s3.port}")
+        @Value("\${itmo-dating.s3.port}")
         port: Int,
 
-        @Value("\${storage.s3.username}")
+        @Value("\${itmo-dating.s3.username}")
         username: String,
 
-        @Value("\${storage.s3.password}")
+        @Value("\${itmo-dating.s3.password}")
         password: String,
     ): MinioClient = MinioClient.builder()
         .endpoint(url, port, isSecure)
