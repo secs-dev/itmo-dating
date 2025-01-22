@@ -17,7 +17,7 @@ acl {
 }
 
 limits {
-  http_max_conns_per_client = 400
+  http_max_conns_per_client = 2000
 }
 
 data_dir = "/opt/consul/data"

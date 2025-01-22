@@ -1,16 +1,10 @@
 import { retrieveLaunchParams } from '@telegram-apps/sdk'
 import { authFx, prepareInitDataRaw } from '@/features'
+import { AuthState } from '@/entities'
 
-export function authenticate() {
+export function authenticate(): Promise<AuthState> {
   const { initDataRaw } = retrieveLaunchParams()
   const { tgInitDataRaw, hash } = prepareInitDataRaw(initDataRaw)
 
-  authFx({ string: tgInitDataRaw, hash: hash })
-    .then(() => {
-      console.log('auth success')
-    })
-    .catch((reason) => {
-      console.log('auth error')
-      console.log(reason)
-    })
+  return authFx({ string: tgInitDataRaw, hash: hash })
 }

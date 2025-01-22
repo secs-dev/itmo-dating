@@ -40,7 +40,7 @@ const fillAuthState = (response: AuthResponse): AuthState => {
   return {
     token: response.access,
     loading: false,
-    tgId: '-1',
+    userId: JSON.parse(atob(response.access.split('.')[1])).user_id,
     isAuthenticated: true,
     error: null,
   }
