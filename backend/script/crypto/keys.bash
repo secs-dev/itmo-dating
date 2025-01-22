@@ -18,6 +18,7 @@ STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/$INTERNAL_INST
 GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
 CONSUL_INSTALL_PATH="consul/config"
 VAULT_INSTALL_PATH="vault/config"
+HAPROXY_INSTALL_PATH="haproxy/config"
 
 function generate() {
   echo "Phase: Generate"
@@ -74,8 +75,11 @@ function generate() {
     -destkeystore "$ALIAS_BACKEND.jks" \
     -deststorepass "$PASSWORD"
 
-  echo "Copying PKCS12 as external certificate"
+  echo "Copying PKCS12 as external certificate..."
   cp "$ALIAS_BACKEND.p12" "$ALIAS_EXTERNAL.p12"
+
+  echo "Creating unified .pem..."
+  cat "$ALIAS_BACKEND.crt" "$ALIAS_BACKEND.key" > "$ALIAS_BACKEND.pem"
 }
 
 function copy() {
@@ -107,6 +111,10 @@ function distribute() {
   copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.key"
   copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
+
+  echo "Copying keys to the HAProxy..."
+  copy "$HAPROXY_INSTALL_PATH" "$ALIAS_BACKEND.pem"
+  copy "$HAPROXY_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 }
 
 function remove() {
@@ -126,18 +134,22 @@ function clear() {
   echo "Removing package from the starter-service-discovery..."
   remove "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
-  echo "Removing package from the gateway..."
+  echo "Removing package from the Gateway..."
   remove "$GATEWAY_INSTALL_PATH" "$ALIAS_EXTERNAL.p12"
 
-  echo "Removing keys from the consul..."
+  echo "Removing keys from the Consul..."
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 
-  echo "Removing keys from the vault..."
+  echo "Removing keys from the Vault..."
   remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.key"
   remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
+
+  echo "Removing keys from the HAProxy..."
+  remove "$HAPROXY_INSTALL_PATH" "$ALIAS_BACKEND.pem"
+  remove "$HAPROXY_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 
   echo "Removing local outputs..."
   rm -rf "$ALIAS_BACKEND.crt"
