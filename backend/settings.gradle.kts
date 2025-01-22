@@ -8,8 +8,10 @@ include(
     ":foundation",
     ":foundation-test",
     ":gateway",
+    ":config",
     ":authik",
     ":matchmaker",
     ":people",
     ":starter-service-discovery",
+    ":starter-tls",
 )

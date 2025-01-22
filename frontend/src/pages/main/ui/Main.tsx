@@ -7,6 +7,8 @@ import { Icon28Edit } from '@telegram-apps/telegram-ui/dist/icons/28/edit'
 import { Icon28AddCircle } from '@telegram-apps/telegram-ui/dist/icons/28/add_circle'
 import { MatchesMenu } from '@/widgets/matches/ui/MatchesMenu.tsx'
 import { ProfileMenu } from '@/widgets/profile/ui/ProfileMenu.tsx'
+import { Icon24QR } from '@telegram-apps/telegram-ui/dist/icons/24/qr'
+import { AdminPanel } from '@/widgets/admin-panel/ui/AdminPanel.tsx'
 
 interface Tab {
   id: number
@@ -32,6 +34,12 @@ const tabs: Tab[] = [
     text: 'Profile',
     Icon: <Icon28Edit />,
     tabContent: <ProfileMenu />,
+  },
+  {
+    id: 3,
+    text: 'Admin panel',
+    Icon: <Icon24QR />,
+    tabContent: <AdminPanel />,
   },
 ]
 export const Main = () => {

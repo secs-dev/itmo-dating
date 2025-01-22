@@ -12,16 +12,12 @@ import { getFaculties } from '@/features/get-faculties/api/getFaculties.ts'
 import { Faculty } from '@/entities/registration-data/model/faculty.ts'
 import { Location } from '@/entities/registration-data/model/Location.ts'
 import { getLocations } from '@/features/get-locations/api/getLocations.ts'
+import {
+  $registrationDataStore,
+  registrationDataFx,
+} from '@/entities/registration-data/api/registrationDataStore.ts'
 
-interface RegistrationCommonInfoProps {
-  registrationData: RegistrationData
-  changeRD: React.Dispatch<React.SetStateAction<RegistrationData>>
-}
-
-export const RegistrationCommonInfo = ({
-  registrationData,
-  changeRD,
-}: RegistrationCommonInfoProps) => {
+export const RegistrationCommonInfo = () => {
   const actualDate = new Date()
   const [day, setDay] = useState<number>(actualDate.getDay())
   const [month, setMonth] = useState<number>(actualDate.getMonth())
@@ -34,11 +30,47 @@ export const RegistrationCommonInfo = ({
     getLocations(setLocations)
   })
 
+  const [registrationData, setRegistrationData] = useState<RegistrationData>(
+    $registrationDataStore.getState(),
+  )
+
+  const z = registrationDataFx.doneData.watch((state) => {
+    console.log('regData changed')
+    setRegistrationData(state)
+    z.unsubscribe()
+  })
+
   useEffect(() => {
-    changeRD((previous) => ({
-      ...previous,
+    if (!registrationData.facultyId && faculties.length > 0)
+      // changeRD((prevState) => {
+      //   return { ...prevState, facultyId: faculties[0].id }
+      // })
+      registrationDataFx({
+        ...$registrationDataStore.getState(),
+        facultyId: faculties[0].id,
+      })
+  }, [faculties])
+
+  useEffect(() => {
+    if (!registrationData.locationId && locations.length > 0)
+      // changeRD((prevState) => {
+      //   return { ...prevState, locationId: locations[0].id }
+      // })
+      registrationDataFx({
+        ...$registrationDataStore.getState(),
+        facultyId: locations[0].id,
+      })
+  }, [locations])
+
+  useEffect(() => {
+    // changeRD((previous) => ({
+    //   ...previous,
+    //   birthday: new Date(year, month, day),
+    // }))
+    registrationDataFx({
+      ...$registrationDataStore.getState(),
       birthday: new Date(year, month, day),
-    }))
+    })
   }, [day, month, year])
 
   return (
@@ -46,18 +78,26 @@ export const RegistrationCommonInfo = ({
       <List>
         <Input
           header="Name"
-          value={registrationData.name || ''}
+          value={registrationData.firstName || ''}
           required={true}
           onChange={(e) =>
-            changeRD((previous) => ({ ...previous, name: e.target.value }))
+            // changeRD((previous) => ({ ...previous, firstName: e.target.value }))
+            registrationDataFx({
+              ...$registrationDataStore.getState(),
+              firstName: e.target.value,
+            })
           }
         />
         <Input
           header="Surname"
-          value={registrationData.surname || ''}
+          value={registrationData.lastName || ''}
           required={true}
           onChange={(e) =>
-            changeRD((previous) => ({ ...previous, surname: e.target.value }))
+            // changeRD((previous) => ({ ...previous, lastName: e.target.value }))
+            registrationDataFx({
+              ...$registrationDataStore.getState(),
+              lastName: e.target.value,
+            })
           }
         />
         <Section header={`Your height ${registrationData.height} cm`}>
@@ -65,7 +105,11 @@ export const RegistrationCommonInfo = ({
             step={1}
             defaultValue={Number(registrationData.height)}
             onChange={(e) =>
-              changeRD((previous) => ({ ...previous, height: e }))
+              // changeRD((previous) => ({ ...previous, height: e }))
+              registrationDataFx({
+                ...$registrationDataStore.getState(),
+                height: e,
+              })
             }
             min={50}
             max={300}
@@ -74,8 +118,12 @@ export const RegistrationCommonInfo = ({
         <Select
           header="Faculty"
           onChange={(e) =>
-            changeRD((previous) => {
-              return { ...previous, facultyId: Number(e.target.value) }
+            // changeRD((previous) => {
+            //   return { ...previous, facultyId: Number(e.target.value) }
+            // })
+            registrationDataFx({
+              ...$registrationDataStore.getState(),
+              facultyId: Number(e.target.value),
             })
           }
         >
@@ -130,8 +178,12 @@ export const RegistrationCommonInfo = ({
         <Select
           header="Location"
           onChange={(e) =>
-            changeRD((previous) => {
-              return { ...previous, locationId: Number(e.target.value) }
+            // changeRD((previous) => {
+            //   return { ...previous, locationId: Number(e.target.value) }
+            // })
+            registrationDataFx({
+              ...$registrationDataStore.getState(),
+              locationId: Number(e.target.value),
             })
           }
         >

@@ -27,7 +27,7 @@ jobs:
         uses: stoplightio/spectral-action@latest
         with:
           file_glob: 'backend/*/src/main/resources/static/openapi/api.yml'
-          spectral_ruleset: backend/config/.spectral.yaml
+          spectral_ruleset: backend/script/.spectral.yaml
 
       - name: Setup up JDK 22
         uses: actions/setup-java@v4
@@ -39,7 +39,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Generate Key Pair
-        run: bash config/crypto/keys.bash generate test
+        run: bash script/crypto/keys.bash generate test
 
       - name: Build
         run: gradle build

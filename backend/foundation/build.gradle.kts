@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     api(project(":starter-service-discovery"))
+    api(project(":starter-tls"))
 
     api(libs.org.springframework.boot.spring.boot)
     api(libs.org.springframework.boot.spring.boot.starter.webflux)
@@ -16,7 +17,7 @@ dependencies {
     api(libs.org.springframework.spring.web)
     api(libs.org.springframework.spring.context)
 
-    api(libs.org.springframework.cloud.spring.cloud.starter.consul.discovery)
+    api(libs.org.springframework.cloud.spring.cloud.starter.config)
 
     api(libs.org.springdoc.springdoc.openapi.starter.webflux.ui)
 

@@ -1,4 +1,4 @@
-import { Person } from '@/entities/person/model/Person.ts'
+import { Person, PersonV2 } from '@/entities/person/model/Person.ts'
 import { useState } from 'react'
 import { useEffectOnce } from '@/shared/api'
 import {
@@ -10,6 +10,11 @@ import {
   Slider,
 } from '@telegram-apps/telegram-ui'
 import { editProfile } from '@/features/edit-profile/api/editProfile.ts'
+import { getUser } from '@/features/get_user/api/getUser.ts'
+import { $authStore } from '@/features/authentication/api/authFx.ts'
+// import {Picture} from "@/entities/person/model/Picture.ts";
+// import {Interest} from "@/entities/person/model/Interest.ts";
+// import {Location} from "@/entities/person/model/Location.ts";
 
 const actP: Person = {
   id: 1234567,
@@ -69,7 +74,25 @@ export const EditProfileMenu = ({
   const [actualPerson, setActualPerson] = useState<Person>(actP)
 
   useEffectOnce(() => {
-    setActualPerson(actP)
+    getUser(Number($authStore.getState().userId)).then((userResp) => {
+      const user = userResp.data as PersonV2
+      setActualPerson({
+        id: user.userId,
+        zodiac: user.zodiac,
+        updateMoment: new Date(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        pictures: [],
+        interests: [], //user.interests,
+        height: user.height,
+        birthday: new Date(user.birthday),
+        faculty: `${user.facultyId}`,
+        location: {
+          name: 'unknown',
+          coordinates: { latitude: 1, longitude: 2 },
+        },
+      })
+    })
   })
 
   return (

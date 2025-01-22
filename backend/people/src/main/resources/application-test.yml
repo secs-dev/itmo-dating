@@ -1,3 +1,9 @@
 spring:
   config:
     import: application-foundation-test.yml
+itmo-dating:
+  s3:
+    bucket:
+      profile-photos: profile-photos
+  matchmaker:
+    url: https://matchmaker/api
