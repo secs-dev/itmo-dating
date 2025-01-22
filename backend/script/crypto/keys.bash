@@ -150,6 +150,7 @@ function clear() {
 }
 
 if [ "$ENV" = "test" ]; then
+  echo "Mode: Testing"
   PASSWORD="testing-keystore-password"
 fi
 

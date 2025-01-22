@@ -5,3 +5,5 @@ itmo-dating:
   s3:
     bucket:
       profile-photos: profile-photos
+  matchmaker:
+    url: https://matchmaker/api
