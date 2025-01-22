@@ -5,62 +5,87 @@ import {
   Rating,
   Section,
 } from '@telegram-apps/telegram-ui'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Topic } from '@/entities/registration-data/model/topic.ts'
 import { getTopics } from '@/features/get-topics/api/getTopics.ts'
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types'
-import { RegistrationData } from '@/entities'
 import { Interest } from '@/entities/registration-data/model/interest.ts'
 import { useEffectOnce } from '@/shared/api'
+import {
+  $registrationDataStore,
+  registrationDataFx,
+} from '@/entities/registration-data/api/registrationDataStore.ts'
 
-interface RegistrationInterestsProps {
-  registrationData: RegistrationData
-  changeRD: React.Dispatch<React.SetStateAction<RegistrationData>>
-}
-
-export const RegistrationInterests = ({
-  changeRD,
-}: RegistrationInterestsProps) => {
+export const RegistrationInterests = () => {
   const MAX_INTEREST_COUNT = 8
   const [topics, setTopics] = useState<Array<Topic>>([])
   const [selected, setSelected] = useState<Array<MultiselectOption>>([])
+  const [isFirstFlag, setFirstFlag] = useState(false)
+  const [interests, setInterests] = useState<Array<Interest>>([])
+  const [interestChanged, setInterestChanged] = useState(false)
 
   useEffectOnce(() => {
     getTopics(setTopics)
   })
 
-  const [interests, setInterests] = useState<Map<number, Interest>>(new Map())
+  useEffect(() => {
+    console.log(
+      'topics selected',
+      topics,
+      selected,
+      $registrationDataStore.getState().interests,
+    )
+    const rdInterests = $registrationDataStore.getState().interests || []
+    const newSelected = rdInterests
+      .map((i) => ({
+        value: i.topicId,
+        label: topics.find((t) => t.id === i.topicId)?.name,
+      }))
+      .filter((i) => typeof i.label !== 'undefined')
+      .map((i) => i as MultiselectOption)
+    const newInterests: Array<Interest> = rdInterests.map((i) => ({
+      topicId: i.topicId,
+      level: i.level,
+    }))
+    if (isFirstFlag) {
+      setSelected(newSelected)
+      setInterests(newInterests)
+      setInterestChanged(true)
+    }
+    setFirstFlag(true)
+  }, [topics])
 
   useEffect(() => {
-    setInterests((prevState) => {
-      const oldInterests = Array.from(prevState.values()).filter(
-        (i) => i.topicId in selected.map((s) => s.value),
-      )
-      const newSelectedOptionInterests = selected.filter(
-        (s) => !(Number(s.value) in interests),
-      )
-      const newSelectedInterests: Interest[] = newSelectedOptionInterests.map(
-        (s) => {
-          return {
-            topicId: Number(s.value),
-            level: 5,
-          }
-        },
-      )
-      const unitedInterests = [...oldInterests, ...newSelectedInterests]
-      const newMap: Map<number, Interest> = new Map()
-
-      unitedInterests.forEach((i) => newMap.set(i.topicId, i))
-
-      return newMap
-    })
+    if (isFirstFlag) {
+      setInterests((prevState) => [
+        ...prevState.filter((p) =>
+          selected.map((s) => Number(s.value)).includes(p.topicId),
+        ),
+        ...selected
+          .map((s) => ({ topicId: s.value, level: 3 }))
+          .filter((s) => typeof s.topicId !== 'undefined')
+          .filter(
+            (s) =>
+              !prevState.map((ss) => ss.topicId).includes(Number(s.topicId)),
+          )
+          .map((s) => ({ topicId: s.topicId as number, level: s.level })),
+      ])
+      setInterestChanged(true)
+    }
   }, [selected])
 
   useEffect(() => {
-    changeRD((prevState) => {
-      return { ...prevState, interests: Array.from(interests.values()) }
-    })
-  }, [interests])
+    console.log('interests changed')
+    if (isFirstFlag && interestChanged) {
+      console.log('interests changed state', $registrationDataStore.getState())
+      registrationDataFx({
+        ...$registrationDataStore.getState(),
+        interests: interests,
+      }).then()
+      setInterestChanged(false)
+    }
+  }, [interests, interestChanged])
+
   return (
     <Section header="Your interests">
       <List>
@@ -79,17 +104,24 @@ export const RegistrationInterests = ({
             selected.map((topic) => (
               <Section key={topic.value} header={topic.label}>
                 <Rating
-                  value={interests.get(Number(topic.value))?.level}
-                  onChange={(e) =>
-                    setInterests((prevState) => {
-                      const newMap = new Map(prevState)
-                      newMap.set(Number(topic.value), {
-                        topicId: Number(topic.value),
-                        level: e,
-                      })
-                      return newMap
-                    })
+                  value={
+                    interests.find((i) => i.topicId === Number(topic.value))
+                      ?.level || 3
                   }
+                  onChange={(e) => {
+                    if (e < 1 || e > 5) {
+                      throw Error('Unsupported value')
+                    }
+                    setInterests((prevState) => {
+                      const newState = prevState
+                      const foundElementIndex = newState.findIndex(
+                        (i) => i.topicId === Number(topic.value),
+                      )
+                      newState[foundElementIndex].level = e
+                      return newState
+                    })
+                    setInterestChanged(true)
+                  }}
                   precision={1}
                 />
               </Section>

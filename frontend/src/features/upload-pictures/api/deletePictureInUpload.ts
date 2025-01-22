@@ -6,7 +6,7 @@ interface DeletePictureProps {
   setUploadedFiles: React.Dispatch<React.SetStateAction<Array<UploadedFile>>>
 }
 
-export function deletePicture(props: DeletePictureProps, id: number) {
+export function deletePictureInUpload(props: DeletePictureProps, id: number) {
   props.setUploadedFiles((prev) =>
     prev.filter((uploadedFile) => uploadedFile.id != id),
   )

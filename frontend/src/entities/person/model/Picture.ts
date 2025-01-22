@@ -4,3 +4,7 @@ export interface Picture {
   medium: string
   large: string
 }
+
+export interface PictureMessage {
+  id: number
+}
