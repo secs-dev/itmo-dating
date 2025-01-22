@@ -101,7 +101,7 @@ services:
     build:
       context: ./backend/gateway
     environment:
-      ITMO_DATING_EXT_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
+      ITMO_DATING_EXT_KEY_STORE_PASSWORD: ${ITMO_DATING_EXT_KEY_STORE_PASSWORD?:err}
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: gateway.dating.se.ifmo.ru
