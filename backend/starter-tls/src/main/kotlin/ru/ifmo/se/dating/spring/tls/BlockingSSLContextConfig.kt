@@ -23,8 +23,6 @@ class BlockingSSLContextConfig(
     ): SSLContext =
         SSLContext
             .getInstance(sslProtocol)
-            .also { it.init(keyManager.keyManagers, trustManager.trustManagers, null) }
+            .apply { init(keyManager.keyManagers, trustManager.trustManagers, null) }
             .also { println("Created blocking SSL Context") }
-
-
 }
