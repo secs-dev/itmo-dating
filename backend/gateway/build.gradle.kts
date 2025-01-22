@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":starter-service-discovery"))
+    implementation(project(":starter-tls"))
 
     implementation(libs.org.springframework.boot.spring.boot)
     implementation(libs.org.springframework.cloud.spring.cloud.starter.gateway)

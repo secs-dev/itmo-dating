@@ -32,7 +32,7 @@ import ru.ifmo.se.dating.SecurityInitializer
     ],
 )
 abstract class PeopleTestSuite {
-    @Value("\${storage.s3.bucket.profile-photos}")
+    @Value("\${itmo-dating.s3.bucket.profile-photos}")
     private final lateinit var bucket: String
 
     @Autowired

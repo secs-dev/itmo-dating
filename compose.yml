@@ -4,28 +4,25 @@ services:
     build:
       context: ./backend/authik
     environment:
-      POSTGRES_DB: ${ITMO_DATING_POSTGRES_DB?:err}
-      POSTGRES_USER: ${ITMO_DATING_POSTGRES_USER?:err}
-      POSTGRES_PASSWORD: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
-      TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
-      TOKEN_SIGN_KEY_PRIVATE: ${ITMO_DATING_AUTHIK_TOKEN_SIGN_KEY_PRIVATE?:err}
-      TELEGRAM_BOT_TOKEN: ${ITMO_DATING_AUTHIK_TELEGRAM_BOT_TOKEN?:err}
-      KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+      ITMO_DATING_VAULT_TOKEN: ${ITMO_DATING_VAULT_TOKEN?:err}
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: authik-0.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:18000:8080/tcp"
+      - "127.0.0.1:18000:8080"
     depends_on:
       database:
         condition: service_healthy
       consul:
+        condition: service_started
+      config:
         condition: service_started
   authik-1:
     extends:
       service: authik-0
     hostname: authik-1.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:18001:8080/tcp"
+      - "127.0.0.1:18001:8080"
     profiles:
       - reliability
   matchmaker-0:
@@ -33,15 +30,12 @@ services:
     build:
       context: ./backend/matchmaker
     environment:
-      POSTGRES_DB: ${ITMO_DATING_POSTGRES_DB?:err}
-      POSTGRES_USER: ${ITMO_DATING_POSTGRES_USER?:err}
-      POSTGRES_PASSWORD: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
-      TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
-      KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+      ITMO_DATING_VAULT_TOKEN: ${ITMO_DATING_VAULT_TOKEN?:err}
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: matchmaker-0.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:18010:8080/tcp"
+      - "127.0.0.1:18010:8080"
     depends_on:
       database:
         condition: service_healthy
@@ -52,7 +46,7 @@ services:
       service: matchmaker-0
     hostname: matchmaker-1.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:18011:8080/tcp"
+      - "127.0.0.1:18011:8080"
     profiles:
       - reliability
   people-0:
@@ -60,17 +54,12 @@ services:
     build:
       context: ./backend/people
     environment:
-      POSTGRES_DB: ${ITMO_DATING_POSTGRES_DB?:err}
-      POSTGRES_USER: ${ITMO_DATING_POSTGRES_USER?:err}
-      POSTGRES_PASSWORD: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
-      MINIO_USER: ${ITMO_DATING_MINIO_ROOT_USER?:err}
-      MINIO_PASSWORD: ${ITMO_DATING_MINIO_ROOT_PASSWORD?:err}
-      TOKEN_SIGN_KEY_PUBLIC: ${ITMO_DATING_TOKEN_SIGN_KEY_PUBLIC?:err}
-      KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+      ITMO_DATING_VAULT_TOKEN: ${ITMO_DATING_VAULT_TOKEN?:err}
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: people-0.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:18020:8080/tcp"
+      - "127.0.0.1:18020:8080"
     depends_on:
       database:
         condition: service_healthy
@@ -83,7 +72,7 @@ services:
       service: people-0
     hostname: people-1.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:18021:8080/tcp"
+      - "127.0.0.1:18021:8080"
     profiles:
       - reliability
   object-storage:
@@ -95,6 +84,8 @@ services:
     environment:
       MINIO_ROOT_USER: ${ITMO_DATING_MINIO_ROOT_USER?:err}
       MINIO_ROOT_PASSWORD: ${ITMO_DATING_MINIO_ROOT_PASSWORD?:err}
+    volumes:
+      - minio-data:/export
     tty: true
     healthcheck:
       test: [ "CMD", "mc", "ready", "local" ]
@@ -110,9 +101,11 @@ services:
       POSTGRES_DB: ${ITMO_DATING_POSTGRES_DB?:err}
       POSTGRES_USER: ${ITMO_DATING_POSTGRES_USER?:err}
       POSTGRES_PASSWORD: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     tty: true
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${ITMO_DATING_POSTGRES_USER?:err}" ]
       interval: 1s
       timeout: 1s
       retries: 16
@@ -122,19 +115,45 @@ services:
     build:
       context: ./backend/gateway
     environment:
-      KEY_STORE_PASSWORD: ${ITMO_DATING_KEY_STORE_PASSWORD?:err}
+      ITMO_DATING_EXT_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     ports:
       - "444:8080"
+  config:
+    image: ghcr.io/secs-dev/itmo-dating-config:latest
+    build:
+      context: ./backend/config
+    environment:
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
+    tty: true
+    hostname: config.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:445:8080"
+    depends_on:
+      vault:
+        condition: service_started
+      consul:
+        condition: service_started
   consul:
     image: ghcr.io/secs-dev/itmo-dating-consul:latest
     build:
       context: ./backend/consul
+    volumes:
+      - consul-data:/opt/consul/data
     tty: true
     hostname: server.dc1.consul
     ports:
-      - "127.0.0.1:8500:8500/tcp"
-      - "127.0.0.1:8501:8501/tcp"
+      - "127.0.0.1:8500:8500"
+      - "127.0.0.1:8501:8501"
+  vault:
+    image: ghcr.io/secs-dev/itmo-dating-vault:latest
+    build:
+      context: ./backend/vault
+    tty: true
+    hostname: vault.dating.se.ifmo.ru
+    ports:
+      - "127.0.0.1:8200:8200"
   tg-miniapp:
     image: ghcr.io/secs-dev/itmo-dating-tg-miniapp:latest
     build:
@@ -142,3 +161,7 @@ services:
     tty: true
     ports:
       - "443:443"
+volumes:
+  postgres-data:
+  minio-data:
+  consul-data:

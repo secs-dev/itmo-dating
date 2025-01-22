@@ -10,13 +10,14 @@ ALIAS_BACKEND="$ALIAS-backend"
 ALIAS_EXTERNAL="$ALIAS-external"
 
 VALIDITY=1
-PASSWORD="$ITMO_DATING_KEY_STORE_PASSWORD"
+PASSWORD="$ITMO_DATING_KEYSTORE_PASSWORD"
 
 INTERNAL_INSTALL_PATH="src/main/resources/keystore"
-FOUNDATION_INSTALL_PATH="foundation/$INTERNAL_INSTALL_PATH"
-GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
+STARTER_TLS_INSTALL_PATH="starter-tls/$INTERNAL_INSTALL_PATH"
 STARTER_SERVICE_DISCOVERY_INSTALL_PATH="starter-service-discovery/$INTERNAL_INSTALL_PATH"
+GATEWAY_INSTALL_PATH="gateway/$INTERNAL_INSTALL_PATH"
 CONSUL_INSTALL_PATH="consul/config"
+VAULT_INSTALL_PATH="vault/config"
 
 function generate() {
   echo "Phase: Generate"
@@ -88,20 +89,24 @@ function copy() {
 function distribute() {
   echo "Phase: Distribute"
 
-  echo "Copying package to the backend..."
-  copy "$FOUNDATION_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  echo "Copying package to the starter-tls..."
+  copy "$STARTER_TLS_INSTALL_PATH" "$ALIAS_BACKEND.p12"
 
   echo "Copying package to the starter-service-discovery..."
   copy "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
   echo "Copying package to the gateway..."
-  copy "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
   copy "$GATEWAY_INSTALL_PATH" "$ALIAS_EXTERNAL.p12"
 
   echo "Copying keys to the consul..."
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   copy "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
+
+  echo "Copying keys to the vault..."
+  copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.key"
+  copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.crt"
+  copy "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 }
 
 function remove() {
@@ -115,19 +120,24 @@ function remove() {
 function clear() {
   echo "Phase: Clear"
 
-  echo "Removing package from the foundation..."
-  remove "$FOUNDATION_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  echo "Removing package from the starter-tls..."
+  remove "$STARTER_TLS_INSTALL_PATH" "$ALIAS_BACKEND.p12"
 
   echo "Removing package from the starter-service-discovery..."
   remove "$STARTER_SERVICE_DISCOVERY_INSTALL_PATH" "$ALIAS_BACKEND.jks"
 
   echo "Removing package from the gateway..."
-  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_BACKEND.p12"
+  remove "$GATEWAY_INSTALL_PATH" "$ALIAS_EXTERNAL.p12"
 
   echo "Removing keys from the consul..."
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.key"
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND.crt"
   remove "$CONSUL_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
+
+  echo "Removing keys from the vault..."
+  remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.key"
+  remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND.crt"
+  remove "$VAULT_INSTALL_PATH" "$ALIAS_BACKEND-ca.crt"
 
   echo "Removing local outputs..."
   rm -rf "$ALIAS_BACKEND.crt"
@@ -140,6 +150,7 @@ function clear() {
 }
 
 if [ "$ENV" = "test" ]; then
+  echo "Mode: Testing"
   PASSWORD="testing-keystore-password"
 fi
 

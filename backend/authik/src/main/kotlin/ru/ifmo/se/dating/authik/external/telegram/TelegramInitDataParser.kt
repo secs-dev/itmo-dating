@@ -13,7 +13,7 @@ import ru.ifmo.se.dating.validation.expect
 
 @Component
 class TelegramInitDataParser(
-    @Value("\${security.auth.telegram.token}")
+    @Value("\${itmo-dating.telegram.bot-token}")
     telegramToken: String,
 ) {
     private val jackson = jacksonObjectMapper().apply {

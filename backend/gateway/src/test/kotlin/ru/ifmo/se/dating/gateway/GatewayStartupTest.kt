@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
     useMainMethod = SpringBootTest.UseMainMethod.ALWAYS,
 )
-@ContextConfiguration(initializers = [SecurityInitializer::class])
+@ContextConfiguration(initializers = [])
 class GatewayStartupTest {
     @Test
     fun contextLoads() {

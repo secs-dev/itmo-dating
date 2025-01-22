@@ -12,7 +12,7 @@ class JwtTokenDecoderConfiguration {
     fun jwtTokenDecoder(
         clock: Clock,
 
-        @Value("\${security.auth.token.sign.public}")
+        @Value("\${itmo-dating.auth.jwt.public-key}")
         publicSignKey: String,
     ) = LoggingTokenDecoder(
         JwtTokenDecoder(
