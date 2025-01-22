@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-service-discovery.yml,application-tls.yml,configserver:https://config.dating.se.ifmo.ru:8080
+    import: application-service-discovery.yml,application-tls.yml,optional:configserver:https://config.dating.se.ifmo.ru:8080
   cloud:
     config:
       uri: https://config.dating.se.ifmo.ru:8080
