@@ -1,4 +1,6 @@
+node_name = "consul-singleton"
 server = true
+
 bind_addr = "0.0.0.0"
 client_addr = "0.0.0.0"
 
@@ -20,16 +22,21 @@ limits {
 
 data_dir = "/opt/consul/data"
 
-ui = true
+tls {
+  defaults {
+    ca_file = "/consul/config/itmo-dating-backend-ca.crt"
+    cert_file = "/consul/config/itmo-dating-backend.crt"
+    key_file = "/consul/config/itmo-dating-backend.key"
+    tls_min_version = "TLSv1_3"
+    verify_incoming = false
+    verify_outgoing = false
+    verify_server_hostname = false
+  }
+}
 
-verify_incoming = false
-verify_outgoing = false
-verify_server_hostname = false
-
-tls_min_version = "TLSv1_3"
-key_file = "/consul/config/itmo-dating-backend.key"
-cert_file = "/consul/config/itmo-dating-backend.crt"
-ca_file = "/consul/config/itmo-dating-backend-ca.crt"
+ui_config {
+  enabled = true
+}
 
 services = [
   {
