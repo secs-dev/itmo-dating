@@ -82,7 +82,7 @@ export const Registration = () => {
     switch (status) {
       case PersonStatusMessage.draft: {
         //FIXME after fixing topic putting
-        ;[1, 2, 3, 4, 5].forEach((t) => deleteTopic(t))
+        ;[1, 2, 3, 4, 5].forEach((t) => deleteTopic(t)) // eslint-disable-line
 
         $registrationDataStore
           .getState()

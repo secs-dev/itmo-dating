@@ -66,9 +66,10 @@ export const RegistrationPictures = () => {
         ))}
         <AddPictureButton
           handleUploadingPhotos={(e) => {
-            ;[...e.target.files].map((file) => {
-              handleUploadingPhotos({ setUploadedFiles }, file)
-            })
+            ;[...e.target.files] // eslint-disable-line
+              .map((file) => {
+                handleUploadingPhotos({ setUploadedFiles }, file)
+              })
             e.target.value = null
           }}
         />
