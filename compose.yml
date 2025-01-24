@@ -97,6 +97,18 @@ services:
       timeout: 1s
       retries: 16
     hostname: database-primary.dating.se.ifmo.ru
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    command: '--no-collector.stat_bgwriter'
+    environment:
+      DATA_SOURCE_URI: database-primary.dating.se.ifmo.ru:5432/${ITMO_DATING_POSTGRES_DB?:err}?sslmode=disable
+      DATA_SOURCE_USER: ${ITMO_DATING_POSTGRES_USER?:err}
+      DATA_SOURCE_PASS: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
+    tty: true
+    hostname: database-primary-exporter.dating.se.ifmo.ru
+    depends_on:
+      database:
+        condition: service_healthy
   gateway:
     image: ghcr.io/secs-dev/itmo-dating-gateway:latest
     build:

@@ -58,3 +58,10 @@ scrape_configs:
         type: A
         port: 9000
     scheme: http
+
+  - job_name: postgres
+    dns_sd_configs:
+      - names:
+          - database-primary-exporter.dating.se.ifmo.ru
+        type: 'A'
+        port: 9187
