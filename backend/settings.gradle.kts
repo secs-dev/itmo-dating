@@ -12,6 +12,7 @@ include(
     ":authik",
     ":matchmaker",
     ":people",
+    ":starter-monitoring",
     ":starter-service-discovery",
     ":starter-tls",
 )

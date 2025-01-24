@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-service-discovery.yml,application-tls.yml
+    import: application-monitoring.yml,application-service-discovery.yml,application-tls.yml
   application:
     name: config
   profiles:
