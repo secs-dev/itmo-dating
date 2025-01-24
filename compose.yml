@@ -72,6 +72,7 @@ services:
     environment:
       MINIO_ROOT_USER: ${ITMO_DATING_MINIO_ROOT_USER?:err}
       MINIO_ROOT_PASSWORD: ${ITMO_DATING_MINIO_ROOT_PASSWORD?:err}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
     volumes:
       - minio-data:/export
     tty: true

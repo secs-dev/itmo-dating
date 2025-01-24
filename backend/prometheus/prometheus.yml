@@ -49,3 +49,12 @@ scrape_configs:
     scheme: https
     tls_config:
       insecure_skip_verify: true
+
+  - job_name: object-storage
+    metrics_path: /minio/v2/metrics/cluster
+    dns_sd_configs:
+      - names:
+          - object-storage.dating.se.ifmo.ru
+        type: A
+        port: 9000
+    scheme: http
