@@ -1,3 +1,6 @@
+client:
+  ssl:
+    key-store-password: testing-keystore-password
 server:
   ssl:
     key-store-password: testing-keystore-password

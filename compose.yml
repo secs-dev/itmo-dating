@@ -8,8 +8,6 @@ services:
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: authik-0.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:18000:8080"
     depends_on:
       database:
         condition: service_healthy
@@ -21,8 +19,6 @@ services:
     extends:
       service: authik-0
     hostname: authik-1.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:18001:8080"
     profiles:
       - reliability
   matchmaker-0:
@@ -34,8 +30,6 @@ services:
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: matchmaker-0.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:18010:8080"
     depends_on:
       database:
         condition: service_healthy
@@ -45,8 +39,6 @@ services:
     extends:
       service: matchmaker-0
     hostname: matchmaker-1.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:18011:8080"
     profiles:
       - reliability
   people-0:
@@ -58,8 +50,6 @@ services:
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: people-0.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:18020:8080"
     depends_on:
       database:
         condition: service_healthy
@@ -71,8 +61,6 @@ services:
     extends:
       service: people-0
     hostname: people-1.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:18021:8080"
     profiles:
       - reliability
   object-storage:
@@ -93,8 +81,6 @@ services:
       timeout: 5s
       retries: 5
     hostname: object-storage.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:9001:9001"
   database:
     image: postgres
     environment:
@@ -115,9 +101,10 @@ services:
     build:
       context: ./backend/gateway
     environment:
-      ITMO_DATING_EXT_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
+      ITMO_DATING_EXT_KEY_STORE_PASSWORD: ${ITMO_DATING_EXT_KEY_STORE_PASSWORD?:err}
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
+    hostname: gateway.dating.se.ifmo.ru
     ports:
       - "444:8080"
   config:
@@ -128,8 +115,6 @@ services:
       ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
     tty: true
     hostname: config.dating.se.ifmo.ru
-    ports:
-      - "127.0.0.1:445:8080"
     depends_on:
       vault:
         condition: service_started
@@ -143,17 +128,24 @@ services:
       - consul-data:/opt/consul/data
     tty: true
     hostname: server.dc1.consul
-    ports:
-      - "127.0.0.1:8500:8500"
-      - "127.0.0.1:8501:8501"
   vault:
     image: ghcr.io/secs-dev/itmo-dating-vault:latest
     build:
       context: ./backend/vault
     tty: true
     hostname: vault.dating.se.ifmo.ru
+  haproxy:
+    image: ghcr.io/secs-dev/itmo-dating-haproxy:latest
+    build:
+      context: ./backend/haproxy
+    tty: true
+    hostname: haproxy.dating.se.ifmo.ru
     ports:
-      - "127.0.0.1:8200:8200"
+      - "127.0.0.1:8445:8445"
+      - "127.0.0.1:8446:8446"
+      - "127.0.0.1:8455:8455"
+      - "127.0.0.1:8456:8456"
+      - "127.0.0.1:8457:8457"
   tg-miniapp:
     image: ghcr.io/secs-dev/itmo-dating-tg-miniapp:latest
     build:
