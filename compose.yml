@@ -141,6 +141,14 @@ services:
       - consul-data:/opt/consul/data
     tty: true
     hostname: server.dc1.consul
+  consul-exporter:
+    image: prom/consul-exporter
+    command: --consul.server=server.dc1.consul:8500
+    tty: true
+    hostname: consul-exporter.dating.se.ifmo.ru
+    depends_on:
+      consul:
+        condition: service_started
   vault:
     image: ghcr.io/secs-dev/itmo-dating-vault:latest
     build:

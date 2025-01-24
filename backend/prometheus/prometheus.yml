@@ -65,3 +65,10 @@ scrape_configs:
           - database-primary-exporter.dating.se.ifmo.ru
         type: 'A'
         port: 9187
+
+  - job_name: consul
+    dns_sd_configs:
+      - names:
+          - consul-exporter.dating.se.ifmo.ru
+        type: 'A'
+        port: 9107
