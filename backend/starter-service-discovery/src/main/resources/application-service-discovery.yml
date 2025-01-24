@@ -21,12 +21,19 @@ spring:
           ttl: 30
         catalog-services-watch-delay: 5000
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
   health:
     consul:
       enabled: true
     diskspace:
       enabled: false
-  endpoints:
-    web:
-      exposure:
-        include: health
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  distribution:
+    percentiles-histogram:
+      "[http.server.requests]": true
