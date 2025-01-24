@@ -65,3 +65,46 @@ scrape_configs:
           - database-primary-exporter.dating.se.ifmo.ru
         type: 'A'
         port: 9187
+
+  - job_name: consul
+    dns_sd_configs:
+      - names:
+          - consul-exporter.dating.se.ifmo.ru
+        type: 'A'
+        port: 9107
+
+  - job_name: vault
+    metrics_path: /v1/sys/metrics
+    params:
+      format: [ 'prometheus' ]
+    authorization:
+      credentials_file: /etc/prometheus/vault.token.txt
+    dns_sd_configs:
+      - names:
+          - vault.dating.se.ifmo.ru
+        type: 'A'
+        port: 8200
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: haproxy
+    dns_sd_configs:
+      - names:
+          - haproxy.dating.se.ifmo.ru
+        type: 'A'
+        port: 8405
+
+  - job_name: prometheus
+    dns_sd_configs:
+      - names:
+          - prometheus.dating.se.ifmo.ru
+        type: 'A'
+        port: 9090
+
+  - job_name: grafana
+    dns_sd_configs:
+      - names:
+          - grafana.dating.se.ifmo.ru
+        type: 'A'
+        port: 3000

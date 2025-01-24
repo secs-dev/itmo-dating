@@ -37,5 +37,8 @@ build/
 *.srl
 *.jks
 
+# Secrets
+*.token.txt
+
 # Java
 *.hprof

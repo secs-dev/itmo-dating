@@ -10,6 +10,10 @@ listener "tcp" {
     tls_min_version     = "tls13"
 }
 
+telemetry {
+  prometheus_retention_time = "12h"
+}
+
 storage "consul" {
   address           = "server.dc1.consul:8501"
   max_parallel      = 32
