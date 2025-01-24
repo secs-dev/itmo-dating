@@ -87,3 +87,10 @@ scrape_configs:
     scheme: https
     tls_config:
       insecure_skip_verify: true
+
+  - job_name: haproxy
+    dns_sd_configs:
+      - names:
+          - haproxy.dating.se.ifmo.ru
+        type: 'A'
+        port: 8405
