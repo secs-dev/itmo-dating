@@ -1,0 +1,67 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+
+  - job_name: authik
+    metrics_path: /actuator/prometheus
+    dns_sd_configs:
+      - names:
+          - authik-0.dating.se.ifmo.ru
+          - authik-1.dating.se.ifmo.ru
+        type: A
+        port: 8080
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: people
+    metrics_path: /actuator/prometheus
+    dns_sd_configs:
+      - names:
+          - people-0.dating.se.ifmo.ru
+          - people-1.dating.se.ifmo.ru
+        type: A
+        port: 8080
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: matchmaker
+    metrics_path: /actuator/prometheus
+    dns_sd_configs:
+      - names:
+          - matchmaker-0.dating.se.ifmo.ru
+          - matchmaker-1.dating.se.ifmo.ru
+        type: A
+        port: 8080
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: gateway
+    metrics_path: /actuator/prometheus
+    dns_sd_configs:
+      - names:
+          - gateway.dating.se.ifmo.ru
+        type: A
+        port: 8080
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+
+  - job_name: object-storage
+    metrics_path: /minio/v2/metrics/cluster
+    dns_sd_configs:
+      - names:
+          - object-storage.dating.se.ifmo.ru
+        type: A
+        port: 9000
+    scheme: http
+
+  - job_name: postgres
+    dns_sd_configs:
+      - names:
+          - database-primary-exporter.dating.se.ifmo.ru
+        type: 'A'
+        port: 9187

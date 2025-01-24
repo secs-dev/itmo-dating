@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-service-discovery.yml,application-tls.yml
+    import: application-monitoring.yml,application-service-discovery.yml,application-tls.yml
   application:
     name: gateway
   cloud:
@@ -146,10 +146,3 @@ springdoc:
         url: openapi/matchmaker/api.yml
       - name: people
         url: openapi/people/api.yml
-logging:
-  level:
-    gateway: WARN
-  group:
-    gateway: org.springframework.cloud.gateway.route
-  pattern:
-    console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSS}){faint} %clr([%level]) %clr(%logger{36}){blue}: %msg%n"

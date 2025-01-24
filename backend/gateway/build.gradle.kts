@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":starter-monitoring"))
     implementation(project(":starter-service-discovery"))
     implementation(project(":starter-tls"))
 

@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    api(project(":starter-monitoring"))
     api(project(":starter-service-discovery"))
     api(project(":starter-tls"))
 

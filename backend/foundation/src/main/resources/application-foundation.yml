@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-service-discovery.yml,application-tls.yml,optional:configserver:https://config.dating.se.ifmo.ru:8080
+    import: application-monitoring.yml,application-service-discovery.yml,application-tls.yml,optional:configserver:https://config.dating.se.ifmo.ru:8080
   cloud:
     config:
       uri: https://config.dating.se.ifmo.ru:8080
@@ -27,12 +27,3 @@ springdoc:
   swagger-ui:
     url: /openapi/api.yml
     path: /swagger-ui.html
-logging:
-  level:
-    web: INFO
-    liquibase: WARN
-    r2dbc: DEBUG
-  group:
-    r2dbc: org.springframework.r2dbc,org.springframework.data.r2dbc,org.jooq.tools.LoggerListener
-  pattern:
-    console: "%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSS}){faint} %clr([%level]) %clr(%logger{36}){blue}: %msg%n"

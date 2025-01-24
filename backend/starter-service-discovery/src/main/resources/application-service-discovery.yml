@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-tls.yml
+    import: application-tls.yml,application-monitoring.yml
   cloud:
     consul:
       scheme: https
@@ -24,9 +24,3 @@ management:
   health:
     consul:
       enabled: true
-    diskspace:
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include: health

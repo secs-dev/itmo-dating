@@ -72,6 +72,7 @@ services:
     environment:
       MINIO_ROOT_USER: ${ITMO_DATING_MINIO_ROOT_USER?:err}
       MINIO_ROOT_PASSWORD: ${ITMO_DATING_MINIO_ROOT_PASSWORD?:err}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
     volumes:
       - minio-data:/export
     tty: true
@@ -96,6 +97,18 @@ services:
       timeout: 1s
       retries: 16
     hostname: database-primary.dating.se.ifmo.ru
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    command: '--no-collector.stat_bgwriter'
+    environment:
+      DATA_SOURCE_URI: database-primary.dating.se.ifmo.ru:5432/${ITMO_DATING_POSTGRES_DB?:err}?sslmode=disable
+      DATA_SOURCE_USER: ${ITMO_DATING_POSTGRES_USER?:err}
+      DATA_SOURCE_PASS: ${ITMO_DATING_POSTGRES_PASSWORD?:err}
+    tty: true
+    hostname: database-primary-exporter.dating.se.ifmo.ru
+    depends_on:
+      database:
+        condition: service_healthy
   gateway:
     image: ghcr.io/secs-dev/itmo-dating-gateway:latest
     build:
@@ -143,9 +156,31 @@ services:
     ports:
       - "127.0.0.1:8445:8445"
       - "127.0.0.1:8446:8446"
+      - "127.0.0.1:8447:8447"
       - "127.0.0.1:8455:8455"
       - "127.0.0.1:8456:8456"
       - "127.0.0.1:8457:8457"
+  prometheus:
+    image: ghcr.io/secs-dev/itmo-dating-prometheus:latest
+    build:
+      context: ./backend/prometheus
+    user: root
+    volumes:
+      - prometheus-data:/prometheus
+    tty: true
+    hostname: prometheus.dating.se.ifmo.ru
+  grafana:
+    image: ghcr.io/secs-dev/itmo-dating-grafana:latest
+    build:
+      context: ./backend/grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${ITMO_DATING_GRAFANA_ADMIN_USER?:err}
+      GF_SECURITY_ADMIN_PASSWORD: ${ITMO_DATING_GRAFANA_ADMIN_PASSWORD?:err}
+      ITMO_DATING_PROMETHEUS_HOST: prometheus.dating.se.ifmo.ru
+    volumes:
+      - grafana-data:/var/lib/grafana
+    tty: true
+    hostname: grafana.dating.se.ifmo.ru
   tg-miniapp:
     image: ghcr.io/secs-dev/itmo-dating-tg-miniapp:latest
     build:
@@ -157,3 +192,5 @@ volumes:
   postgres-data:
   minio-data:
   consul-data:
+  prometheus-data:
+  grafana-data:
