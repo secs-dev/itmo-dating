@@ -94,3 +94,17 @@ scrape_configs:
           - haproxy.dating.se.ifmo.ru
         type: 'A'
         port: 8405
+
+  - job_name: prometheus
+    dns_sd_configs:
+      - names:
+          - prometheus.dating.se.ifmo.ru
+        type: 'A'
+        port: 9090
+
+  - job_name: grafana
+    dns_sd_configs:
+      - names:
+          - grafana.dating.se.ifmo.ru
+        type: 'A'
+        port: 3000
