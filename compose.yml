@@ -168,6 +168,16 @@ services:
       - "127.0.0.1:8455:8455"
       - "127.0.0.1:8456:8456"
       - "127.0.0.1:8457:8457"
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - "--path.rootfs=/host"
+    pid: host
+    volumes:
+      - "/:/host:ro,rslave"
+    tty: true
+    hostname: node-exporter.dating.se.ifmo.ru
   prometheus:
     image: ghcr.io/secs-dev/itmo-dating-prometheus:latest
     build:
