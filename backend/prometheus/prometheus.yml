@@ -1,5 +1,5 @@
 global:
-  scrape_interval: 5s
+  scrape_interval: 10s
 
 scrape_configs:
 
@@ -94,6 +94,13 @@ scrape_configs:
           - haproxy.dating.se.ifmo.ru
         type: 'A'
         port: 8405
+
+  - job_name: node
+    dns_sd_configs:
+      - names:
+          - node-exporter.dating.se.ifmo.ru
+        type: 'A'
+        port: 9100
 
   - job_name: prometheus
     dns_sd_configs:
