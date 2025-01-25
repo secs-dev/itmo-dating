@@ -178,7 +178,9 @@ services:
     tty: true
     hostname: prometheus.dating.se.ifmo.ru
   loki:
-    image: grafana/loki
+    image: ghcr.io/secs-dev/itmo-dating-loki:latest
+    build:
+      context: ./backend/loki
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki-data:/loki
