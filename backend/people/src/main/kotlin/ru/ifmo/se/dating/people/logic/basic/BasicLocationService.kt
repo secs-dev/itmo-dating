@@ -12,6 +12,6 @@ class BasicLocationService(private val storage: LocationStorage) : LocationServi
     override suspend fun getById(id: Location.Id): Location? =
         storage.selectById(id)
 
-    override fun getAll(): Flow<Location> =
+    override suspend fun getAll(): Flow<Location> =
         storage.selectAll()
 }

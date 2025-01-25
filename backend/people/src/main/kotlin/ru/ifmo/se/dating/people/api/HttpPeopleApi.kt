@@ -2,6 +2,7 @@ package ru.ifmo.se.dating.people.api
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
@@ -52,7 +53,7 @@ class HttpPeopleApi(
         updatedMin: OffsetDateTime?,
         updatedMax: OffsetDateTime?,
         sortBy: List<PersonSortingKeyMessage>?,
-    ): ResponseEntity<Flow<PersonMessage>> {
+    ): ResponseEntity<Flow<PersonMessage>> = runBlocking {
         val area = when (listOfNotNull(latitude, longitude, radius).size) {
             0 -> {
                 null
@@ -76,7 +77,7 @@ class HttpPeopleApi(
             }
         }
 
-        return personService.getFiltered(
+        personService.getFiltered(
             page = Page(offset = offset.toInt(), limit = limit.toInt()),
             filter = PersonFilter(
                 firstName = firstName?.let { Regex(it) },

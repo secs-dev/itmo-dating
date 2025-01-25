@@ -1,6 +1,7 @@
 package ru.ifmo.se.dating.people.storage.minio
 
 import io.minio.MinioClient
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -33,6 +34,6 @@ class MinioClientConfiguration {
         .build()
         .also { client ->
             val names = client.listBuckets().joinToString(", ") { "'${it.name()}'" }
-            log.info("Initialized MinIO client. Found buckets: $names")
+            runBlocking { log.info("Initialized MinIO client. Found buckets: $names") }
         }
 }

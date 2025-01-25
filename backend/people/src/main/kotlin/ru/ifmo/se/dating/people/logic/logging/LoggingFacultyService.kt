@@ -20,7 +20,7 @@ class LoggingFacultyService(private val origin: FacultyService) : FacultyService
             .onFailure { e -> log.warn("Failed to get faculty with id $id", e) }
             .getOrThrow()
 
-    override fun getAll(): Flow<Faculty> =
+    override suspend fun getAll(): Flow<Faculty> =
         runCatching { origin.getAll() }
             .onSuccess { log.debug("Got all faculties") }
             .onFailure { e -> log.warn("Failed to get all faculties: ${e.message}") }

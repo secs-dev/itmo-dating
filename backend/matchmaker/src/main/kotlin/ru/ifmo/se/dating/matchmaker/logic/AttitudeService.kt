@@ -6,6 +6,6 @@ import ru.ifmo.se.dating.security.auth.User
 
 interface AttitudeService {
     suspend fun express(attitude: Attitude)
-    fun matches(client: User.Id): Flow<User.Id>
-    fun suggestions(client: User.Id, limit: Int): Flow<User.Id>
+    suspend fun matches(client: User.Id): Flow<User.Id>
+    suspend fun suggestions(client: User.Id, limit: Int): Flow<User.Id>
 }

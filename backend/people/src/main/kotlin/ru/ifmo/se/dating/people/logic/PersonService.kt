@@ -13,7 +13,7 @@ interface PersonService {
     suspend fun getById(id: User.Id): PersonVariant?
     suspend fun delete(id: User.Id)
 
-    fun getFiltered(
+    suspend fun getFiltered(
         page: Page,
         filter: PersonFilter,
         sortedBy: List<SortingKey<PersonField>>,

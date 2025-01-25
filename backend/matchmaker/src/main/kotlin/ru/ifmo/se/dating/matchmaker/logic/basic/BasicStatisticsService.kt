@@ -6,6 +6,6 @@ import ru.ifmo.se.dating.matchmaker.model.AttitudesStatistics
 import ru.ifmo.se.dating.matchmaker.storage.StatisticsStorage
 
 class BasicStatisticsService(private val storage: StatisticsStorage) : StatisticsService {
-    override fun selectAttitudesByPerson(): Flow<AttitudesStatistics> =
+    override suspend fun selectAttitudesByPerson(): Flow<AttitudesStatistics> =
         storage.selectAttitudesByPerson()
 }

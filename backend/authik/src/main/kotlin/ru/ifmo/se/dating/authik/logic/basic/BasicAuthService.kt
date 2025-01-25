@@ -1,5 +1,6 @@
 package ru.ifmo.se.dating.authik.logic.basic
 
+import kotlinx.coroutines.runBlocking
 import ru.ifmo.se.dating.authik.logic.AuthService
 import ru.ifmo.se.dating.authik.model.generated.TelegramWebAppInitDataMessage
 import ru.ifmo.se.dating.authik.security.auth.TokenIssuer
@@ -17,8 +18,10 @@ class BasicAuthService(
     private val log = autoLog()
 
     init {
-        val adamToken = issuer.issue(AccessToken.Payload(User.Id(ADAM_ID)))
-        log.info("Issued adam token: '${adamToken.text}'")
+        runBlocking {
+            val adamToken = issuer.issue(AccessToken.Payload(User.Id(ADAM_ID)))
+            log.info("Issued adam token: '${adamToken.text}'")
+        }
     }
 
     override suspend fun authenticate(telegram: TelegramWebAppInitDataMessage): AccessToken =

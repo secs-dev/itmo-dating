@@ -7,7 +7,7 @@ import ru.ifmo.se.dating.storage.TxEnv
 @Suppress("ComplexInterface")
 interface TransactionalOutbox<E, Id> {
     val tx: TxEnv
-    fun publishable(): Flow<Id>
+    suspend fun publishable(): Flow<Id>
     suspend fun acquireById(id: Id): E
     suspend fun isPublished(event: E): Boolean
     suspend fun doProcess(event: E)

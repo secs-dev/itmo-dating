@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 import ru.ifmo.se.dating.matchmaker.model.AttitudesStatistics
 
 interface StatisticsService {
-    fun selectAttitudesByPerson(): Flow<AttitudesStatistics>
+    suspend fun selectAttitudesByPerson(): Flow<AttitudesStatistics>
 }

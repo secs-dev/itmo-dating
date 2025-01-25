@@ -22,7 +22,7 @@ class LoggingLocationService(private val origin: LocationService) : LocationServ
             .onFailure { e -> log.warn("Failed to get location with id $id", e) }
             .getOrThrow()
 
-    override fun getAll(): Flow<Location> =
+    override suspend fun getAll(): Flow<Location> =
         runCatching { origin.getAll() }
             .onSuccess { log.debug("Got all locations") }
             .onFailure { e -> log.warn("Failed to get all locations: ${e.message}") }

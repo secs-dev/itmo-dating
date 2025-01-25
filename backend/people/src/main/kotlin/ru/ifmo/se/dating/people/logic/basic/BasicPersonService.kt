@@ -71,7 +71,7 @@ class BasicPersonService(
         storage.setIsPublished(id, false)
     }.let { background.launch { outbox.process(id) } }.let { }
 
-    override fun getFiltered(
+    override suspend fun getFiltered(
         page: Page,
         filter: PersonFilter,
         sortedBy: List<SortingKey<PersonField>>,

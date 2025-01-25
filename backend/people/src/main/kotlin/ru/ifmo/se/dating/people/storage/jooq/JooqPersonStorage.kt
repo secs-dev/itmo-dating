@@ -196,8 +196,6 @@ class JooqPersonStorage(
                 .orderBy(orderByClause)
                 .offset(page.offset)
                 .limit(page.limit)
-                .also { log.warn("Executed SQL: ${it.sql}") }
-                .also { log.warn("BindValues: ${it.bindValues}") }
         }
             .map { it.enrichToModel() as Person }
             .filter { filter.area == null || filter.area.contains(it.location.coordinates) }

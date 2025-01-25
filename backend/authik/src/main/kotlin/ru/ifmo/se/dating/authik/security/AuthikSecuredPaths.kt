@@ -14,6 +14,6 @@ class AuthikSecuredPaths : SpringSecuredPaths {
         Path("/api/**"),
         Not(Path("/api/auth/telegram/web-app", HttpMethod.GET)),
         Not(Path("/api/monitoring/healthcheck", HttpMethod.PUT)),
-        Not(Path("/actuator/**", HttpMethod.GET)),
+        Not(Path("/actuator/prometheus", HttpMethod.GET)),
     )
 }

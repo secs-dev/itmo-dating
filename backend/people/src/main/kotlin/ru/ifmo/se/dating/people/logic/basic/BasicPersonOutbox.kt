@@ -41,6 +41,6 @@ class BasicPersonOutbox(
     override suspend fun markPublished(event: PersonVariant) =
         storage.setIsPublished(event.id, true)
 
-    override fun publishable(): Flow<User.Id> =
+    override suspend fun publishable(): Flow<User.Id> =
         storage.selectNotSentIds(limit = 64)
 }

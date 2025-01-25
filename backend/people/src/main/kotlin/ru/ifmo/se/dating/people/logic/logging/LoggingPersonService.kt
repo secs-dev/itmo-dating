@@ -38,7 +38,7 @@ class LoggingPersonService(private val origin: PersonService) : PersonService {
             .onFailure { e -> log.warn("Failed to delete a person with id $id", e) }
             .getOrThrow()
 
-    override fun getFiltered(
+    override suspend fun getFiltered(
         page: Page,
         filter: PersonFilter,
         sortedBy: List<SortingKey<PersonField>>,

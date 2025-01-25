@@ -6,7 +6,7 @@ import ru.ifmo.se.dating.security.auth.AccessToken
 class LoggingTokenIssuer(private val origin: TokenIssuer) : TokenIssuer {
     private val log = autoLog()
 
-    override fun issue(payload: AccessToken.Payload): AccessToken =
+    override suspend fun issue(payload: AccessToken.Payload): AccessToken =
         runCatching { origin.issue(payload) }
             .onSuccess { log.info("Issued access token for user with id ${payload.userId}") }
             .onFailure { e ->
