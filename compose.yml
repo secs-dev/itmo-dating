@@ -177,6 +177,13 @@ services:
       - prometheus-data:/prometheus
     tty: true
     hostname: prometheus.dating.se.ifmo.ru
+  loki:
+    image: grafana/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+    tty: true
+    hostname: loki.dating.se.ifmo.ru
   grafana:
     image: ghcr.io/secs-dev/itmo-dating-grafana:latest
     build:
@@ -185,6 +192,7 @@ services:
       GF_SECURITY_ADMIN_USER: ${ITMO_DATING_GRAFANA_ADMIN_USER?:err}
       GF_SECURITY_ADMIN_PASSWORD: ${ITMO_DATING_GRAFANA_ADMIN_PASSWORD?:err}
       ITMO_DATING_PROMETHEUS_HOST: prometheus.dating.se.ifmo.ru
+      ITMO_DATING_LOKI_HOST: loki.dating.se.ifmo.ru
     volumes:
       - grafana-data:/var/lib/grafana
     tty: true
@@ -201,4 +209,5 @@ volumes:
   minio-data:
   consul-data:
   prometheus-data:
+  loki-data:
   grafana-data:
