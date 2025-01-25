@@ -26,6 +26,7 @@ io-projectreactor-kotlin-reactor-kotlin-extensions = "1.2.3"
 
 io-micrometer = "1.14.3"
 com-github-loki4j = "1.6.0"
+io-github-numichi-reactive-logger = "6.0.3"
 
 io-projectreactor-reactor-test = "3.6.11"
 junit-junit = "4.13.2"
@@ -81,6 +82,7 @@ org-postgresql-r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", 
 
 io-micrometer-micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "io-micrometer" }
 com-github-loki4j-loki-logback-appender = { module = "com.github.loki4j:loki-logback-appender", version.ref = "com-github-loki4j" }
+io-github-numichi-reactive-logger = { module = "io.github.numichi:reactive-logger", version.ref = "io-github-numichi-reactive-logger" }
 
 junit-junit = { module = "junit:junit", version.ref = "junit-junit" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "org-testcontainers" }

@@ -14,7 +14,6 @@ import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 import ru.ifmo.se.dating.exception.AuthenticationException
 import ru.ifmo.se.dating.exception.GenericException
-import ru.ifmo.se.dating.logging.Log.Companion.autoLog
 import ru.ifmo.se.dating.spring.exception.SpringGenericExceptionHandler
 
 @Component
@@ -42,8 +41,6 @@ class SpringJwtContextRepository(
     private val headerName = HttpHeaders.AUTHORIZATION
     private val bearerPrefix = "Bearer "
 
-    private val log = autoLog()
-
     override fun save(
         exchange: ServerWebExchange,
         context: SecurityContext,
@@ -64,7 +61,7 @@ class SpringJwtContextRepository(
             null
         }
 
-    private fun extractBearer(exchange: ServerWebExchange): String = runCatching {
+    private suspend fun extractBearer(exchange: ServerWebExchange): String {
         val count = exchange.request.headers.getOrEmpty(headerName).size
         if (count != 1) {
             throw AuthenticationException(
@@ -79,9 +76,6 @@ class SpringJwtContextRepository(
             )
         }
 
-        bearer.substringAfter(bearerPrefix)
+        return bearer.substringAfter(bearerPrefix)
     }
-        .onSuccess { log.debug("Extracted a bearer token") }
-        .onFailure { e -> log.warn("Failed to extract a bearer token: ${e.message}") }
-        .getOrThrow()
 }

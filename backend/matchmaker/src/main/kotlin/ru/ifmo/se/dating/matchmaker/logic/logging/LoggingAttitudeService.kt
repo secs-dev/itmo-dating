@@ -28,7 +28,7 @@ class LoggingAttitudeService(private val origin: AttitudeService) : AttitudeServ
             }
             .getOrThrow()
 
-    override fun matches(client: User.Id): Flow<User.Id> =
+    override suspend fun matches(client: User.Id): Flow<User.Id> =
         runCatching { origin.matches(client) }
             .onSuccess { log.debug("Got matches for client with id ${client.number}") }
             .onFailure { e ->
@@ -40,7 +40,7 @@ class LoggingAttitudeService(private val origin: AttitudeService) : AttitudeServ
             }
             .getOrThrow()
 
-    override fun suggestions(client: User.Id, limit: Int): Flow<User.Id> =
+    override suspend fun suggestions(client: User.Id, limit: Int): Flow<User.Id> =
         runCatching { origin.suggestions(client, limit) }
             .onSuccess {
                 log.debug("Got no more than $limit suggestions for client with id $client")

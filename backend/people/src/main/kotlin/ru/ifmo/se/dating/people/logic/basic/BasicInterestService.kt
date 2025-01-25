@@ -16,6 +16,6 @@ class BasicInterestService(
     override suspend fun remove(id: User.Id, topicId: Topic.Id) =
         storage.delete(id, topicId)
 
-    override fun getAllTopics(): Flow<Topic> =
+    override suspend fun getAllTopics(): Flow<Topic> =
         storage.selectAllTopics()
 }

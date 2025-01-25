@@ -10,4 +10,5 @@ dependencies {
     api(libs.io.micrometer.micrometer.registry.prometheus)
 
     api(libs.com.github.loki4j.loki.logback.appender)
+    api(libs.io.github.numichi.reactive.logger)
 }

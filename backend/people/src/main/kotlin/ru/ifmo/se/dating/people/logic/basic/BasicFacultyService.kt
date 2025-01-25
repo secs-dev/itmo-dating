@@ -12,6 +12,6 @@ class BasicFacultyService(private val storage: FacultyStorage) : FacultyService 
     override suspend fun getById(id: Faculty.Id): Faculty? =
         storage.selectById(id)
 
-    override fun getAll(): Flow<Faculty> =
+    override suspend fun getAll(): Flow<Faculty> =
         storage.selectAll()
 }

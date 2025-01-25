@@ -33,7 +33,7 @@ class JooqPictureRecordStorage(
             .where(PICTURE.ID.eq(id.number))
     }.let { }
 
-    override fun selectAbandoned(): Flow<Picture> = database.flow {
+    override suspend fun selectAbandoned(): Flow<Picture> = database.flow {
         val threshold = 5.minutes.toJavaDuration()
         selectFrom(PICTURE)
             .where(

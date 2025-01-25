@@ -30,7 +30,7 @@ class SpringPersonOutbox(
     override val tx: TxEnv
         get() = origin.tx
 
-    override fun publishable(): Flow<User.Id> =
+    override suspend fun publishable(): Flow<User.Id> =
         origin.publishable()
 
     override suspend fun acquireById(id: User.Id): PersonVariant =

@@ -1,11 +1,11 @@
 package ru.ifmo.se.dating.logging
 
 interface Log {
-    fun info(message: String)
-    fun warn(message: String)
-    fun warn(message: String, e: Throwable)
-    fun error(message: String, e: Throwable)
-    fun debug(message: String)
+    suspend fun info(message: String)
+    suspend fun warn(message: String)
+    suspend fun warn(message: String, e: Throwable)
+    suspend fun error(message: String, e: Throwable)
+    suspend fun debug(message: String)
 
     companion object {
         inline fun <reified T : Any> T.autoLog() = forClass(T::class.java)

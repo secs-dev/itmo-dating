@@ -1,5 +1,6 @@
 package ru.ifmo.se.dating.spring.storage
 
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.jdbc.datasource.SingleConnectionDataSource
 import org.springframework.stereotype.Component
@@ -27,7 +28,7 @@ class SpringLiquibaseMigration(
     private val log = autoLog()
 
     init {
-        log.info("Running a liquibase migration...")
+        runBlocking { log.info("Running a liquibase migration...") }
 
         val suppressClose = false
         SingleConnectionDataSource(url, username, password, suppressClose).use {
@@ -38,6 +39,6 @@ class SpringLiquibaseMigration(
             ).run()
         }
 
-        log.info("Liquibase migration was completed successfully")
+        runBlocking { log.info("Liquibase migration was completed successfully") }
     }
 }

@@ -6,5 +6,5 @@ import ru.ifmo.se.dating.people.model.Faculty
 interface FacultyService {
     suspend fun create(draft: Faculty.Draft): Faculty
     suspend fun getById(id: Faculty.Id): Faculty?
-    fun getAll(): Flow<Faculty>
+    suspend fun getAll(): Flow<Faculty>
 }

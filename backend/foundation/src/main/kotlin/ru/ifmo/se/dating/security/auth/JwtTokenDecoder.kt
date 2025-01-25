@@ -12,7 +12,7 @@ class JwtTokenDecoder(
     private val clock: Clock,
     private val publicSignKey: PublicKey,
 ) : TokenDecoder {
-    override fun decode(token: AccessToken): AccessToken.Payload =
+    override suspend fun decode(token: AccessToken): AccessToken.Payload =
         try {
             Jwts.parser()
                 .verifyWith(publicSignKey)

@@ -37,7 +37,7 @@ class LoggingPictureRecordStorage(
             .onFailure { e -> log.warn("Failed to delete a picture record with id $id", e) }
             .getOrThrow()
 
-    override fun selectAbandoned(): Flow<Picture> =
+    override suspend fun selectAbandoned(): Flow<Picture> =
         runCatching { origin.selectAbandoned() }
             .onSuccess { log.info("Retrieved abandoned pictures") }
             .onFailure { log.warn("Failed to select abandoned pictures") }

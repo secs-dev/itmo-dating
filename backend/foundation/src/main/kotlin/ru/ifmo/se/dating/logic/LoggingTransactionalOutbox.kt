@@ -8,7 +8,7 @@ class LoggingTransactionalOutbox<E, Id>(
 ) : TransactionalOutbox<E, Id> by origin {
     private val log = Log.forClass(origin.javaClass)
 
-    override fun publishable(): Flow<Id> =
+    override suspend fun publishable(): Flow<Id> =
         runCatching { origin.publishable() }
             .onSuccess { log.info("Retrieved publishable events") }
             .onFailure { log.warn("Failed to retrieve publishable events") }

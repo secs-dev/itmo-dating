@@ -34,7 +34,7 @@ class LoggingInterestService(private val origin: InterestService) : InterestServ
             }
             .getOrThrow()
 
-    override fun getAllTopics(): Flow<Topic> =
+    override suspend fun getAllTopics(): Flow<Topic> =
         runCatching { origin.getAllTopics() }
             .onSuccess { log.debug("Got all topics") }
             .onFailure { e -> log.warn("Failed to get all topics: ${e.message}") }

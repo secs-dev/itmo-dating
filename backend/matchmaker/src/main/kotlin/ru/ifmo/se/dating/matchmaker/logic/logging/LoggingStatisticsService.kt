@@ -8,7 +8,7 @@ import ru.ifmo.se.dating.matchmaker.model.AttitudesStatistics
 class LoggingStatisticsService(private val origin: StatisticsService) : StatisticsService {
     private val log = autoLog()
 
-    override fun selectAttitudesByPerson(): Flow<AttitudesStatistics> =
+    override suspend fun selectAttitudesByPerson(): Flow<AttitudesStatistics> =
         runCatching { origin.selectAttitudesByPerson() }
             .onSuccess { log.warn("Someone got attitudes by person statistics") }
             .onFailure { e -> log.warn("Failed to got statistics: ${e.message}") }

@@ -17,7 +17,7 @@ class JwtTokenIssuer(
 ) : TokenIssuer {
     private val duration: JavaDuration = duration.toJavaDuration()
 
-    override fun issue(payload: AccessToken.Payload): AccessToken {
+    override suspend fun issue(payload: AccessToken.Payload): AccessToken {
         val now = clock.instant()
         return Jwts.builder()
             .claims(Jwt.serialize(payload))

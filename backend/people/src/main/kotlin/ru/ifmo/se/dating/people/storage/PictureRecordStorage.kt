@@ -8,6 +8,6 @@ interface PictureRecordStorage {
     suspend fun insert(ownerId: User.Id): Picture
     suspend fun setIsReferenced(id: Picture.Id, isReferenced: Boolean)
     suspend fun delete(id: Picture.Id)
-    fun selectAbandoned(): Flow<Picture>
+    suspend fun selectAbandoned(): Flow<Picture>
     fun selectByOwner(ownerId: User.Id): Flow<Picture>
 }
