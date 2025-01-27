@@ -13,6 +13,9 @@ management:
     export:
       prometheus:
         enabled: true
+    tags:
+      application: ${spring.application.name}
+      hostname: ${HOSTNAME}
   distribution:
     percentiles-histogram:
       "[http.server.requests]": true

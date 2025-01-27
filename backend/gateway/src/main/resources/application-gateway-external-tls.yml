@@ -1,0 +1,4 @@
+server:
+  ssl:
+    key-store: classpath:keystore/itmo-dating-external.p12
+    key-store-password: ${ITMO_DATING_EXT_KEY_STORE_PASSWORD}
