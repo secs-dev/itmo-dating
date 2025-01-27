@@ -11,7 +11,8 @@ listener "tcp" {
 }
 
 telemetry {
-  prometheus_retention_time = "12h"
+  disable_hostname = true
+  prometheus_retention_time = "480h"
 }
 
 storage "consul" {

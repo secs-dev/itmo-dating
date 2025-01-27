@@ -122,3 +122,11 @@ scrape_configs:
           - grafana.dating.se.ifmo.ru
         type: 'A'
         port: 3000
+
+  - job_name: consul_exporter
+    metrics_path: /metrics
+    dns_sd_configs:
+      - names:
+            - consul-exporter.dating.se.ifmo.ru
+        type: 'A'
+        port: 9107
