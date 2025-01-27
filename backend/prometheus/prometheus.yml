@@ -66,7 +66,8 @@ scrape_configs:
         type: 'A'
         port: 9187
 
-  - job_name: consul
+  - job_name: consul_exporter
+    metrics_path: /metrics
     dns_sd_configs:
       - names:
           - consul-exporter.dating.se.ifmo.ru
