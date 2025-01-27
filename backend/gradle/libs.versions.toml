@@ -31,12 +31,15 @@ io-github-numichi-reactive-logger = "6.0.3"
 io-projectreactor-reactor-test = "3.6.11"
 junit-junit = "4.13.2"
 org-testcontainers = "1.20.3"
+org-junit-platform = "1.11.4"
+org-jetbrains-kotlin = "2.1.0"
 
 [libraries]
 org-springframework-boot-spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "org-springframework-boot-spring-boot" }
 org-springframework-boot-spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "org-springframework-boot-spring-boot" }
 org-springframework-boot-spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc", version.ref = "org-springframework-boot-spring-boot" }
 org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "org-springframework-boot-spring-boot" }
+org-springframework-boot-spring-boot-starter-web-services = { module = "org.springframework.boot:spring-boot-starter-web-services", version.ref = "org-springframework-boot-spring-boot" }
 org-springframework-boot-spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "org-springframework-boot-spring-boot" }
 org-springframework-boot-spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "org-springframework-boot-spring-boot" }
 org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "org-springframework-boot-spring-boot" }
@@ -84,6 +87,8 @@ io-micrometer-micrometer-registry-prometheus = { module = "io.micrometer:microme
 com-github-loki4j-loki-logback-appender = { module = "com.github.loki4j:loki-logback-appender", version.ref = "com-github-loki4j" }
 io-github-numichi-reactive-logger = { module = "io.github.numichi:reactive-logger", version.ref = "io-github-numichi-reactive-logger" }
 
+org-jetbrains-kotlin-kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "org-jetbrains-kotlin" }
+
 junit-junit = { module = "junit:junit", version.ref = "junit-junit" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "org-testcontainers" }
 org-testcontainers-r2dbc = { module = "org.testcontainers:r2dbc", version.ref = "org-testcontainers" }
@@ -91,3 +96,6 @@ org-testcontainers-minio = { module = "org.testcontainers:minio", version.ref = 
 org-testcontainers-vault = { module = "org.testcontainers:vault", version.ref = "org-testcontainers" }
 org-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "org-testcontainers" }
 io-projectreactor-reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "io-projectreactor-reactor-test" }
+org-jetbrains-kotlin-kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "org-jetbrains-kotlin" }
+org-junit-platform-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "org-junit-platform" }
+

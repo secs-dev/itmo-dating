@@ -1,0 +1,284 @@
+<wsdl:definitions
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://matchmaker.dating.se.ifmo.ru/"
+        targetNamespace="http://matchmaker.dating.se.ifmo.ru/"
+        name="ITMODatingMatchmakerService">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://matchmaker.dating.se.ifmo.ru/">
+            <xsd:simpleType name="PersonId">
+                <xsd:restriction base="xsd:long">
+                    <xsd:minInclusive value="1"/>
+                    <xsd:maxInclusive value="10000000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+
+            <xsd:simpleType name="PersonStatus">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="hidden"/>
+                    <xsd:enumeration value="active"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+
+            <xsd:complexType name="PersonUpdate">
+                <xsd:sequence>
+                    <xsd:element name="status" type="tns:PersonStatus"/>
+                    <xsd:element name="version" type="xsd:int"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:simpleType name="AttitudeKind">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="like"/>
+                    <xsd:enumeration value="skip"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+
+            <xsd:complexType name="GeneralError">
+                <xsd:sequence>
+                    <xsd:element name="code" type="xsd:int"/>
+                    <xsd:element name="status" type="xsd:string"/>
+                    <xsd:element name="message" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:element name="GetSuggestionsRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="limit" type="xsd:int" minOccurs="0" default="20"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetSuggestionsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="personId" type="tns:PersonId" maxOccurs="50"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="LikeSkipRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="person_id" type="tns:PersonId"/>
+                        <xsd:element name="attitude_kind" type="tns:AttitudeKind"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="LikeSkipResponse">
+                <xsd:complexType>
+                    <xsd:sequence/>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="ResetAttitudesRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="source_id" type="tns:PersonId"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="ResetAttitudesResponse">
+                <xsd:complexType>
+                    <xsd:sequence/>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetMatchesRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="person_id" type="tns:PersonId"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetMatchesResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="personId" type="tns:PersonId" maxOccurs="10000"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpdatePersonRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="person_id" type="tns:PersonId"/>
+                        <xsd:element name="personUpdate" type="tns:PersonUpdate"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpdatePersonResponse">
+                <xsd:complexType>
+                    <xsd:sequence/>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetAttitudesStatisticsRequest"/>
+
+            <xsd:element name="GetAttitudesStatisticsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="statistics" maxOccurs="10000">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="personId" type="tns:PersonId"/>
+                                    <xsd:element name="likes" type="xsd:int"/>
+                                    <xsd:element name="skips" type="xsd:int"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="GetSuggestionsRequest">
+        <wsdl:part name="parameters" element="tns:GetSuggestionsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetSuggestionsResponse">
+        <wsdl:part name="parameters" element="tns:GetSuggestionsResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="LikeSkipRequest">
+        <wsdl:part name="parameters" element="tns:LikeSkipRequest"/>
+    </wsdl:message>
+    <wsdl:message name="LikeSkipResponse">
+        <wsdl:part name="parameters" element="tns:LikeSkipResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="ResetAttitudesRequest">
+        <wsdl:part name="parameters" element="tns:ResetAttitudesRequest"/>
+    </wsdl:message>
+    <wsdl:message name="ResetAttitudesResponse">
+        <wsdl:part name="parameters" element="tns:ResetAttitudesResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="GetMatchesRequest">
+        <wsdl:part name="parameters" element="tns:GetMatchesRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetMatchesResponse">
+        <wsdl:part name="parameters" element="tns:GetMatchesResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="UpdatePersonRequest">
+        <wsdl:part name="parameters" element="tns:UpdatePersonRequest"/>
+    </wsdl:message>
+    <wsdl:message name="UpdatePersonResponse">
+        <wsdl:part name="parameters" element="tns:UpdatePersonResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="GetAttitudesStatisticsRequest">
+        <wsdl:part name="parameters" element="tns:GetAttitudesStatisticsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="GetAttitudesStatisticsResponse">
+        <wsdl:part name="parameters" element="tns:GetAttitudesStatisticsResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ITMODatingMatchmakerPortType">
+        <wsdl:operation name="GetSuggestions">
+            <wsdl:input message="tns:GetSuggestionsRequest"/>
+            <wsdl:output message="tns:GetSuggestionsResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="LikeSkip">
+            <wsdl:input message="tns:LikeSkipRequest"/>
+            <wsdl:output message="tns:LikeSkipResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="ResetAttitudes">
+            <wsdl:input message="tns:ResetAttitudesRequest"/>
+            <wsdl:output message="tns:ResetAttitudesResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetMatches">
+            <wsdl:input message="tns:GetMatchesRequest"/>
+            <wsdl:output message="tns:GetMatchesResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdatePerson">
+            <wsdl:input message="tns:UpdatePersonRequest"/>
+            <wsdl:output message="tns:UpdatePersonResponse"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetAttitudesStatistics">
+            <wsdl:input message="tns:GetAttitudesStatisticsRequest"/>
+            <wsdl:output message="tns:GetAttitudesStatisticsResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ITMODatingMatchmakerSoapBinding" type="tns:ITMODatingMatchmakerPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+        <wsdl:operation name="GetSuggestions">
+            <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/GetSuggestions"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="LikeSkip">
+            <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/LikeSkip"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="ResetAttitudes">
+            <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/ResetAttitudes"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetMatches">
+            <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/GetMatches"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="UpdatePerson">
+            <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/UpdatePerson"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="GetAttitudesStatistics">
+            <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/GetAttitudesStatistics"/>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ITMODatingMatchmakerService">
+        <wsdl:port name="ITMODatingMatchmakerPort" binding="tns:ITMODatingMatchmakerSoapBinding">
+            <soap:address location="http://matchmaker-soap.dating.se.ifmo.ru:8080"/>
+            <soap:address location="http://localhost:8080"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

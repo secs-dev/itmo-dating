@@ -41,6 +41,14 @@ services:
     hostname: matchmaker-1.dating.se.ifmo.ru
     profiles:
       - reliability
+  matchmaker-soap:
+    image: ghcr.io/secs-dev/itmo-dating-matchmaker-soap:latest
+    build:
+      context: ./backend/matchmaker-soap
+    environment:
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
+    tty: true
+    hostname: matchmaker-soap.dating.se.ifmo.ru
   people-0:
     image: ghcr.io/secs-dev/itmo-dating-people:latest
     build:

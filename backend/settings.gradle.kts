@@ -16,3 +16,4 @@ include(
     ":starter-service-discovery",
     ":starter-tls",
 )
+include("matchmaker-soap")
