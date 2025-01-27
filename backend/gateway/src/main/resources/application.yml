@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-monitoring.yml,application-service-discovery.yml,application-tls.yml
+    import: application-monitoring.yml,application-service-discovery.yml,application-tls.yml,application-gateway-external-tls.yml
   application:
     name: gateway
   cloud:
@@ -132,10 +132,6 @@ spring:
           predicates:
             - Method=GET
             - Path=/api/locations
-server:
-  ssl:
-    key-store: classpath:keystore/itmo-dating-external.p12
-    key-store-password: ${ITMO_DATING_EXT_KEY_STORE_PASSWORD}
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
