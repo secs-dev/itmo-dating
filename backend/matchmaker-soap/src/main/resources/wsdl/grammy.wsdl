@@ -8,6 +8,12 @@
 
     <wsdl:types>
         <xsd:schema targetNamespace="http://matchmaker.dating.se.ifmo.ru/">
+            <xsd:element name="AuthToken">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string"/>
+                </xsd:simpleType>
+            </xsd:element>
+
             <xsd:simpleType name="PersonId">
                 <xsd:restriction base="xsd:long">
                     <xsd:minInclusive value="1"/>
@@ -141,6 +147,7 @@
     </wsdl:types>
 
     <wsdl:message name="GetSuggestionsRequest">
+        <wsdl:part name="authorization" element="tns:AuthToken"/>
         <wsdl:part name="parameters" element="tns:GetSuggestionsRequest"/>
     </wsdl:message>
     <wsdl:message name="GetSuggestionsResponse">
@@ -148,6 +155,7 @@
     </wsdl:message>
 
     <wsdl:message name="LikeSkipRequest">
+        <wsdl:part name="authorization" element="tns:AuthToken"/>
         <wsdl:part name="parameters" element="tns:LikeSkipRequest"/>
     </wsdl:message>
     <wsdl:message name="LikeSkipResponse">
@@ -155,6 +163,7 @@
     </wsdl:message>
 
     <wsdl:message name="ResetAttitudesRequest">
+        <wsdl:part name="authorization" element="tns:AuthToken"/>
         <wsdl:part name="parameters" element="tns:ResetAttitudesRequest"/>
     </wsdl:message>
     <wsdl:message name="ResetAttitudesResponse">
@@ -162,6 +171,7 @@
     </wsdl:message>
 
     <wsdl:message name="GetMatchesRequest">
+        <wsdl:part name="authorization" element="tns:AuthToken"/>
         <wsdl:part name="parameters" element="tns:GetMatchesRequest"/>
     </wsdl:message>
     <wsdl:message name="GetMatchesResponse">
@@ -220,7 +230,11 @@
         <wsdl:operation name="GetSuggestions">
             <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/GetSuggestions"/>
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:header
+                        message="tns:GetSuggestionsRequest"
+                        part="authorization"
+                        use="literal"/>
+                <soap:body parts="parameters" use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
@@ -230,7 +244,11 @@
         <wsdl:operation name="LikeSkip">
             <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/LikeSkip"/>
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:header
+                        message="tns:LikeSkipRequest"
+                        part="authorization"
+                        use="literal"/>
+                <soap:body parts="parameters" use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
@@ -240,7 +258,11 @@
         <wsdl:operation name="ResetAttitudes">
             <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/ResetAttitudes"/>
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:header
+                        message="tns:ResetAttitudesRequest"
+                        part="authorization"
+                        use="literal"/>
+                <soap:body parts="parameters" use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
@@ -250,7 +272,11 @@
         <wsdl:operation name="GetMatches">
             <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/GetMatches"/>
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:header
+                        message="tns:GetMatchesRequest"
+                        part="authorization"
+                        use="literal"/>
+                <soap:body parts="parameters" use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
@@ -260,7 +286,7 @@
         <wsdl:operation name="UpdatePerson">
             <soap:operation soapAction="http://matchmaker.dating.se.ifmo.ru/UpdatePerson"/>
             <wsdl:input>
-                <soap:body use="literal"/>
+                <soap:body parts="parameters" use="literal"/>
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
@@ -277,8 +303,8 @@
 
     <wsdl:service name="ITMODatingMatchmakerService">
         <wsdl:port name="ITMODatingMatchmakerPort" binding="tns:ITMODatingMatchmakerSoapBinding">
+            <soap:address location="https://localhost:8458"/>
             <soap:address location="http://matchmaker-soap.dating.se.ifmo.ru:8080"/>
-            <soap:address location="http://localhost:8080"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
