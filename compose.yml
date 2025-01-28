@@ -187,6 +187,7 @@ services:
       - "127.0.0.1:8455:8455"
       - "127.0.0.1:8456:8456"
       - "127.0.0.1:8457:8457"
+      - "127.0.0.1:8458:8458"
     restart: unless-stopped
   node-exporter:
     image: prom/node-exporter:latest

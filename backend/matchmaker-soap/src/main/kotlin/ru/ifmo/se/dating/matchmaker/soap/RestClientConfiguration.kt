@@ -16,8 +16,9 @@ class RestClientConfiguration {
 
         ssl: RestClientSsl,
     ): MatchmakerRestClient = RestClient.builder()
-        .baseUrl(baseUrl)
+        .baseUrl("$baseUrl/api")
         .messageConverters { it.add(MappingJackson2HttpMessageConverter()) }
+        .apply(ssl.fromBundle("internal"))
         .build()
         .let { MatchmakerRestClient(it) }
 }

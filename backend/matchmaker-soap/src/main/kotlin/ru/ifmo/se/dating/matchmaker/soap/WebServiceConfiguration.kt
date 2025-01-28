@@ -20,7 +20,7 @@ class WebServiceConfiguration {
         service: ITMODatingMatchmakerPortType,
     ): Endpoint {
         val endpoint = EndpointImpl(bus, service)
-        endpoint.publish("/")
+        endpoint.publish("/matchmaker")
         return endpoint
     }
 }
