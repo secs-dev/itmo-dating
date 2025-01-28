@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.matchmaker.soap
+package ru.ifmo.se.dating.matchmaker.soap.server.soap
 
 import ru.ifmo.se.dating.matchmaker.*
 import ru.ifmo.se.dating.matchmaker.client.model.generated.AttitudeKindMessage

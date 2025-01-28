@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.matchmaker.soap
+package ru.ifmo.se.dating.matchmaker.soap.client.rest
 
 import org.springframework.web.client.RestClient
 import ru.ifmo.se.dating.matchmaker.client.generated.apis.PeopleApi

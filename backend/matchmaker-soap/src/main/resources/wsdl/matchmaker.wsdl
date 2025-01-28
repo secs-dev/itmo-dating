@@ -303,8 +303,7 @@
 
     <wsdl:service name="ITMODatingMatchmakerService">
         <wsdl:port name="ITMODatingMatchmakerPort" binding="tns:ITMODatingMatchmakerSoapBinding">
-            <soap:address location="https://localhost:8458/services/matchmaker"/>
-            <soap:address location="https://matchmaker-soap.dating.se.ifmo.ru:8080/services/matchmaker"/>
+            <soap:address location="https://localhost:8080/services/matchmaker"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

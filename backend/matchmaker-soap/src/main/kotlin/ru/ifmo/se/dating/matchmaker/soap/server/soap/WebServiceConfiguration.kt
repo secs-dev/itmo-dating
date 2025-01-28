@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.matchmaker.soap
+package ru.ifmo.se.dating.matchmaker.soap.server.soap
 
 import jakarta.xml.ws.Endpoint
 import org.apache.cxf.Bus
@@ -6,7 +6,6 @@ import org.apache.cxf.bus.spring.SpringBus
 import org.apache.cxf.jaxws.EndpointImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import ru.ifmo.se.dating.matchmaker.ITMODatingMatchmakerPortType
 
 @Configuration
 class WebServiceConfiguration {
@@ -17,7 +16,7 @@ class WebServiceConfiguration {
     @Bean
     fun matchmakerEndpoint(
         bus: Bus,
-        service: ITMODatingMatchmakerPortType,
+        service: MatchmakerSoapServer,
     ): Endpoint {
         val endpoint = EndpointImpl(bus, service)
         endpoint.publish("/matchmaker")

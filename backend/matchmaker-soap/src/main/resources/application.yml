@@ -1,6 +1,6 @@
 spring:
-  config:
-    import: application-tls.yml
+#  config:
+#    import: application-tls.yml
   application:
     name: matchmaker-soap
   ssl:

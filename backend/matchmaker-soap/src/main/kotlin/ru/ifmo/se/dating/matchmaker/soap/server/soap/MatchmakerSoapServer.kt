@@ -1,10 +1,11 @@
-package ru.ifmo.se.dating.matchmaker.soap
+package ru.ifmo.se.dating.matchmaker.soap.server.soap
 
 import org.springframework.stereotype.Controller
 import ru.ifmo.se.dating.matchmaker.*
+import ru.ifmo.se.dating.matchmaker.soap.client.rest.MatchmakerRestClient
 
 @Controller
-class MatchmakerSoapService(
+class MatchmakerSoapServer(
     private val rest: MatchmakerRestClient,
 ) : ITMODatingMatchmakerPortType {
     override fun getSuggestions(

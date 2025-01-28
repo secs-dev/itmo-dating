@@ -1,4 +1,4 @@
-package ru.ifmo.se.dating.matchmaker.soap
+package ru.ifmo.se.dating.matchmaker.soap.client.rest
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.web.client.RestClientSsl
