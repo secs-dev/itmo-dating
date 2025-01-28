@@ -1,0 +1,20 @@
+spring:
+  config:
+    import: application-tls.yml
+  application:
+    name: matchmaker-soap
+  ssl:
+    bundle:
+      jks:
+        internal:
+          keystore:
+            type: PKCS12
+            location: classpath:keystore/itmo-dating-backend.p12
+            password: ${ITMO_DATING_KEY_STORE_PASSWORD}
+          truststore:
+            type: PKCS12
+            location: classpath:keystore/itmo-dating-backend.p12
+            password: ${ITMO_DATING_KEY_STORE_PASSWORD}
+itmo-dating:
+  matchmaker:
+    url: https://matchmaker-0.dating.se.ifmo.ru:8080

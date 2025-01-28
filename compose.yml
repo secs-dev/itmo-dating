@@ -15,6 +15,7 @@ services:
         condition: service_started
       config:
         condition: service_started
+    restart: unless-stopped
   authik-1:
     extends:
       service: authik-0
@@ -35,12 +36,21 @@ services:
         condition: service_healthy
       consul:
         condition: service_started
+    restart: unless-stopped
   matchmaker-1:
     extends:
       service: matchmaker-0
     hostname: matchmaker-1.dating.se.ifmo.ru
     profiles:
       - reliability
+  matchmaker-soap:
+    image: ghcr.io/secs-dev/itmo-dating-matchmaker-soap:latest
+    build:
+      context: ./backend/matchmaker-soap
+    environment:
+      ITMO_DATING_KEY_STORE_PASSWORD: ${ITMO_DATING_KEYSTORE_PASSWORD?:err}
+    tty: true
+    hostname: matchmaker-soap.dating.se.ifmo.ru
   people-0:
     image: ghcr.io/secs-dev/itmo-dating-people:latest
     build:
@@ -57,6 +67,7 @@ services:
         condition: service_started
       object-storage:
         condition: service_healthy
+    restart: unless-stopped
   people-1:
     extends:
       service: people-0
@@ -82,6 +93,7 @@ services:
       timeout: 5s
       retries: 5
     hostname: object-storage.dating.se.ifmo.ru
+    restart: unless-stopped
   database:
     image: postgres
     environment:
@@ -97,6 +109,7 @@ services:
       timeout: 1s
       retries: 16
     hostname: database-primary.dating.se.ifmo.ru
+    restart: unless-stopped
   postgres-exporter:
     image: quay.io/prometheuscommunity/postgres-exporter
     command: '--no-collector.stat_bgwriter'
@@ -109,6 +122,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    restart: unless-stopped
   gateway:
     image: ghcr.io/secs-dev/itmo-dating-gateway:latest
     build:
@@ -120,6 +134,7 @@ services:
     hostname: gateway.dating.se.ifmo.ru
     ports:
       - "444:8080"
+    restart: unless-stopped
   config:
     image: ghcr.io/secs-dev/itmo-dating-config:latest
     build:
@@ -133,6 +148,7 @@ services:
         condition: service_started
       consul:
         condition: service_started
+    restart: unless-stopped
   consul:
     image: ghcr.io/secs-dev/itmo-dating-consul:latest
     build:
@@ -141,6 +157,7 @@ services:
       - consul-data:/opt/consul/data
     tty: true
     hostname: server.dc1.consul
+    restart: unless-stopped
   consul-exporter:
     image: prom/consul-exporter
     command: --consul.server=server.dc1.consul:8500
@@ -149,12 +166,14 @@ services:
     depends_on:
       consul:
         condition: service_started
+    restart: unless-stopped
   vault:
     image: ghcr.io/secs-dev/itmo-dating-vault:latest
     build:
       context: ./backend/vault
     tty: true
     hostname: vault.dating.se.ifmo.ru
+    restart: unless-stopped
   haproxy:
     image: ghcr.io/secs-dev/itmo-dating-haproxy:latest
     build:
@@ -168,6 +187,8 @@ services:
       - "127.0.0.1:8455:8455"
       - "127.0.0.1:8456:8456"
       - "127.0.0.1:8457:8457"
+      - "127.0.0.1:8458:8458"
+    restart: unless-stopped
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node_exporter
@@ -178,6 +199,7 @@ services:
       - "/:/host:ro,rslave"
     tty: true
     hostname: node-exporter.dating.se.ifmo.ru
+    restart: unless-stopped
   prometheus:
     image: ghcr.io/secs-dev/itmo-dating-prometheus:latest
     build:
@@ -187,6 +209,7 @@ services:
       - prometheus-data:/prometheus
     tty: true
     hostname: prometheus.dating.se.ifmo.ru
+    restart: unless-stopped
   loki:
     image: ghcr.io/secs-dev/itmo-dating-loki:latest
     build:
@@ -196,6 +219,7 @@ services:
       - loki-data:/loki
     tty: true
     hostname: loki.dating.se.ifmo.ru
+    restart: unless-stopped
   grafana:
     image: ghcr.io/secs-dev/itmo-dating-grafana:latest
     build:
@@ -209,6 +233,7 @@ services:
       - grafana-data:/var/lib/grafana
     tty: true
     hostname: grafana.dating.se.ifmo.ru
+    restart: unless-stopped
   tg-miniapp:
     image: ghcr.io/secs-dev/itmo-dating-tg-miniapp:latest
     build:
